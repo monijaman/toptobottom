@@ -1,0 +1,20 @@
+const firebaseConfig = {
+
+  apiKey: "AIzaSyBJd-6u3BaKJj6-GmNPDuiSI91QDMPlUCo",
+
+  authDomain: "top-to-bottom-500e7.firebaseapp.com",
+
+  projectId: "top-to-bottom-500e7",
+
+  storageBucket: "top-to-bottom-500e7.appspot.com",
+
+  messagingSenderId: "443046048782",
+
+  appId: "1:443046048782:web:fd7d77b14f3ea69163f85f",
+
+  measurementId: "G-C8R2T88VBG"
+
+};
+
+
+https://blog.logrocket.com/using-styled-components-in-typescript-a-tutorial-with-examples/

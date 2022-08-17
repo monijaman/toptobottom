@@ -1,0 +1,9 @@
+{ 
+    "item": "journal", 
+    "price": 9.99, 
+    "qty": 25, 
+    "size": { "h": 14, "l": 21, "w": 1 }, 
+    "features": "Beautiful, handmade journal.",
+    "categories": ["writing", "bestseller"],
+    "image": "items/journal.jpg"  
+} 
