@@ -26,7 +26,7 @@ import { selectCartState } from "redux/cartSlice";
 
 // import { wrapper } from "redux/store";
 // import "../styles/globals.css";
-
+import { additem } from "redux/cartSlice"
 
 const Home: NextPage = ({
   products,
@@ -48,7 +48,7 @@ const Home: NextPage = ({
     }
    // dispatch({ type: actionTypes.CART_ADD_ITEM, payload: { ...item, quantity } });
     console.log(data)
-
+      dispatch(additem({ ...item, quantity }));
     // dispatch({ type: actionTypes.CART_ADD_ITEM, payload: { ...product, quantity } });
   //  router.push('/cart');
   };
