@@ -38,13 +38,18 @@ const reducer = (state = initialState, action: Actions): StateType => {
       const existItem = state.cart.cartItems.find(
         (item) => item._id === newItem._id
       );
+
+    
       const cartItems = existItem
         ? state.cart.cartItems.map((item) =>
             item.name === existItem.name ? newItem : item
           )
         : [...state.cart.cartItems, newItem];
+
+       // console.log('New', newItem)
+
       Cookies.set("cartItems", JSON.stringify(cartItems));
-      return { ...state, cart: { ...state.cart, cartItems } };
+      //return { ...state, cart: { ...state.cart, cartItems } };
     }
 
     case actionTypes.CART_REMOVE_ITEM: {

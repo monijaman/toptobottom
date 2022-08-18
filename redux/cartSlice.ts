@@ -78,15 +78,22 @@ export const cartSlice = createSlice({
           const existItem = state.cart.cartItems.find(
             (item) => item._id === newItem._id
           );
+          
+          
           const cartItems = existItem
             ? state.cart.cartItems.map((item) =>
                 item.name === existItem.name ? newItem : item
               )
             : [...state.cart.cartItems, newItem];
+            
+           // console.log('cartItems', state.cart.cartItems)
 
           Cookies.set("cartItems", JSON.stringify(cartItems));
-
-          state =  { ...state, cart: { ...state.cart, cartItems } };
+          // state.push(action.payload)
+          // console.log(newItem)
+          
+          //state.payload = { ...state, cart: { ...state.cart, cartItems } }
+          return { ...state, cart: { ...state.cart, cartItems } };
         
       },
       removeitems(state, action) {
@@ -94,7 +101,8 @@ export const cartSlice = createSlice({
           (item) => item._id !== (action.payload as IProduct)?._id
         );
         Cookies.set("cartItems", JSON.stringify(cartItems));
-        state =  { ...state, cart: { ...state.cart, cartItems } };
+        return { ...state, cart: { ...state.cart, cartItems } };
+        //state =  { ...state, cart: { ...state.cart, cartItems } };
       }
 
       

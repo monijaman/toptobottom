@@ -16,26 +16,26 @@ import Layout from "../components/Layout";
 import axios from 'axios';
 import Product from "models/Product";
 import { InferGetServerSidePropsType } from "next";
-import NextLink from "next/link";
 import { useRouter } from 'next/router';
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { additem, selectCartState } from "redux/cartSlice";
 import { IProduct } from "types/index";
 import db from "../utils/db";
-// import { useDispatch, useSelector } from "react-redux";
-import { selectCartState } from "redux/cartSlice";
 
 // import { wrapper } from "redux/store";
 // import "../styles/globals.css";
-import { additem } from "redux/cartSlice"
+
 
 const Home: NextPage = ({
   products,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   
   const router = useRouter()  
-   const {    cart: { cartItems }  } = useSelector(selectCartState);
-  
+  const {    cart: { cartItems }  } = useSelector(selectCartState);
+  const dispatch = useDispatch();
   // const { state, dispatch } = useContext(StoreContext);
+  
+
   
   const addToCartHandler = async (product: IProduct) => {
     
@@ -46,9 +46,11 @@ const Home: NextPage = ({
       window.alert('Sorry. Product is out of stock'); 
       return;
     }
+    // const dataItm  = { payload: { ...item, quantity } }
+    dispatch(additem({  ...product, quantity  }))
    // dispatch({ type: actionTypes.CART_ADD_ITEM, payload: { ...item, quantity } });
-    console.log(data)
-      dispatch(additem({ ...item, quantity }));
+   
+
     // dispatch({ type: actionTypes.CART_ADD_ITEM, payload: { ...product, quantity } });
   //  router.push('/cart');
   };
@@ -62,7 +64,7 @@ const Home: NextPage = ({
         <Grid container spacing={3}>
           {products.map((product) => (
             <Grid item md={4} key={product.name}>
-              <NextLink href={`/product/${product.slug}`} passHref>
+           {/* <NextLink href={`/product/${item.slug}`} passHref>   */}
                 <Card>
                   <CardActionArea>
                     <CardMedia
@@ -83,7 +85,7 @@ const Home: NextPage = ({
                     </Button>
                   </CardActions>
                 </Card>
-              </NextLink>
+               {/* </NextLink> */}
             </Grid>
           ))}
         </Grid>
