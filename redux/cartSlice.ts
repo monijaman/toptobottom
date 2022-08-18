@@ -97,9 +97,14 @@ export const cartSlice = createSlice({
         
       },
       removeitems(state, action) {
+        const newItem = action.payload.item as IProduct;
         const cartItems = state.cart.cartItems.filter(
-          (item) => item._id !== (action.payload as IProduct)?._id
+          (item) => item._id !== newItem._id
         );
+
+       // console.log(newItem.item._id)
+           
+
         Cookies.set("cartItems", JSON.stringify(cartItems));
         return { ...state, cart: { ...state.cart, cartItems } };
         //state =  { ...state, cart: { ...state.cart, cartItems } };

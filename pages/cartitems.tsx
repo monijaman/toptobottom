@@ -12,22 +12,23 @@ import {
 import type { NextPage } from "next";
 import Layout from "../components/Layout";
 // import axios from "axios";
-
 import axios from 'axios';
 import Product from "models/Product";
 import { InferGetServerSidePropsType } from "next";
+import NextLink from "next/link";
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from "react-redux";
 import { additem, selectCartState } from "redux/cartSlice";
 import { IProduct } from "types/index";
 import db from "../utils/db";
 
+ 
 // import { wrapper } from "redux/store";
 // import "../styles/globals.css";
 
 
 const Home: NextPage = ({
-  products,
+  products ,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   
   const router = useRouter()  
@@ -35,7 +36,6 @@ const Home: NextPage = ({
   const dispatch = useDispatch();
   // const { state, dispatch } = useContext(StoreContext);
   
-
   
   const addToCartHandler = async (product: IProduct) => {
     
@@ -46,16 +46,13 @@ const Home: NextPage = ({
       window.alert('Sorry. Product is out of stock'); 
       return;
     }
-    // const dataItm  = { payload: { ...item, quantity } }
-    dispatch(additem({  ...product, quantity  }))
-   // dispatch({ type: actionTypes.CART_ADD_ITEM, payload: { ...item, quantity } });
    
-
-    // dispatch({ type: actionTypes.CART_ADD_ITEM, payload: { ...product, quantity } });
-  //  router.push('/cart');
+    dispatch(additem({  ...product, quantity  }))
+  
   };
+  
 
-
+   
   return (
 
     <Layout>
@@ -64,8 +61,8 @@ const Home: NextPage = ({
         <Grid container spacing={3}>
           {products.map((product) => (
             <Grid item md={4} key={product.name}>
-           {/* <NextLink href={`/product/${item.slug}`} passHref>   */}
                 <Card>
+                  <NextLink href={`/product/${product.slug}`} passHref> 
                   <CardActionArea>
                     <CardMedia
                       component="img"
@@ -76,6 +73,8 @@ const Home: NextPage = ({
                       <Typography>{product.name}</Typography>
                     </CardContent>
                   </CardActionArea>
+                  </NextLink>  
+
                   <CardActions>
                     <Typography>${product.price}</Typography>
                     <Button size="small"
@@ -85,7 +84,7 @@ const Home: NextPage = ({
                     </Button>
                   </CardActions>
                 </Card>
-               {/* </NextLink> */}
+                 
             </Grid>
           ))}
         </Grid>
@@ -100,7 +99,7 @@ export default Home;
 
 export const getServerSideProps = async () => {
   await db.connect();
-  const products = await Product.find({}).lean();
+  const products : IProduct = await Product.find({}).lean();
   await db.disconnect();
   return {
     props: {
@@ -109,22 +108,4 @@ export const getServerSideProps = async () => {
   };
 };
  
-
-// export const getServerSideProps = wrapper.getServerSideProps(
-//   (store) =>
-//     async ({ params }) => {
-//       // we can set the initial state from here
-//       // we are setting to false but you can run your custom logic here
-//     //  await store.dispatch(setCartState(false)); 
-//       console.log("State on server", store.getState());
-
-//       await db.connect();
-//       const products = await Product.find({}).lean();
-//       await db.disconnect();
-//       return {
-//         props: {
-//           authState: false,
-//         },
-//       };
-//     }
-// );
+ 
