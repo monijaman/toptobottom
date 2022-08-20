@@ -12,30 +12,32 @@ import { useRouter } from "next/router";
 import NextLink from "next/link";
 import React, { useContext, useEffect } from "react";
 import Layout from "../components/Layout";
-import { StoreContext } from "../utils/Store";
+ 
 import useStyles from "../utils/styles";
 import Cookies from "js-cookie";
 import { Controller, useForm } from "react-hook-form";
 import { useSnackbar } from "notistack";
+import { useDispatch, useSelector } from "react-redux";
+import {  selectCartState, userLogin } from 'redux/cartSlice';
+import { UserSubmitForm } from "types/index";
 
-export type UserSubmitForm = {
-  name: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-};
 
+ 
 const Register: React.ReactNode = () => {
   const {
     handleSubmit,
     control,
     formState: { errors },
   } = useForm();
+
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const router = useRouter();
+
   const redirect = router.query.redirect as string;
-  const { state, dispatch } = useContext(StoreContext);
-  const { userInfo } = state;
+  
+  const dispatch = useDispatch();
+
+  const {    userInfo  }  = useSelector(selectCartState);
   useEffect(() => {
     if (userInfo) {
       router.push("/");
@@ -55,12 +57,12 @@ const Register: React.ReactNode = () => {
       return;
     }
     try {
-      const { data } = await axios.post("/api/users/register", {
+      const { data  } = await axios.post("/api/users/register", {
         name,
         email,
         password,
       });
-      dispatch({ type: "USER_LOGIN", payload: data });
+      dispatch(userLogin(data));
       Cookies.set("userInfo", data);
       router.push(redirect || "/");
     } catch (err: any) {

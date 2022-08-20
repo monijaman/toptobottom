@@ -15,13 +15,16 @@ import {
   TextField,
 } from '@material-ui/core';
 import { getError } from '../utils/error';
-import { StoreContext } from '../utils/Store';
+// import { StoreContext } from '../utils/Store';
 import Layout from '../components/Layout';
 import useStyles from '../utils/styles';
 import { Controller, useForm } from 'react-hook-form';
 import { useSnackbar } from 'notistack';
 import Cookies from 'js-cookie';
 import { UserSubmitForm } from './register';
+
+import { useDispatch, useSelector } from "react-redux";
+import { savePaymentMethod, selectCartState } from "redux/cartSlice";
 
 function Profile() {
   const { state, dispatch } = useContext(StoreContext);
@@ -31,6 +34,9 @@ function Profile() {
     formState: { errors },
     setValue,
   } = useForm();
+
+  const dispatch = useDispatch();
+  
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const router = useRouter();
   const classes = useStyles();

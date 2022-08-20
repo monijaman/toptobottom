@@ -1,11 +1,15 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/router';
-import React, { useContext, useEffect, useState } from 'react';
-import { actionTypes, StoreContext } from '../utils/Store';
-import Layout from '../components/Layout';
+import React, { useEffect, useState } from 'react';
+// import { actionTypes, StoreContext } from '../utils/Store';
 import CheckoutWizard from '../components/CheckoutWizard';
+import Layout from '../components/Layout';
 import useStyles from '../utils/styles';
+
+import { useDispatch, useSelector } from "react-redux";
+import { savePaymentMethod, selectCartState } from "redux/cartSlice";
+
 import {
   Button,
   FormControl,
@@ -14,7 +18,7 @@ import {
   ListItem,
   Radio,
   RadioGroup,
-  Typography,
+  Typography
 } from '@material-ui/core';
 import { useSnackbar } from 'notistack';
 
@@ -23,10 +27,14 @@ const Payment: React.ReactNode = () =>  {
   const classes = useStyles();
   const router = useRouter();
   const [paymentMethod, setPaymentMethod] = useState('');
-  const { state, dispatch } = useContext(StoreContext);
+  // const { state, dispatch } = useContext(StoreContext);
+
+  const dispatch = useDispatch();
+
   const {
     cart: { shippingAddress },
-  } = state;
+  } = useSelector(selectCartState);
+
   useEffect(() => {
     if (!shippingAddress?.address) {
       router.push('/shipping');
@@ -34,17 +42,20 @@ const Payment: React.ReactNode = () =>  {
       setPaymentMethod(Cookies.get('paymentMethod') || '');
     }
   }, []);
+console.log(paymentMethod)
   const submitHandler = (e: React.FormEvent) => {
     closeSnackbar();
     e.preventDefault();
     if (!paymentMethod) {
       enqueueSnackbar('Payment method is required', { variant: 'error' });
     } else {
-      dispatch({ type: actionTypes.SAVE_PAYMENT_METHOD, payload: paymentMethod });
+      dispatch(savePaymentMethod({paymentMethod}));
+     
       Cookies.set('paymentMethod', paymentMethod);
       router.push('/placeorder');
     }
   };
+  
   return (
     <Layout title="Payment Method">
       <CheckoutWizard activeStep={2}></CheckoutWizard>

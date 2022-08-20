@@ -1,52 +1,68 @@
-import React, { useContext } from "react";
-import { InferGetServerSidePropsType } from "next";
+// https://blog.logrocket.com/use-redux-next-js/
+// https://stackoverflow.com/questions/69798089/redux-saga-typeerror-cannot-read-properties-of-undefined-reading-data
 import {
-  Card,
+  Button, Card,
   CardActionArea,
   CardActions,
   CardContent,
   CardMedia,
   Grid,
-  Typography,
-  Button,
+  Typography
 } from "@material-ui/core";
-import NextLink from "next/link";
+import type { NextPage } from "next";
 import Layout from "../components/Layout";
-import Product, { IProduct } from "../models/Product";
-import db from "../utils/db";
+// import axios from "axios";
 import axios from 'axios';
+import Product from "models/Product";
+import { InferGetServerSidePropsType } from "next";
+import NextLink from "next/link";
 import { useRouter } from 'next/router';
-import { actionTypes, StoreContext } from '../utils/Store';
+import { useDispatch, useSelector } from "react-redux";
+import { additem, selectCartState } from "redux/cartSlice";
+import { IProduct } from "types/index";
+import db from "../utils/db";
+
+ 
+// import { wrapper } from "redux/store";
+// import "../styles/globals.css";
 
 
-const Home: React.ReactNode = ({
-  products,
+const Home: NextPage = ({
+  products ,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   
-  const router = useRouter();
-  const { state, dispatch } = useContext(StoreContext);
+  const router = useRouter()  
+  const {    cart: { cartItems }  } = useSelector(selectCartState);
+  const dispatch = useDispatch();
+  // const { state, dispatch } = useContext(StoreContext);
+  
   
   const addToCartHandler = async (product: IProduct) => {
-    const existItem = state.cart.cartItems.find((x) => x._id === product._id);
+    
+    const existItem = cartItems.find((x) => x._id === product._id);
     const quantity = existItem ? existItem.quantity + 1 : 1;
     const { data } = await axios.get(`/api/products/${product._id}`);
     if (data.countInStock < quantity) {
-      window.alert('Sorry. Product is out of stock');
+      window.alert('Sorry. Product is out of stock'); 
       return;
     }
-    dispatch({ type: actionTypes.CART_ADD_ITEM, payload: { ...product, quantity } });
-    router.push('/cart');
+   
+    dispatch(additem({  ...product, quantity  }))
+  
   };
+  
 
+   
   return (
+
     <Layout>
       <div>
         <h1>Products</h1>
         <Grid container spacing={3}>
           {products.map((product) => (
             <Grid item md={4} key={product.name}>
-              <NextLink href={`/product/${product.slug}`} passHref>
                 <Card>
+                  <NextLink href={`/product/${product.slug}`} passHref> 
                   <CardActionArea>
                     <CardMedia
                       component="img"
@@ -57,6 +73,8 @@ const Home: React.ReactNode = ({
                       <Typography>{product.name}</Typography>
                     </CardContent>
                   </CardActionArea>
+                  </NextLink>  
+
                   <CardActions>
                     <Typography>${product.price}</Typography>
                     <Button size="small"
@@ -66,12 +84,14 @@ const Home: React.ReactNode = ({
                     </Button>
                   </CardActions>
                 </Card>
-              </NextLink>
+                 
             </Grid>
           ))}
         </Grid>
       </div>
     </Layout>
+
+    
   );
 };
 
@@ -79,7 +99,7 @@ export default Home;
 
 export const getServerSideProps = async () => {
   await db.connect();
-  const products = await Product.find({}).lean();
+  const products : IProduct = await Product.find({}).lean();
   await db.disconnect();
   return {
     props: {
@@ -87,3 +107,5 @@ export const getServerSideProps = async () => {
     },
   };
 };
+ 
+ 

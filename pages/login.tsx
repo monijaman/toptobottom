@@ -14,29 +14,35 @@ import React, { useContext, useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import Layout from "../components/Layout";
 import { getError } from '../utils/error';
-import { actionTypes, StoreContext } from "../utils/Store";
+// import { actionTypes, StoreContext } from "../utils/Store";
 import useStyles from "../utils/styles";
 
-type UserSubmitForm = {
-  email: string;
-  password: string;
-};
+import { useDispatch, useSelector } from "react-redux";
+import {  selectCartState, userLogin } from 'redux/cartSlice';
+import { UserSubmitForm } from "types/index";
+
+
 
 const Login: React.ReactNode = () => {
   const {
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm();
+  } = useForm<FormData>();
+
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const router = useRouter();
   const redirect = router.query.redirect as string; // login?redirect=/shipping
-  const { state, dispatch } = useContext(StoreContext);
-  const { userInfo } = state;
+  // const { state, dispatch } = useContext(StoreContext);
+  // const { userInfo } = state;
+
+  const {    userInfo  }  = useSelector(selectCartState);
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (userInfo) {
-      router.push("/");
+      //router.push("/");
     }
   }, []);
   
@@ -53,7 +59,7 @@ const Login: React.ReactNode = () => {
 
       console.log(data);
 
-      dispatch({ type: actionTypes.USER_LOGIN, payload: data });
+      dispatch(userLogin(data));
       Cookies.set("userInfo", JSON.stringify(data));
       router.push(redirect || "/");
       

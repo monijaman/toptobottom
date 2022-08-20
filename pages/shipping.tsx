@@ -1,19 +1,20 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import {
-  List,
-  ListItem,
-  Typography,
-  TextField,
-  Button,
+  Button, List,
+  ListItem, TextField, Typography
 } from '@material-ui/core';
-import React, { useContext, useEffect } from 'react';
-import Layout from '../components/Layout';
-import useStyles from '../utils/styles';
 import Cookies from 'js-cookie';
+import { useRouter } from 'next/router';
+import React, { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import CheckoutWizard from '../components/CheckoutWizard';
-import { useRouter } from 'next/router';
-import { actionTypes, ShippingAddressType, StoreContext } from '../utils/Store';
+import Layout from '../components/Layout';
+// import { actionTypes, ShippingAddressType, StoreContext } from '../utils/Store';
+import useStyles from '../utils/styles';
+
+import { useDispatch, useSelector } from "react-redux";
+import { saveShippingAddress, selectCartState } from "redux/cartSlice";
+import { ShippingAddressType } from "types/index";
 
 const Shipping: React.ReactNode = () => {
   const {
@@ -23,11 +24,15 @@ const Shipping: React.ReactNode = () => {
     setValue,
   } = useForm();
   const router = useRouter();
-  const { state, dispatch } = useContext(StoreContext);
+  //const { state, dispatch } = useContext(StoreContext);
+ 
   const {
     userInfo,
     cart: { shippingAddress },
-  } = state;
+  }  = useSelector(selectCartState);
+ 
+  const dispatch = useDispatch();
+
   useEffect(() => {
     if (!userInfo) {
       router.push('/login?redirect=/shipping');
@@ -41,10 +46,8 @@ const Shipping: React.ReactNode = () => {
 
   const classes = useStyles();
   const submitHandler = ({ fullName, address, city, postalCode, country }: ShippingAddressType) => {
-    dispatch({
-      type: actionTypes.SAVE_SHIPPING_ADDRESS,
-      payload: { fullName, address, city, postalCode, country },
-    });
+    dispatch(saveShippingAddress( { fullName, address, city, postalCode, country }))
+    
     Cookies.set('shippingAddress', JSON.stringify({
       fullName,
       address,
@@ -52,7 +55,10 @@ const Shipping: React.ReactNode = () => {
       postalCode,
       country,
     }));
+    
     router.push('/payment');
+    
+ 
   };
   return (
     <Layout title="Shipping Address">
@@ -79,6 +85,7 @@ const Shipping: React.ReactNode = () => {
                   label="Full Name"
                   error={Boolean(errors.fullName)}
                   helperText={
+                    
                     errors.fullName
                       ? errors.fullName.type === 'minLength'
                         ? 'Full Name length is more than 1'

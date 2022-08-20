@@ -34,7 +34,7 @@ import Layout from "../components/Layout";
     };
     
     const removeItemHandler = (item: IProduct) => {
-        console.log(12121)
+        
         dispatch(removeitems({ item  }))
      
     };

@@ -18,8 +18,11 @@ import NextLink from "next/link";
 import React, { useContext } from "react";
 import useStyles from "../utils/styles";
 import Cookies from "js-cookie";
-import { StoreContext } from "../utils/Store";
+// import { StoreContext } from "../utils/Store";
 import { IAuthUser } from "../models/User";
+import { useDispatch, useSelector } from "react-redux";
+import {  selectCartState, userLogin } from "redux/cartSlice";
+
 
 interface Props {
   title?: string;
@@ -31,10 +34,11 @@ interface Props {
  *
  */
 const Layout: React.FC<Props> = ({ title, description, children }) => {
-  const router = useRouter();
-  const { state, dispatch } = useContext(StoreContext);
-  const { darkMode, cart, userInfo } = state;
-
+  const router = useRouter()  
+  const {    cart: { cartItems }, darkMode,  userInfo   } = useSelector(selectCartState);
+  // const { darkMode, cart, userInfo } = state;
+  const dispatch = useDispatch();
+  
   const theme = createTheme({
     typography: {
       h1: {
@@ -73,7 +77,7 @@ const Layout: React.FC<Props> = ({ title, description, children }) => {
   };
   const logoutClickHandler = () => {
     setAnchorEl(null);
-    dispatch({ type: "USER_LOGOUT" });
+    dispatch(userLogin());
     Cookies.remove("userInfo");
     Cookies.remove("cartItems");
     router.push("/");
@@ -102,10 +106,10 @@ const Layout: React.FC<Props> = ({ title, description, children }) => {
               <div>
                 <NextLink href="/cart" passHref>
                   <Link>
-                    {cart.cartItems.length > 0 ? (
+                    {cartItems.length > 0 ? (
                       <Badge
                         color="secondary"
-                        badgeContent={cart.cartItems.length}
+                        badgeContent={cartItems.length}
                       >
                         Cart
                       </Badge>

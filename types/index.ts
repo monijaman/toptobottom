@@ -1,7 +1,9 @@
-import { IProduct } from "models/Product";
-
-
-
+export type UserSubmitForm = {
+  name?: string;
+  email: string;
+  password: string;
+  confirmPassword?: string;
+};
 export interface IUser {
   name: string;
   email: string;
