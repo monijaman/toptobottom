@@ -149,11 +149,12 @@ useEffect(() => {
                  
             </Grid>
           ))}
+
+
         </Grid>
       </div>
-    </Layout>
-       
- 
+
+
       <Pagination
         count={pages}
         variant='outlined'
@@ -162,6 +163,9 @@ useEffect(() => {
         page={page}
         onChange={handlePaginationChange}
       />
+    </Layout>
+       
+ 
 
     </div>
   );

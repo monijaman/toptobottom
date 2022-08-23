@@ -9,6 +9,9 @@ handler.get(async (req, res) => {
   await db.connect();
   const products = await Product.find({});
   await db.disconnect();
+  const dataset:any = {};
+  dataset.results = products;
+  // dataset.info.count = 121;
   res.send(products);
 });
 

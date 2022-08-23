@@ -1,14 +1,16 @@
 import Container from "components/ui/Container"
 import { InferGetStaticPropsType } from 'next'
-import * as React from 'react'
+// import * as React from 'react'
 import AddPost from '../components/AddPost'
 import Post from '../components/Post'
 import { IPost } from '../types'
-const BASE_URL: string = 'https://jsonplaceholder.typicode.com/photos'
+// const BASE_URL: string = 'https://jsonplaceholder.typicode.com/photos'
+import React, { useEffect } from 'react'
+import styled from 'styled-components'
+import { Filters, ProductList, Sort, PageHero } from 'components'
 
+export default function IndexPage({ posts, }: InferGetStaticPropsType<typeof getStaticProps>) {
 
-export default function IndexPage({  posts,}: InferGetStaticPropsType<typeof getStaticProps>) {
-  
   const [postList, setPostList] = React.useState(posts)
 
   const addPost = async (e: React.FormEvent, formData: IPost) => {
@@ -19,7 +21,7 @@ export default function IndexPage({  posts,}: InferGetStaticPropsType<typeof get
       title: formData.title,
       body: formData.body,
     }
-    
+
     setPostList([post, ...postList])
   }
 
@@ -33,20 +35,20 @@ export default function IndexPage({  posts,}: InferGetStaticPropsType<typeof get
 
   return (
     <Container title='test'>
-    <main className='container'>
-      <h1>My posts</h1>
-      <AddPost savePost={addPost} />
-      {postList.map((post: IPost) => (
-        <Post key={post.id} deletePost={deletePost} post={post} />
-      ))}
-    </main>    
+      <main className='container'>
+        <h1>My posts</h1>
+        <AddPost savePost={addPost} />
+        {postList.map((post: IPost) => (
+          <Post key={post.id} deletePost={deletePost} post={post} />
+        ))}
+      </main>
     </Container>
   )
-  
+
 }
 
 export async function getStaticProps() {
-  const res = await fetch(BASE_URL)
+  // const res = await fetch(BASE_URL)
   const posts: IPost[] = await res.json()
 
   return {

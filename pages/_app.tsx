@@ -14,9 +14,14 @@ import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 import { SnackbarProvider } from "notistack";
 import { useEffect } from "react";
 import "../styles/globals.css";
-import { StoreProvider } from "../utils/Store";
+import "../styles/globals.scss";
+// import { StoreProvider } from "../utils/Store";
 
 import { wrapper } from "redux/store";
+
+
+ 
+import { useState } from "react";
 
 // function MyApp({ Component, pageProps }: AppProps) {
 
@@ -43,6 +48,8 @@ import { wrapper } from "redux/store";
  
 
 function MyApp({ Component, pageProps }: AppProps) {
+  
+
   useEffect(() => {
     const jssStyles = document.querySelector("#jss-server-side")!;
     if (jssStyles) {
@@ -51,12 +58,15 @@ function MyApp({ Component, pageProps }: AppProps) {
   }, []);
 //https://bobbyhadz.com/blog/react-type-children-has-no-properties-in-common
   return (
+   
+
     <SnackbarProvider anchorOrigin={{ vertical: "top", horizontal: "center" }}>
-      <StoreProvider>
         <PayPalScriptProvider deferLoading={true} options={{ "client-id": "test" }}>
-          <Component {...pageProps} />
-        </PayPalScriptProvider>
-      </StoreProvider>
+           
+              <Component {...pageProps} />
+              
+            
+        </PayPalScriptProvider>   
     </SnackbarProvider>
   );
 }

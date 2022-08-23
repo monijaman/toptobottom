@@ -12,7 +12,7 @@ import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
 import React, { useContext, useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
-import Layout from "../components/Layout";
+import Layout from "../components/Layout"; 
 import { getError } from '../utils/error';
 // import { actionTypes, StoreContext } from "../utils/Store";
 import useStyles from "../utils/styles";

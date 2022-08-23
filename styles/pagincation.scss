@@ -1,0 +1,193 @@
+$colorDark: #2e2e2e;
+$colorGrey100: #888888;
+$colorGrey300: #f4f4f4;
+$colorNegative: #ff421e;
+
+$spacingBase: 20px;
+$spacingXs: $spacingBase / 4;
+$spacingSm: $spacingBase / 2;
+$spacingLg: $spacingBase * 2;
+$spacingXl: $spacingBase * 3;
+$spacingXxl: $spacingBase * 5;
+
+$borderSize: 1px;
+$borderRadius: 10px;
+$iconSize: 20px;
+$disabledOpacity: 0.5;
+
+$transTimeBase: 250ms;
+$easeBase: cubic-bezier(0.73, 0.09, 0.21, 0.96);
+
+$buttonColor: $colorGrey100;
+$buttonBackground: transparent;
+$buttonFocusShadowColor: #eeeeee;
+$buttonHoverBackground: rgba($colorDark, 0.08);
+$buttonHoverColor: darken($colorGrey100, 20%);
+$buttonPadding: 8px;
+$buttonRadius: $borderRadius;
+
+$inputBackgroundColor: $colorGrey300;
+$inputTextColor: $colorDark;
+$inputPlaceholderColor: $colorGrey100;
+$inputOutlineColor: #eeeeee;
+$inputSpacingX: $spacingSm;
+$inputSpacingY: $spacingSm;
+$inputRadius: $borderRadius;
+
+html {
+	box-sizing: border-box;
+}
+* {
+	&,
+	&:before,
+	&:after {
+		box-sizing: inherit;
+	}
+}
+
+body {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	min-height: 100vh;
+}
+
+// Button
+.button {
+	display: inline-flex;
+	padding: $buttonPadding;
+	overflow: hidden;
+	cursor: pointer;
+
+	position: relative;
+
+	background: $buttonBackground;
+	border: none;
+	border-radius: $buttonRadius;
+
+	color: $buttonColor;
+	font-weight: 600;
+	text-decoration: none;
+
+	transition: $transTimeBase $easeBase background-color,
+		$transTimeBase $easeBase border-color, $transTimeBase $easeBase color,
+		$transTimeBase $easeBase opacity;
+
+	&:focus {
+		outline: 0;
+		box-shadow: 0 0 1px 3px $buttonFocusShadowColor;
+	}
+
+	&:active {
+		box-shadow: none;
+	}
+
+	&:disabled {
+		background: transparent;
+		opacity: $disabledOpacity;
+		cursor: not-allowed;
+	}
+
+	&:not(:disabled):hover {
+		background: rgba($colorDark, 0.08);
+		color: $buttonHoverColor;
+	}
+
+	&.textNegative {
+		color: $colorNegative;
+
+		&:hover {
+			color: $colorNegative;
+		}
+	}
+}
+
+// Icon
+.icon {
+	display: flex;
+	flex-shrink: 0;
+	width: $iconSize;
+	height: $iconSize;
+	fill: currentColor;
+
+	svg {
+		display: block;
+		width: 100%;
+		height: 100%;
+	}
+}
+
+// Input
+.input {
+	width: 40px;
+	max-width: 100%;
+	padding: $inputSpacingY $inputSpacingX;
+
+	background-color: $inputBackgroundColor;
+	border: 0;
+	border-radius: $inputRadius;
+	box-shadow: none; // remove native styles in Firefox
+
+	color: $inputTextColor;
+	font-weight: 600;
+	text-align: center;
+
+	&::placeholder {
+		color: $inputPlaceholderColor;
+		font-weight: 400;
+		opacity: 1;
+	}
+
+	&:focus {
+		outline: 0;
+		box-shadow: 0 0 1px 3px $inputOutlineColor;
+	}
+
+	&:disabled {
+		opacity: $disabledOpacity;
+		cursor: not-allowed;
+	}
+
+	// Hide arrows on number field
+	&[type="number"] {
+		appearance: textfield;
+	}
+	&[type="number"]::-webkit-outer-spin-button,
+	&[type="number"]::-webkit-inner-spin-button {
+		appearance: none;
+	}
+}
+
+//Pagination
+.pagination {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.text {
+	display: block;
+	margin: 0 $spacingSm;
+}
+
+.pageText {
+	@media only screen and (max-width: 375px) {
+		display: none;
+	}
+}
+
+.pageTitle {
+	position: absolute;
+	top: $spacingBase;
+	left: $spacingBase;
+	right: $spacingBase;
+	
+	text-align: center;
+}
+
+.currentPageLabel {
+	position: absolute;
+	bottom: $spacingBase;
+	left: $spacingBase;
+}
