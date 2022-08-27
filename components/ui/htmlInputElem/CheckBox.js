@@ -40,11 +40,7 @@ function CheckBox(props) {
 
     return (
         <div>
-            
-               
-                    {renderCheckboxLists()}
-               
-            
+            {renderCheckboxLists()}
         </div>
     )
 }

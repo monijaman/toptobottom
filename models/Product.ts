@@ -1,4 +1,7 @@
 import mongoose from "mongoose";
+// import { MongooseQueryLogger } from 'mongoose-query-logger';
+
+// export const queryLogger = new MongooseQueryLogger();
 
 const productSchema = new mongoose.Schema(
   {
@@ -17,6 +20,8 @@ const productSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+// productSchema.plugin(queryLogger.getPlugin());
 
 const Product =
   mongoose.models.Product || mongoose.model("Product", productSchema);

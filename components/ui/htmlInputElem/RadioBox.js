@@ -14,7 +14,7 @@ function RadioBox(props) {
         props.list &&  props.list.map((value) => (
            
             <FormControlLabel value={`${value._id}`} control={
-                 <Radio key={value._id} value={`${value._id}`}>{value.name}</Radio>} 
+                 <Radio key={value._id} value={`${value.array}`}>{value.name}</Radio>} 
                  label={value.name}  />           
         ))
     )

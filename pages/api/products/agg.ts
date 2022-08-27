@@ -44,50 +44,50 @@ handler.get(async (req, res) => {
       message: "Server Error",
     });
   }
-//   const products = await Product.find({});
+  //   const products = await Product.find({});
 
-// db.collection.aggregate( [
-// { $match : { score : { $gt : 70, $lte : 90 } } },
-// { $group: { _id: null, count: { $sum: 1 } } }
+  // db.collection.aggregate( [
+  // { $match : { score : { $gt : 70, $lte : 90 } } },
+  // { $group: { _id: null, count: { $sum: 1 } } }
 
-// ] );
+  // ] );
 
-// [
-//     { $match : { score : { $gt : 70, $lte : 90 } } },
-//     { $count: 'count' }
-//     ] 
-const currPage:number = req.query.page;
-const dataLimit:number = req.query.page;
+  // [
+  //     { $match : { score : { $gt : 70, $lte : 90 } } },
+  //     { $count: 'count' }
+  //     ] 
+  const currPage: number = req.query.page;
+  const dataLimit: number = req.query.page;
 
-const products = await Product.aggregate([
-    { $match : { price : { $gt : 70, $lte : 90 } } },
+  const products = await Product.aggregate([
+    { $match: { price: { $gt: 70, $lte: 90 } } },
     { $group: { _id: null, count: { $sum: 1 } } },
-    ] );
+  ]);
 
 
-//     const result = await Product.aggregate([
-//         { $match : { price : { $gt : 70, $lte : 90 } } },
-//      //   {$sort: {[sort]:order}},
-//    //     {$project: {password: 0, avatarData: 0, tokens: 0}},
-//         {$facet:{
-//             users: [{ $skip: +10 }, { $limit: +10}],
-//             totalCount: [
-//               {
-//                 $sum: 1 
-//               }
-//             ]
-//           }}
-//         ]);
-    //   console.log(JSON.stringify(result));
-    //   console.log(result[0]);
-    //  return res.status(200).json({users: result[0].users, total_count: result[0].totalCount[0].count});
+  //     const result = await Product.aggregate([
+  //         { $match : { price : { $gt : 70, $lte : 90 } } },
+  //      //   {$sort: {[sort]:order}},
+  //    //     {$project: {password: 0, avatarData: 0, tokens: 0}},
+  //         {$facet:{
+  //             users: [{ $skip: +10 }, { $limit: +10}],
+  //             totalCount: [
+  //               {
+  //                 $sum: 1 
+  //               }
+  //             ]
+  //           }}
+  //         ]);
+  //   console.log(JSON.stringify(result));
+  //   console.log(result[0]);
+  //  return res.status(200).json({users: result[0].users, total_count: result[0].totalCount[0].count});
 
   await db.disconnect();
-//   const dataset:any = {};
-//   dataset.results = products;
+  //   const dataset:any = {};
+  //   dataset.results = products;
   // dataset.info.count = 121;
-  return res.status(200).json({products: products, total_count: currPage});
-//   res.send(products);
+  return res.status(200).json({ products: products, total_count: currPage });
+  //   res.send(products);
 });
 
 export default handler;

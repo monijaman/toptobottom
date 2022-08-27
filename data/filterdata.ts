@@ -7,12 +7,12 @@ const price = [
     {
         "_id": 1,
         "name": "$0 to $199",
-        "array": [0, 199]
+        "array": [0, 100]
     },
     {
         "_id": 2,
         "name": "$200 to $249",
-        "array": [200, 249]
+        "array": [100, 250]
     },
     {
         "_id": 3,
@@ -33,39 +33,43 @@ const price = [
 
 
 
-const continents = [
+const category = [
     {
-        "_id": 1,
-        "name": "Africa"
+        "_id": "All",
+        "name": "All"
     },
     {
-        "_id": 2,
-        "name": "Europe"
+        "_id": "Shirts",
+        "name": "Shirts"
     },
     {
-        "_id": 3,
-        "name": "Asia"
+        "_id": "Pants",
+        "name": "Pants"
+    },
+    {
+        "_id": "Tshirt",
+        "name": "Tshirt"
     },
     {
         "_id": 4,
-        "name": "North America"
+        "name": "Night Gown"
     },
     {
-        "_id": 5,
-        "name": "South America"
+        "_id": "Sports",
+        "name": "Sports Wear"
     },
     {
-        "_id": 6,
-        "name": "Australia"
+        "_id": "Shoes",
+        "name": "Shoes"
     },
     {
         "_id": 7,
-        "name": "Antarctica"
+        "name": "Watch"
     }
 ]
 
 
 export {
     price,
-    continents
+    category
 }

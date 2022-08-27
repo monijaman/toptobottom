@@ -26,7 +26,8 @@ import ImageSlider from 'components/ui/htmlInputElem/ImageSlider';
 import CheckBox from 'components/ui/htmlInputElem/CheckBox';
 import RadioBox from 'components/ui/htmlInputElem/RadioBox';
 import SearchFeature from 'components/ui/htmlInputElem/SearchFeature';
-import { continents, price } from 'data/filterdata';
+import { category, price } from 'data/filterdata';
+const querystring = require('querystring');
 
 export default function paginationSSR({ pageNum }: props) {
   const { query } = useRouter();
@@ -44,11 +45,11 @@ export default function paginationSSR({ pageNum }: props) {
   // const { state, dispatch } = useContext(StoreContext);
   const [Skip, setSkip] = useState(0)
   const [Limit, setLimit] = useState(8)
-  const [PostSize, setPostSize] = useState()
+
   const [SearchTerms, setSearchTerms] = useState("")
 
   const [Filters, setFilters] = useState({
-    continents: [],
+    category: [],
     price: []
   })
 
@@ -59,7 +60,8 @@ export default function paginationSSR({ pageNum }: props) {
       limit: Limit,
     }
 
-    fecthIniPosts(variables)
+    // fecthIniPosts(variables)
+    getProducts()
 
   }, [])
 
@@ -98,7 +100,7 @@ export default function paginationSSR({ pageNum }: props) {
         setProducts(data);
         setLoading(false);
       } catch (error) {
-        console.log(error);
+        // console.log(error);
         setLoading(false);
         //  setError("Some error occured");
       }
@@ -123,7 +125,7 @@ export default function paginationSSR({ pageNum }: props) {
       setProducts(data);
       setLoading(false);
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       setLoading(false);
       //  setError("Some error occured");
     }
@@ -142,31 +144,70 @@ export default function paginationSSR({ pageNum }: props) {
 
   const showFilteredResults = (filters) => {
 
-    const variables = {
+
+    let filterQueryString = Object.keys(filters).map(key => key + '=' + filters[key]).join('&');
+
+    // const urlFilter = `?price[gte]=${newValue[0]}&price[lte]=${newValue[1]}`;
+
+    // setFilter(urlFilter);
+
+    // let conData = filters['continents'].join('OR')
+
+    // let restString = querystring.stringify(filters);
+
+    let queryParama = {
       skip: 0,
       limit: Limit,
-      filters: filters
-
+      page: pageNum,
+      price: filters['price'],
+      search: filters['searchTerm'],
+      category: filters['category'].join(',')
     }
-    getProducts(variables)
+ 
+    router.push({
+      pathname: '/',
+      query: queryParama
+    })
+
+    // router.push(queryString);
+    // router.push(`?${restString + filterQueryString}`, undefined, { shallow: true });
+    getProducts(queryParama)
     setSkip(0)
 
   }
 
-  const getProducts = (variables) => {
-    Axios.post('/api/product/agg/', variables)
-      .then(response => {
-        if (response.data.success) {
-          if (variables.loadMore) {
-            setProducts([...Products, ...response.data.products])
-          } else {
-            setProducts(response.data.products)
-          }
-          setPostSize(response.data.postSize)
-        } else {
-          alert('Failed to fectch product datas')
-        }
-      })
+  const getProducts = async (queryParama: any) => {
+    // const getProducts = (variables) => {
+    //const search = useLocation().search;
+
+    // console.log("here", router.query);
+    let qString = querystring.stringify(router.query);
+    // let queryString = querystring.stringify(variables);
+    // console.log(queryString)
+    setLoading(true);
+    const res = await fetch(`/api/products/filter?${qString}`);
+
+    const { data, pages: totalPages } = await res.json();
+
+    if (res.status == 200) {
+      setProducts(data);
+      setLoading(false);
+    }
+    // console.log(res.status)
+
+    // Axios.get('/api/products/filter/', variables)
+    //   .then(response => {
+    //     if (response.data.success) {
+    //       if (variables.loadMore) {
+    //         setProducts([...Products, ...response.data.products])
+    //       } else {
+    //         setProducts(response.data.products)
+    //       }
+    //       setPostSize(response.data.postSize)
+    //     } else {
+    //       alert('Failed to fectch product datas')
+    //     }
+    //   })
   }
 
   const handlePrice = (value) => {
@@ -179,22 +220,26 @@ export default function paginationSSR({ pageNum }: props) {
         array = data[key].array;
       }
     }
-    console.log('array', array)
+    // console.log('array', array)
     return array
   }
   const handleFilters = (filters, category) => {
 
+
+  
     const newFilters = { ...Filters }
 
     newFilters[category] = filters
 
-    if (category === "price") {
-      let priceValues = handlePrice(filters)
-      newFilters[category] = priceValues
+    if (category === "all") {
+     // let priceValues = handlePrice(filters)
+    //  newFilters[category] = priceValues
+
+    console.log(555555555555)
 
     }
 
-    console.log(newFilters)
+    // console.log(newFilters)
 
     showFilteredResults(newFilters)
     setFilters(newFilters)
@@ -215,22 +260,31 @@ export default function paginationSSR({ pageNum }: props) {
     getProducts(variables)
   }
 
+  const onLoadMore = () => {
+    let skip = Skip + Limit;
+
+    const variables = {
+      skip: skip,
+      limit: Limit,
+      loadMore: true,
+      filters: Filters,
+      searchTerm: SearchTerms
+    }
+    getProducts(variables)
+    setSkip(skip)
+  }
 
   return (
     <>
-
       <Layout>
-
-        {console.log(continents)}
         <h1>Products</h1>
-
         <Typography component="h2" variant="h2">Filter</Typography>
         <div>
-          Continents
+          categories
 
           <CheckBox
-            list={continents}
-            handleFilters={filters => handleFilters(filters, "continents")}
+            list={category}
+            handleFilters={filters => handleFilters(filters, "category")}
           />
         </div>
         <div>
@@ -244,7 +298,7 @@ export default function paginationSSR({ pageNum }: props) {
 
         <div>
           <SearchFeature
-            refreshFunction={updateSearchTerms}
+            refreshFunction={filters => handleFilters(filters, "searchTerm")}
           />
         </div>
 
