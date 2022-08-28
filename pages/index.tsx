@@ -29,7 +29,10 @@ import SearchFeature from 'components/ui/htmlInputElem/SearchFeature';
 import { category, price } from 'data/filterdata';
 const querystring = require('querystring');
 
-export default function paginationSSR({ pageNum }: props) {
+
+
+
+export default function paginationSSR({ pageNum, propCategory }: props) {
   const { query } = useRouter();
 
   const router = useRouter();
@@ -48,6 +51,7 @@ export default function paginationSSR({ pageNum }: props) {
 
   const [SearchTerms, setSearchTerms] = useState("")
 
+
   const [Filters, setFilters] = useState({
     category: [],
     price: []
@@ -59,6 +63,28 @@ export default function paginationSSR({ pageNum }: props) {
       skip: Skip,
       limit: Limit,
     }
+
+    // console.log(category)
+
+    // const newFilters = { ...Filters }
+    // newFilters[category] = filters    
+    
+    let propCat = propCategory.split(',');
+    
+    const newFilters = { ...Filters }
+    
+     newFilters['category'] = propCat;
+
+     showFilteredResults(newFilters)
+     setFilters(newFilters)
+
+     
+    if (category === "category"  && filters.includes('All')  ) {
+      // let catArray = newFilters[category];    
+    }    
+    
+     //   showFilteredResults(newFilters)
+        // setFilters(newFilters)
 
     // fecthIniPosts(variables)
     getProducts()
@@ -223,26 +249,29 @@ export default function paginationSSR({ pageNum }: props) {
     // console.log('array', array)
     return array
   }
-  const handleFilters = (filters, category) => {
 
+
+  const handleFilters = (chkFilters, category) => {
+
+    const newFilters = { ...Filters }
+ 
+     newFilters[category] = chkFilters
+// console.log(filters)
+    // console.log(filters.includes('All'));
+
+    if (category === "category"  && chkFilters.includes('All')  ) {
+      let catArray = newFilters[category];
 
   
-    const newFilters = { ...Filters }
-
-    newFilters[category] = filters
-
-    if (category === "all") {
      // let priceValues = handlePrice(filters)
     //  newFilters[category] = priceValues
 
-    console.log(555555555555)
-
     }
-
-    // console.log(newFilters)
 
     showFilteredResults(newFilters)
     setFilters(newFilters)
+      // console.log(Filters)
+      // console.log(newFilters)
   }
 
   const updateSearchTerms = (newSearchTerm) => {
@@ -281,10 +310,9 @@ export default function paginationSSR({ pageNum }: props) {
         <Typography component="h2" variant="h2">Filter</Typography>
         <div>
           categories
-
           <CheckBox
-            list={category}
-            handleFilters={filters => handleFilters(filters, "category")}
+            list={category} selectedChk={Filters['category']}
+            handleFilters={chkFilters => handleFilters(chkFilters, "category")}
           />
         </div>
         <div>
@@ -353,7 +381,11 @@ export default function paginationSSR({ pageNum }: props) {
 
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  var pageNum = parseInt(context.query["page"]) || 1;
+  let pageNum = parseInt(context.query["page"]) || 1;
+  let prpSearch = context.query["search"].toString() || "";
+  let propCategory =  (context.query["category"]).toString() || "all";
+  let prpLimit = parseInt(context.query["limit"]) || 8;
+  let prpSkip = parseInt(context.query["skip"]) || 0;
 
   // In this example, we might call a database or an API with given ID from the query parameters
   // I'll call a fake API to get the players name from a fake database
@@ -368,11 +400,15 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   // const products  = await Product.find({}).lean();
   // await db.disconnect();
 
-
+ 
 
   return {
     props: {
       pageNum,
+      prpSearch,
+      propCategory,
+      prpLimit,
+      prpSkip
       // products: products.map(db.convertDocToObj), 
     },
   };

@@ -51,7 +51,7 @@ const category = [
         "name": "Tshirt"
     },
     {
-        "_id": 4,
+        "_id": "Gown",
         "name": "Night Gown"
     },
     {
@@ -63,7 +63,7 @@ const category = [
         "name": "Shoes"
     },
     {
-        "_id": 7,
+        "_id": "Watch",
         "name": "Watch"
     }
 ]

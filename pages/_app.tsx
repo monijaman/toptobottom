@@ -49,26 +49,39 @@ import { useState } from "react";
 
 function MyApp({ Component, pageProps }: AppProps) {
   
+  const [showing, setShowing] = useState(false);
 
   useEffect(() => {
+    setShowing(true);
+
     const jssStyles = document.querySelector("#jss-server-side")!;
     if (jssStyles) {
       jssStyles.parentElement?.removeChild(jssStyles);
     }
   }, []);
-//https://bobbyhadz.com/blog/react-type-children-has-no-properties-in-common
-  return (
-   
 
-    <SnackbarProvider anchorOrigin={{ vertical: "top", horizontal: "center" }}>
-        <PayPalScriptProvider deferLoading={true} options={{ "client-id": "test" }}>
-           
-              <Component {...pageProps} />
-              
+  if (!showing) {
+    return null;
+  }
+
+
+
+  if (typeof window === 'undefined') {
+    return <></>;
+  } else {
+    return (
+      <SnackbarProvider anchorOrigin={{ vertical: "top", horizontal: "center" }}>
+      <PayPalScriptProvider deferLoading={true} options={{ "client-id": "test" }}>
+         
+            <Component {...pageProps} />
             
-        </PayPalScriptProvider>   
-    </SnackbarProvider>
-  );
+          
+      </PayPalScriptProvider>   
+  </SnackbarProvider>
+    );
+  }
+//https://bobbyhadz.com/blog/react-type-children-has-no-properties-in-common
+ 
 }
 
 
