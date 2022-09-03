@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
-// import { MongooseQueryLogger } from 'mongoose-query-logger';
+import { MongooseQueryLogger } from 'mongoose-query-logger';
 
-// export const queryLogger = new MongooseQueryLogger();
+export const queryLogger = new MongooseQueryLogger();
 
 const productSchema = new mongoose.Schema(
   {
@@ -21,7 +21,7 @@ const productSchema = new mongoose.Schema(
   }
 );
 
-// productSchema.plugin(queryLogger.getPlugin());
+productSchema.plugin(queryLogger.getPlugin());
 
 const Product =
   mongoose.models.Product || mongoose.model("Product", productSchema);

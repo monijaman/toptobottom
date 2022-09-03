@@ -3,14 +3,12 @@ import Pagination from "@material-ui/lab/Pagination";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import {
-  CircularProgress,
   Button, Card,
   CardActionArea,
   CardActions,
   CardContent,
   CardMedia,
   Grid,
-  makeStyles,
   Typography
 } from "@material-ui/core";
 import type { NextPage } from "next";
@@ -29,37 +27,14 @@ import CheckBox from 'components/ui/htmlInputElem/CheckBox';
 import RadioBox from 'components/ui/htmlInputElem/RadioBox';
 import SearchFeature from 'components/ui/htmlInputElem/SearchFeature';
 import { categories, price } from 'data/filterdata';
-import axios from "axios";
 const querystring = require('querystring');
 
 
-const useStyles = makeStyles({
-  root: {
-    marginTop: 20,
-  },
-  loader: {
-    width: "100%",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  paper: {
-    marginBottom: "1rem",
-    padding: "13px",
-  },
-  filters: {
-    padding: "0 1.5rem",
-  },
-  priceRangeInputs: {
-    display: "flex",
-    justifyContent: "space-between",
-  },
-});
 
 
-export default function paginationSSR({ pageNum, propCategory, prpPrice, prpSearch, prpLimit }: props) {
+export default function paginationSSR({ pageNum, propCategory,prpPrice, prpSearch }: props) {
   const { query } = useRouter();
-  const classes = useStyles();
+
   const router = useRouter();
   const [pageNumber, setPageNumber] = useState(parseInt(query.page) || 1);
 
@@ -67,12 +42,12 @@ export default function paginationSSR({ pageNum, propCategory, prpPrice, prpSear
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [page, setPage] = useState(pageNumber);
-  const [pages, setPages] = useState(0);
+  const [pages, setPages] = useState(1);
   const { cart: { cartItems } } = useSelector(selectCartState);
   const dispatch = useDispatch();
   // const { state, dispatch } = useContext(StoreContext);
   const [Skip, setSkip] = useState(0)
-  const [Limit, setLimit] = useState(2)
+  const [Limit, setLimit] = useState(8)
 
   const [SearchTerms, setSearchTerms] = useState(prpSearch)
 
@@ -82,23 +57,41 @@ export default function paginationSSR({ pageNum, propCategory, prpPrice, prpSear
     price: []
   })
 
-
-
   useEffect(() => {
 
+    const variables = {
+      skip: Skip,
+      limit: Limit,
+    }
+
+    // console.log(category)
+
+    // const newFilters = { ...Filters }
+    // newFilters[category] = filters    
+    
     let propCat = propCategory.split(',');
+
+   
     const newFilters = { ...Filters }
     newFilters['category'] = propCat;
     newFilters['price'] = prpPrice;
 
+     showFilteredResults(newFilters)
+     setFilters(newFilters)
 
-    setFilters(newFilters)
-    showFilteredResults(newFilters)
+     
+    // if (category === "category"  && filters.includes('All')  ) {
+      // let catArray = newFilters[category];    
+    // }    
+    
+     //   showFilteredResults(newFilters)
+        // setFilters(newFilters)
+
+    // fecthIniPosts(variables)
+    getProducts()
 
   }, [])
 
-
-  /* Add products to cart  */
   const addToCartHandler = async (product: IProduct) => {
 
     const existItem = cartItems.find((x) => x._id === product._id);
@@ -114,98 +107,207 @@ export default function paginationSSR({ pageNum, propCategory, prpPrice, prpSear
   };
 
 
-  /* Invoked when pagination button is called */
-  const handlePaginationChange = async (e: React.ChangeEvent<HTMLInputElement>, value: any) => {
-    setLoading(true);
-    setPageNumber(parseInt(value));
 
-    router.query.page = value;
+  function handlePaginationChange(e: React.ChangeEvent<HTMLInputElement>, value: any) {
 
-    let qString = querystring.stringify(router.query);
-
-    const res = await fetch(`/api/products/filter?${qString}`);
-
-    const { data, pages: pages } = await res.json();
+    //const [pageNumber, setPageNumber] = useState(parseInt(value));
 
     setPage(value);
-    setPages(pages);
-    setProducts(data);
-    setLoading(false);
+    router.push(`ptest/?page=${value}`, undefined, { shallow: true });
 
-    router.push(`/?${qString}`, undefined, { shallow: true });
+
+    const fecthPosts = async () => {
+      setLoading(true);
+      try {
+        const res = await fetch(`/api/products/agg/?page=${value}`);
+
+        const { data, pages: totalPages } = await res.json();
+
+        setPages(totalPages);
+        setProducts(data);
+        setLoading(false);
+      } catch (error) {
+        // console.log(error);
+        setLoading(false);
+        //  setError("Some error occured");
+      }
+    };
+
+    fecthPosts();
 
   }
- 
-/* Response according handleFilters function or on load with useeffect */
+
+  const fecthIniPosts = async () => {
+
+    // router.push(`ptest/?page=1`, undefined, { shallow: true });
+
+    setLoading(true);
+    //console.log({page})
+    try {
+      const res = await fetch(`/api/products/agg/?page=${pageNum}}`);
+
+      const { data, pages: totalPages } = await res.json();
+
+      setPages(totalPages);
+      setProducts(data);
+      setLoading(false);
+    } catch (error) {
+      // console.log(error);
+      setLoading(false);
+      //  setError("Some error occured");
+    }
+
+  }
+
+
+
+
+  // useEffect(() => {
+  //   // console.log(' useeffect '+query.page)
+  //   fecthIniPosts();
+  // }, []);
+
+
+
   const showFilteredResults = (filters) => {
 
+    
     // alert(JSON.stringify(filters, null, 4))
-    setPage(1);
-    setSkip(0)
+    // let filterQueryString = Object.keys(filters).map(key => key + '=' + filters[key]).join('&');
+
+    // const urlFilter = `?price[gte]=${newValue[0]}&price[lte]=${newValue[1]}`;
+
+    // setFilter(urlFilter);
+
+    // let conData = filters['continents'].join('OR')
+
+    // let restString = querystring.stringify(filters);
+    // alert(JSON.stringify(filters, null, 4))
     let queryParama = {
-      skip: Skip,
+      skip: 0,
       limit: Limit,
       page: pageNum,
       price: filters['price'],
       search: filters['search'],
       category: filters['category'].join(',')
     }
-
     getProducts(queryParama)
-
+   
+    
     router.push({
       pathname: '/',
       query: queryParama
     })
 
+    // router.push(queryString);
+    // router.push(`?${restString + filterQueryString}`, undefined, { shallow: true });
+ 
+    
+    setSkip(0)
+
   }
 
-  /* Get all data and set url query string */
   const getProducts = async (queryParama: any) => {
 
     let qString = querystring.stringify(queryParama);
-    // alert(JSON.stringify(queryParama, null, 4) + "getproducts")
+   
     setLoading(true);
     const res = await fetch(`/api/products/filter?${qString}`);
 
-    const { data, pages: pages } = await res.json();
-    setPages(pages)
-   
+    const { data, pages: totalPages } = await res.json();
 
     if (res.status == 200) {
       setProducts(data);
       setLoading(false);
-     
-    } else {
-      setLoading(false);
-      setProducts([]);
     }
+    // console.log(res.status)
 
+    // Axios.get('/api/products/filter/', variables)
+    //   .then(response => {
+    //     if (response.data.success) {
+    //       if (variables.loadMore) {
+    //         setProducts([...Products, ...response.data.products])
+    //       } else {
+    //         setProducts(response.data.products)
+    //       }
+    //       setPostSize(response.data.postSize)
+    //     } else {
+    //       alert('Failed to fectch product datas')
+    //     }
+    //   })
   }
- 
 
-/* Functionaltiyr for controlling checkbox, radio and search */
+  const handlePrice = (value) => {
+    const data = price;
+    let array = [];
+
+    for (let key in data) {
+
+      if (data[key]._id === parseInt(value, 10)) {
+        array = data[key].array;
+      }
+    }
+    // console.log('array', array)
+    return array
+  }
+
+
   const handleFilters = (selFilters, filterType) => {
 
     const newFilters = { ...Filters }
-    //  alert(JSON.stringify(selFilters, null, 4))
-
-
-    if (filterType == "searchTerm") {
+  //  alert(JSON.stringify(selFilters, null, 4))
+    
+    // newFilters['price'] = prpPrice;
+    if(filterType=="searchTerm"){
+      
+      // setSearchTerms(selFilters)
       newFilters['search'] = selFilters
-    } else if (filterType === "category") {
+
+  
+    }else if(filterType === "category"){ 
+   //   alert(JSON.stringify(newFilters, null, 4))
       newFilters['category'] = selFilters
-    } else if (filterType === "price") {
+      
+    }else if (filterType === "price") {
+     
       newFilters['price'] = selFilters
     }
 
 
     showFilteredResults(newFilters)
     setFilters(newFilters)
+    //  alert(JSON.stringify(newFilters, null, 4))
+ 
   }
 
- 
+  const updateSearchTerms = (newSearchTerm) => {
 
+    const variables = {
+      skip: 0,
+      limit: Limit,
+      filters: Filters,
+      searchTerm: newSearchTerm
+    }
+
+    setSkip(0)
+    setSearchTerms(newSearchTerm)
+
+    getProducts(variables)
+  }
+
+  const onLoadMore = () => {
+    let skip = Skip + Limit;
+
+    const variables = {
+      skip: skip,
+      limit: Limit,
+      loadMore: true,
+      filters: Filters,
+      searchTerm: SearchTerms
+    }
+    getProducts(variables)
+    setSkip(skip)
+  }
 
   return (
     <>
@@ -227,23 +329,16 @@ export default function paginationSSR({ pageNum, propCategory, prpPrice, prpSear
             handleFilters={rdoFilters => handleFilters(rdoFilters, "price")}
           />
         </div>
+
         <div>
           <SearchFeature
             searchTrm={prpSearch}
             refreshFunction={filters => handleFilters(filters, "searchTerm")}
           />
         </div>
- 
+
         <Grid container spacing={3}>
-          {loading && (
-          <div className={classes.loader}>
-            <CircularProgress size="3rem" thickness={5} />
-          </div>
-        ) }
- 
-          {products.length > 0? 
-          
-          (products.map((product) => (
+          {products.map((product) => (
             <Grid item md={4} key={product.name}>
               <Card>
                 <NextLink href={`/product/${product.slug}`} passHref>
@@ -270,12 +365,7 @@ export default function paginationSSR({ pageNum, propCategory, prpPrice, prpSear
               </Card>
 
             </Grid>
-          )))
-          : 
-          
-          <h2>No Data</h2>
-          
-          }
+          ))}
         </Grid>
 
       </Layout>
@@ -298,13 +388,13 @@ export default function paginationSSR({ pageNum, propCategory, prpPrice, prpSear
 
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  let pageNum = context.query["page"] ? parseInt(context.query["page"]) : 1;
+  let pageNum =context.query["page"] ? parseInt(context.query["page"]) : 1;
   let prpSearch = context.query["search"] ? context.query["search"].toString() : "";
-  let propCategory = context.query["category"] ? (context.query["category"]).toString() : "all";
-  let prpPrice = context.query["price"] ? (context.query["price"]).toString() : "any";
+  let propCategory =  context.query["category"] ? (context.query["category"]).toString() : "all";
+  let prpPrice= context.query["price"] ? (context.query["price"]).toString() : "all";
   let prpLimit = context.query["limit"] ? parseInt(context.query["limit"]) : 8;
   let prpSkip = context.query["skip"] ? parseInt(context.query["skip"]) : 0;
-
+  
 
   // In this example, we might call a database or an API with given ID from the query parameters
   // I'll call a fake API to get the players name from a fake database
@@ -319,7 +409,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   // const products  = await Product.find({}).lean();
   // await db.disconnect();
 
-
+ 
 
   return {
     props: {

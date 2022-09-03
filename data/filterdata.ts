@@ -2,17 +2,17 @@ const price = [
     {
         "_id": 0,
         "name": "Any",
-        "array": []
+        "array": ['any']
     },
     {
         "_id": 1,
         "name": "$0 to $199",
-        "array": [0, 100]
+        "array": [0, 199]
     },
     {
         "_id": 2,
         "name": "$200 to $249",
-        "array": [100, 250]
+        "array": [200, 250]
     },
     {
         "_id": 3,
@@ -27,13 +27,13 @@ const price = [
     {
         "_id": 5,
         "name": "More than $300",
-        "array": [300, 1500000]
+        "array": [300, 99999999]
     }
 ]
 
 
 
-const category = [
+const categories = [
     {
         "_id": "All",
         "name": "All"
@@ -71,5 +71,5 @@ const category = [
 
 export {
     price,
-    category
+    categories
 }

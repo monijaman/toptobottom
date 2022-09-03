@@ -5,7 +5,7 @@ import Input from '@mui/material/Input';
 
 function SearchFeature(props) {
 
-    const [SearchTerms, setSearchTerms] = useState("")
+    const [SearchTerms, setSearchTerms] = useState(props.searchTrm)
 
     const onChangeSearch = (event) => {
         setSearchTerms(event.currentTarget.value)
