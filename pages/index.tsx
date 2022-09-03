@@ -1,7 +1,8 @@
-import { useQuery, dehydrate, QueryClient } from "react-query";
+import styles from "./index.module.scss";
 import Pagination from "@material-ui/lab/Pagination";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
+import Head from "next/head";
 import {
   CircularProgress,
   Button, Card,
@@ -210,6 +211,26 @@ export default function paginationSSR({ pageNum, propCategory, prpPrice, prpSear
   return (
     <>
       <Layout>
+      <div className={styles.container}>
+        <Head>
+          <title>Cart Page</title>
+          <link rel="icon" href="/favicon.ico" />
+        </Head>
+
+        <main className={styles.main}>
+          <div className={styles.header}>
+            <h1 className={styles.title}>
+              <span className={styles.emoji}>⚡</span>New In
+            </h1>
+            <div className={styles.headerButtons}>
+              <Button type="sort" style={{ marginRight: 20 }} />
+              <Button count={0} />
+            </div>
+          </div>
+
+           
+        </main>
+
         <h1>Products</h1>
 
         <Typography component="h2" variant="h2">Filter</Typography>
@@ -277,7 +298,7 @@ export default function paginationSSR({ pageNum, propCategory, prpPrice, prpSear
           
           }
         </Grid>
-
+        </div>
       </Layout>
 
 
