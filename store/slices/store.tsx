@@ -7,7 +7,7 @@ import {
 import authSlice from './slices/authSlice';
 import cartSlice from './slices/cartSlice';
 import userSlice from './slices/userSlice';
-
+import filterSlice from './slices/filterSlice';
 /**
  * Creates a store and includes all the slices as reducers.
  */
@@ -15,7 +15,8 @@ export const store = configureStore({
   reducer: {
     user: userSlice,
     auth:authSlice,
-    cart:cartSlice
+    cart:cartSlice,
+    filterRed:filterSlice
   },
 });
 

@@ -31,6 +31,15 @@ export interface IProduct {
   updatedAt?: string;
 }
 
+export interface  queryParamType {
+  skip: number;
+  limit: number;
+  page: number;
+  price?: number;
+  search?: string;
+  category?: string;
+}
+
 
 export interface IAuthUser extends IUser {
   token: string;
