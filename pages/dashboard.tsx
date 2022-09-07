@@ -7,7 +7,7 @@ import { useEffect } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { getUserState } from '../store/slices/userSlice';
-import { useDispatch, useSelector } from '../store/store';
+import { useDispatch, useSelector } from 'store/store';
 import styles from '../styles/Home.module.css';
 
 let userStorageInfo:string|null;

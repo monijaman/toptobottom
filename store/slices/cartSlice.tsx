@@ -74,6 +74,7 @@ export const getProducts = createAsyncThunk(
       state.name = action.payload;
     }
   },
+  
   extraReducers: (builder) => {
     builder
     .addCase(getProducts.pending, (state) => {

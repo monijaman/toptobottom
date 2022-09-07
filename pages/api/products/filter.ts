@@ -12,7 +12,7 @@ handler.get(async (req, res) => {
   try {
 
     const search = req.query.search || "";
-    let category = req.query.category || "all";
+    let category = req.query['category[]'] || "all";
     const page = parseInt(req.query.page) || 1;
     const pageSize = parseInt(req.query.limit) || 2;
     const priceSelected = req.query.price || 'any';
@@ -20,7 +20,7 @@ handler.get(async (req, res) => {
     let selcategory = []
     let selPriceArray = []
     // let query = Product.find({ name: { $regex: search, $options: "i" } });
-   
+    
     let min = 0
     let max = 999999999999
 
@@ -30,14 +30,15 @@ handler.get(async (req, res) => {
       max = prices[1]  
      }  
 
-     console.log(priceSelected)
+  
+
+    //  console.log(priceSelected)
 
   if(category=='all'){
-    selcategory = categories.map(catName => catName._id);
-  }else{
-    selcategory = category.split(",")
-  }
-   
+    category = categories.map(catName => catName._id);
+  } 
+  // console.log(category)
+ 
 
     // category = "Shirts";
     let query = Product.find({
@@ -49,9 +50,10 @@ handler.get(async (req, res) => {
       // category: { $regex: category, $options: "i" } 
     });
 
-  
+ 
+    const total = 6;
     
-    const total = await Product.countDocuments({
+    await Product.countDocuments({
       $or: [
         { name: { $regex: search, $options: "i" } },
         { brand: { $regex: search, $options: "i" } }
@@ -60,9 +62,9 @@ handler.get(async (req, res) => {
       // category: { $regex: category, $options: "i" } 
     })
       .where("category")
-      .in([...selcategory]);
+      .in(category);
 
-  
+ 
     const pages = Math.ceil(total / pageSize);
 
     if (page > pages) {
@@ -76,7 +78,7 @@ handler.get(async (req, res) => {
     // console.log('category', selcategory)
     query = query
       .where("category")
-      .in([...selcategory])
+      .in(category)
       .skip(skip)
       .limit(pageSize);
     
@@ -86,7 +88,7 @@ handler.get(async (req, res) => {
     await db.disconnect();
 
       res.status(200).json({
-      category: selPriceArray,
+      category: category,
       status: "success",
       count: total,
       page,

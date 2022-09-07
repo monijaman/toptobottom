@@ -6,7 +6,7 @@ import styles from "./header.module.scss";
 import SearchIcon from "../icons/search";
 import CartIcon from "../icons/cart";
 import ArrowIcon from "../icons/arrow";
-
+import SearchFeature from 'components/ui/htmlInputElem/SearchFeature';
  
 // import { useCart } from "hooks/cart.hook";
 import { useRouter } from "next/router";
@@ -81,19 +81,9 @@ export default function Header() {
           fill="grey"
           className={styles.searchIcon}
         />
-        <form
-          onSubmit={() =>
-            input &&
-            typeof window !== "undefined" &&
-            router.push(`/search/${input}`)
-          }
-        >
-          <input
-            className={styles.searchInput}
-            placeholder="Search for products, brands and more... "
-            onChange={(e) => setInput(e.target.value)}
-          />
-        </form>
+ 
+        
+            <SearchFeature    />
       </div>
       <div className={styles.rightContent}>
         <Link href="/cart">

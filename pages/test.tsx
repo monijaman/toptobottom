@@ -2,16 +2,16 @@ import styles from "./index.module.scss";
 import HorizontalCard from "components/HomeCard/horizontal-card";
 import VerticalCard from "components/HomeCard/vertical-card";
 import Products from "components/HomeProducts";
- 
+
 import Button from "components/FilterButton";
- 
+
 import Pagination from "@material-ui/lab/Pagination";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import {
   CircularProgress,
-   Card,
+  Card,
   CardActionArea,
   CardActions,
   CardContent,
@@ -28,7 +28,7 @@ import Product from "models/Product";
 import { InferGetServerSidePropsType } from "next";
 import NextLink from "next/link";
 import { useDispatch, useSelector } from "react-redux";
-import { additem, selectCartState } from "redux/cartSlice";
+
 import { IProduct } from "types/index";
 import db from "../utils/db";
 import ImageSlider from 'components/ui/htmlInputElem/ImageSlider';
@@ -38,36 +38,142 @@ import SearchFeature from 'components/ui/htmlInputElem/SearchFeature';
 import { categories, price } from 'data/filterdata';
 import axios from "axios";
 const querystring = require('querystring');
- 
+
+import { getProducts, selectFilterState } from "redux/filterSlice";
+
+
+const useStyles = makeStyles({
+  root: {
+    marginTop: 20,
+  },
+  loader: {
+    width: "100%",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  paper: {
+    marginBottom: "1rem",
+    padding: "13px",
+  },
+  filters: {
+    padding: "0 1.5rem",
+  },
+  priceRangeInputs: {
+    display: "flex",
+    justifyContent: "space-between",
+  },
+});
+
 
 export default function paginationSSR({ pageNum, propCategory, prpPrice, prpSearch, prpLimit }: props) {
-      
 
+  const dispatch = useDispatch();
+
+
+  const { query } = useRouter();
+  const classes = useStyles();
+  const router = useRouter();
+  const [pageNumber, setPageNumber] = useState(parseInt(query.page) || 1);
+
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
+  const [page, setPage] = useState(pageNumber);
+  const [pages, setPages] = useState(0);
+
+  // const {  { isError, isSuccess } } = useSelector(selectFilterState);
+
+  const { isLoading, isError, isSuccess, dataSet }
+    = useSelector(selectFilterState)
+
+ 
+  // const { state, dispatch } = useContext(StoreContext);
+  const [Skip, setSkip] = useState(0)
+  const [Limit, setLimit] = useState(2)
+
+  const [SearchTerms, setSearchTerms] = useState(prpSearch)
+
+
+  useEffect(() => {
+    // dispatch(updateFilter())
+   
+    dispatch(getProducts())
+
+  }, [])
+
+ 
   return (
     <>
       <Layout>
-      <div className={styles.container}>
-        <Head>
-          <title>Create Next App</title>
-          <link rel="icon" href="/favicon.ico" />
-        </Head>
+        <div className={styles.container}>
+          <Head>
+            <title>Create Next App</title>
+            <link rel="icon" href="/favicon.ico" />
+          </Head>
 
-        <main className={styles.main}>
-          <div className={styles.header}>
-            <h1 className={styles.title}>
-              <span className={styles.emoji}>⚡</span>New In
-            </h1>
-            <div className={styles.headerButtons}>
-              <Button type="sort" style={{ marginRight: 20 }} />
-              <Button count={0} />
+          <main className={styles.main}>
+            <div className={styles.header}>
+              <h1 className={styles.title}>
+                <span className={styles.emoji}>⚡</span>New In
+              </h1>
+              <div className={styles.headerButtons}>
+                <Button type="sort" style={{ marginRight: 20 }} />
+                <Button count={0} />
+              </div>
             </div>
+            <Grid container spacing={3}>
+       {loading && (
+          <div className={classes.loader}>
+            <CircularProgress size="3rem" thickness={5} />
           </div>
+        ) }
 
-          <Products>
+          {dataSet.length > 0 ?   
+
+          (dataSet.map((product) => (
+          
+            <Grid item md={4} key={product.name}>
+              <Card>
+                <NextLink href={`/product/${product.slug}`} passHref>
+                  <CardActionArea>
+                    <CardMedia
+                      component="img"
+                      image={product.image}
+                      title={product.name}
+                    ></CardMedia>
+                    <CardContent>
+                      <Typography>{product.name}</Typography>
+                    </CardContent>
+                  </CardActionArea>
+                </NextLink>
+
+                <CardActions>
+                  <Typography>${product.price}</Typography>
+                  <Button size="small"
+                    color="primary"
+                    onClick={() => addToCartHandler(product as IProduct)}>
+                    Add to cart
+                  </Button>
+                </CardActions>
+              </Card>
+
+            </Grid>
+          ))) : (
+           
+          <div>
+           <h2>Sorry no data</h2>
+          </div>
+      
+            )}
+   </Grid>
+
+          {/*    < Products >
             <HorizontalCard
               bgColor="#BCE7F0"
               title="Get up to 50% off"
               image="https://i.ibb.co/wL3nWkm/Pngtree-memphis-style-line-point-line-3797599.png"
+              
             />
             <HorizontalCard
               bgColor="#dec8f3"
@@ -143,7 +249,7 @@ export default function paginationSSR({ pageNum, propCategory, prpPrice, prpSear
               image="https://i.ibb.co/dtDfmFL/Kisspng-megan-fox-april-o-neil-teenage-mutant-ninja-turtle-april-5ac7c931c3d7f9-94147347152304260980.png"
               price="150"
             />
-          </Products>
+          </Products> */}
         </main>
       </div>
     </Layout>

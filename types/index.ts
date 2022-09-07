@@ -35,9 +35,10 @@ export interface  queryParamType {
   skip: number;
   limit: number;
   page: number;
-  price?: number;
+  totalPage:number;
   search?: string;
-  category?: string;
+  category?: string[];
+  price?: string[];
 }
 
 
@@ -95,8 +96,6 @@ export interface Actions {
   payload?: IProduct | IAuthUser | ShippingAddressType | string;
 }
 
-
- 
 
 
 export interface IPost {

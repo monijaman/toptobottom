@@ -33,6 +33,7 @@ export type ContextType = {
  const paymentCookie:string = Cookies.get("paymentMethod");
  const userCookie:string = Cookies.get("userInfo");
 // console.log(shippingCookie) 
+
 const initialState: cartState = {
   darkMode: Cookies.get("darkMode") === "ON" ? true : false,
 
@@ -41,8 +42,8 @@ const initialState: cartState = {
     shippingAddress: shippingCookie ? JSON.parse(shippingCookie): {},
     paymentMethod: paymentCookie ? paymentCookie: "",
   },
-
-  userInfo: userCookie  ? JSON.parse(userCookie!) : null,
+  //  userInfo: userCookie  ? userCookie : null,
+  userInfo: userCookie  ? userCookie : null,
   authState: false,
 };
 
@@ -78,7 +79,7 @@ export const cartSlice = createSlice({
           const existItem = state.cart.cartItems.find(
             (item) => item._id === newItem._id
           );          
-          
+       
           const cartItems = existItem
             ? state.cart.cartItems.map((item) =>
                 item.name === existItem.name ? newItem : item

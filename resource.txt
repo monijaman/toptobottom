@@ -18,3 +18,8 @@ const firebaseConfig = {
 
 
 https://blog.logrocket.com/using-styled-components-in-typescript-a-tutorial-with-examples/
+
+
+https://npm.io/package/@brajevicm/next-redux-wrapper
+
+https://codesandbox.io/examples/package/next-redux-wrapper

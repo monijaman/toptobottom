@@ -3,60 +3,85 @@ import React, { useState, useEffect } from 'react'
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Box from '@mui/material/Box';
+import FormGroup from '@mui/material/FormGroup';
+import { selectFilterState, updatFilter, getProducts } from "redux/filterSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 function CheckBox(props) {
 
-    const [Checked, setChecked] = useState(props.selectedChk.split(","))
+    const dispatch = useDispatch();
+    const { pagination }
+        = useSelector(selectFilterState)
 
-    const handleToggle = (value) => {
+    const slectedCat = pagination.category
+    const [Checked, setChecked] = useState(slectedCat)
 
-        const currentIndex = Checked.indexOf(value)
+  useEffect(() => {
+    // dispatch(updateFilter())
+    dispatch(getProducts())
+
+  }, [Checked])
+
+    const handleToggle = (chkItm:string) => {
+
+        const currentIndex = Checked.indexOf(chkItm)
         const newChecked = [...Checked]
         const allCat = []
+ 
+         
+        if (chkItm == "All" && currentIndex === -1) {
+            props.list.map((item) => (
+                allCat.push(item._id)
+           )),
+           dispatch(updatFilter({chkItm:allCat, type:"checkAll" }  ))
+           setChecked(allCat)
 
-        if(value=="All" && currentIndex===-1){
-           
-            props.list.map((value) => (
-                allCat.push(value._id)
-             ))
-            
-             setChecked(allCat)
-             props.handleFilters(allCat)
-           
-        }else  if(value=="All" && currentIndex!=-1){
-           
+        } else if (chkItm == "All" && currentIndex != -1) {
+            props.list.map((item) => (
+                allCat.push([])
+           )),
+           dispatch(updatFilter({chkItm:allCat, type:"checkOutAll" }))
             setChecked([])
-            props.handleFilters([])
-
-        }else  if (currentIndex === -1) {
-            newChecked.push(value)
+            
+        } else if (currentIndex === -1) {
+            newChecked.push(chkItm)
             setChecked(newChecked)
-            props.handleFilters(newChecked)
+            dispatch(updatFilter({ chkItm  , type:"single" }))
         } else {
             newChecked.splice(currentIndex, 1)
             setChecked(newChecked)
-            props.handleFilters(newChecked)
+            dispatch(updatFilter({ chkItm , type:"single" }))
         }
+        // console.log(chkItm)
+        // dispatch(updatFilter({ chkItm  }))
     }
+
+
+
+    
 
     const renderCheckboxLists = () => props.list && props.list.map((value, index) => (
         <React.Fragment key={index}>
+             
             <FormControlLabel control={
-            <Checkbox
-                label='My checkbox' 
-                onChange={() => handleToggle(value._id)}
-                type="checkbox"
-                checked={Checked.indexOf(value._id) === -1 ? false : true}
-            />   } label={value.name} />
-           
+                <Checkbox
+                    label='My checkbox'
+                    onChange={() => handleToggle(value._id)}
+                    type="checkbox"
+                    checked={Checked.indexOf(value._id) === -1 ? false : true}
+                />} label={value.name} color="success"
+                sx={{ '& .MuiSvgIcon-root': { fontSize: 24 } }} />
+
         </React.Fragment>
     ))
-    
+
 
     return (
-        <div>
-            {renderCheckboxLists()}
-        </div>
+        <>
+            <FormGroup>
+                {renderCheckboxLists()}
+            </FormGroup>
+        </>
     )
 }
 
