@@ -11,57 +11,61 @@ handler.get(async (req, res) => {
 
   try {
 
+    let category = [];
+
+    if (req.query.type && req.query.type == "server") {
+      category = (req.query.category).split(",") || "all";
+    } else {
+      category = req.query['category[]'] || "all";
+    }
+
     const search = req.query.search || "";
-    let category = req.query['category[]'] || "all";
+    // let category = req.query['category[]'] || "all";
     const page = parseInt(req.query.page) || 1;
-    const pageSize = parseInt(req.query.limit) || 2;
+    const pageSize = parseInt(req.query.limit) || 8;
     const priceSelected = req.query.price || 'any';
     const skip = (page - 1) * pageSize;
-    let selcategory = []
-    let selPriceArray = []
-    // let query = Product.find({ name: { $regex: search, $options: "i" } });
-    
+
     let min = 0
     let max = 999999999999
 
-    if (priceSelected!='any' ) {
-      let prices  = priceSelected.split(",")
-      min = prices[0]  
-      max = prices[1]  
-     }  
+    if (priceSelected != 'any') {
+      let prices = priceSelected.split(",")
+      min = prices[0]
+      max = prices[1]
+      console.log(555555)
+    }
 
-    //  console.log(priceSelected)
 
-  if(category=='all'){
-    category = categories.map(catName => catName._id);
-  } 
-  // console.log(category)
- 
+    if (category == 'all') {
+      category = categories.map(catName => catName._id);
+    }
 
-    // category = "Shirts";
+
+
     let query = Product.find({
       $or: [
         { name: { $regex: search, $options: "i" } },
         { brand: { $regex: search, $options: "i" } }
       ],
-       price: { $gt: min, $lt: max },
-      // category: { $regex: category, $options: "i" } 
+      price: { $gt: min, $lt: max },
+
     });
 
- 
-   
+
     const total = await Product.countDocuments({
       $or: [
         { name: { $regex: search, $options: "i" } },
         { brand: { $regex: search, $options: "i" } }
       ],
-     price: { $gt: min, $lt: max },
-      // category: { $regex: category, $options: "i" } 
+      price: { $gt: min, $lt: max },
+
     })
       .where("category")
-      .in(category);
+      .in(category)
 
- 
+
+
     const totalPage = Math.ceil(total / pageSize);
 
     if (page > totalPage) {
@@ -85,13 +89,13 @@ handler.get(async (req, res) => {
       .in(category)
       .skip(skip)
       .limit(pageSize);
-    
+
     const result = await query;
- 
+
 
     await db.disconnect();
 
-      res.status(200).json({
+    res.status(200).json({
       category: category,
       status: "success",
       count: total,
@@ -108,10 +112,8 @@ handler.get(async (req, res) => {
       message: "Server Error",
     });
   }
- 
- 
-  //return res.status(200).json({ products: products, total_count: currPage });
-  //   res.send(products);
+
+
 });
 
 export default handler;

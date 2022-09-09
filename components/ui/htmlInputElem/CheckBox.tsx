@@ -16,52 +16,49 @@ function CheckBox(props) {
     const slectedCat = pagination.category
     const [Checked, setChecked] = useState(slectedCat)
 
-//   useEffect(() => {
-//     // dispatch(updateFilter())
-//     dispatch(getProducts())
+    //   useEffect(() => {
+    //     // dispatch(updateFilter())
+    //     dispatch(getProducts())
 
-//   }, [Checked])
+    //   }, [Checked])
 
-    const handleToggle = (chkItm:string) => {
+    const handleToggle = (chkItm: string) => {
 
         const currentIndex = Checked.indexOf(chkItm)
         const newChecked = [...Checked]
         const allCat = []
- 
-         
+
+
         if (chkItm == "All" && currentIndex === -1) {
             props.list.map((item) => (
                 allCat.push(item._id)
-           )),
-           dispatch(updatFilter({chkItm:allCat, type:"checkAll" }  ))
-           setChecked(allCat)
+            )),
+                dispatch(updatFilter({ chkItm: allCat, type: "checkAll" }))
+            setChecked(allCat)
 
         } else if (chkItm == "All" && currentIndex != -1) {
             props.list.map((item) => (
                 allCat.push([])
-           )),
-           dispatch(updatFilter({chkItm:allCat, type:"checkOutAll" }))
+            )),
+                dispatch(updatFilter({ chkItm: allCat, type: "checkOutAll" }))
             setChecked([])
-            
+
         } else if (currentIndex === -1) {
             newChecked.push(chkItm)
             setChecked(newChecked)
-            dispatch(updatFilter({ chkItm  , type:"single" }))
+            dispatch(updatFilter({ chkItm, type: "single" }))
         } else {
             newChecked.splice(currentIndex, 1)
             setChecked(newChecked)
-            dispatch(updatFilter({ chkItm , type:"single" }))
+            dispatch(updatFilter({ chkItm, type: "single" }))
         }
         dispatch(getProducts())
     }
 
 
-
-    
-
     const renderCheckboxLists = () => props.list && props.list.map((value, index) => (
         <React.Fragment key={index}>
-             
+
             <FormControlLabel control={
                 <Checkbox
                     label='My checkbox'
