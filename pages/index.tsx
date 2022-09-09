@@ -119,7 +119,7 @@ export default function paginationSSR({ pageNum, propCategory, prpPrice, prpSear
   const handlePaginationChange = async (e: React.ChangeEvent<HTMLInputElement>, value: any) => {
     setLoading(true);
     setPageNumber(parseInt(value));
-
+ 
     router.query.page = value;
 
     let qString = querystring.stringify(router.query);
@@ -262,7 +262,7 @@ export default function paginationSSR({ pageNum, propCategory, prpPrice, prpSear
           </div>
         ) }
  
-          {products.length > 0? 
+          {products && products.length > 0? 
           
           (products.map((product) => (
             <Grid item md={4} key={product.name}>

@@ -30,8 +30,6 @@ handler.get(async (req, res) => {
       max = prices[1]  
      }  
 
-  
-
     //  console.log(priceSelected)
 
   if(category=='all'){
@@ -51,9 +49,8 @@ handler.get(async (req, res) => {
     });
 
  
-    const total = 6;
-    
-    await Product.countDocuments({
+   
+    const total = await Product.countDocuments({
       $or: [
         { name: { $regex: search, $options: "i" } },
         { brand: { $regex: search, $options: "i" } }
@@ -65,12 +62,19 @@ handler.get(async (req, res) => {
       .in(category);
 
  
-    const pages = Math.ceil(total / pageSize);
+    const totalPage = Math.ceil(total / pageSize);
 
-    if (page > pages) {
-      return res.status(404).json({
-        status: "fail",
-        message: "No Data"
+    if (page > totalPage) {
+      return res.status(200).json({
+        message: "No Data",
+        category: category,
+        status: "failed",
+        count: total,
+        pageSize,
+        page,
+        skip,
+        totalPage,
+        dataSet: [],
       });
     }
 
@@ -92,8 +96,9 @@ handler.get(async (req, res) => {
       status: "success",
       count: total,
       page,
-      pages,
-      data: result,
+      skip,
+      totalPage,
+      dataSet: result,
 
     });
   } catch (error) {

@@ -2,11 +2,10 @@ import styles from "./index.module.scss";
 import HorizontalCard from "components/HomeCard/horizontal-card";
 import VerticalCard from "components/HomeCard/vertical-card";
 import Products from "components/HomeProducts";
-
 import Button from "components/FilterButton";
 
 import Pagination from "@material-ui/lab/Pagination";
-import { useState, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import {
@@ -37,9 +36,9 @@ import RadioBox from 'components/ui/htmlInputElem/RadioBox';
 import SearchFeature from 'components/ui/htmlInputElem/SearchFeature';
 import { categories, price } from 'data/filterdata';
 import axios from "axios";
-const querystring = require('querystring');
+const queryString = require('querystring');
 
-import { getProducts, selectFilterState } from "redux/filterSlice";
+import { getProducts, updatFilter, selectFilterState } from "redux/filterSlice";
 
 
 const useStyles = makeStyles({
@@ -66,7 +65,7 @@ const useStyles = makeStyles({
 });
 
 
-export default function paginationSSR({ pageNum, propCategory, prpPrice, prpSearch, prpLimit }: props) {
+export default function paginationSSR({ pageNum, propCategory, prpPrice, prpSearch, prpLimit, prpTotalPages, prpDataSet }: props) {
 
   const dispatch = useDispatch();
 
@@ -75,17 +74,25 @@ export default function paginationSSR({ pageNum, propCategory, prpPrice, prpSear
   const classes = useStyles();
   const router = useRouter();
   const [pageNumber, setPageNumber] = useState(parseInt(query.page) || 1);
+  const [dataResSet, setDataResSet] = useState(prpDataSet);
+  const [totalPages, setTotalPages] = useState(prpTotalPages);
+  const isMounted = useRef(false);
+  
+  const { isLoading, isError, isSuccess, dataSet, pagination, resetPage }
+  = useSelector(selectFilterState)
 
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
+  // let { search, category, price } = pagination;
+
+  const [filterChange, setFilterChange] = useState(pagination?.category);
+ 
+  const [loading, setLoading] = useState(isLoading);
+  const [error, setError] = useState(isError);
   const [page, setPage] = useState(pageNumber);
-  const [pages, setPages] = useState(0);
-
+  // const [totalPages, setTotalPages] = useState(pagination.totalPage);
+ 
   // const {  { isError, isSuccess } } = useSelector(selectFilterState);
 
-  const { isLoading, isError, isSuccess, dataSet }
-    = useSelector(selectFilterState)
+
 
  
   // const { state, dispatch } = useContext(StoreContext);
@@ -93,16 +100,74 @@ export default function paginationSSR({ pageNum, propCategory, prpPrice, prpSear
   const [Limit, setLimit] = useState(2)
 
   const [SearchTerms, setSearchTerms] = useState(prpSearch)
-
+ 
 
   useEffect(() => {
-    // dispatch(updateFilter())
-   
-    dispatch(getProducts())
 
-  }, [])
+
+    let qString = queryString.stringify(pagination);
+    router.push(`test/?${qString}`, undefined, { shallow: true });
+
+     if (isMounted.current) {
+
+      setDataResSet(dataSet)
+      setPage(pagination.page);
+      setTotalPages(pagination.totalPage);
+    } else {
+      isMounted.current = true;
+    }
+  
+  }, [dataSet])
+
+//   useEffect(() => {
+//     if (isMounted.current) {
+//       // setPage(1);
+//       // setSkip(0)
+//    } else {
+     
+//      isMounted.current = true;
+//    }
+ 
+//  }, [pagination])
 
  
+  /* Invoked when pagination button is called */
+  const handlePagination =   (e: React.ChangeEvent<HTMLInputElement>, value: any) => {
+    setLoading(true);
+    setPageNumber(parseInt(value));
+ 
+ 
+    dispatch(updatFilter({page:value }  ))
+// defining the object which will be stringified
+ 
+
+// calling the stringify function with default delimiters
+ 
+    //  let test = queryString.stringify({foo: ['one', 'two']}, {arrayFormat: 'colon-list-separator'});
+    //  console.log(test)
+    let qString = queryString.stringify(pagination);
+  
+    // let test = querystring.stringify(foo: [1, 2, 3], { arrayFormat: 'brackets', encode: false } );
+
+    // let qString = querystring.stringify(pagination, { arrayFormat: 'brackets' });
+    // console.log(test)
+    // let qString = querystring.stringify(pagination, { arrayFormat: 'brackets', encode: false });
+    // const res = await fetch(`/api/products/filter?${qString}`);
+
+    // dispatch(getProducts())
+
+    // const { data, pages: pages } = await res.json();
+    dispatch(getProducts())
+ 
+    setPage(value); 
+    // setTotalPages(pagination.totalPage);
+    // setProducts(data);
+    setLoading(false);
+    // console.log(totalPage)
+
+  //  router.push(`test/?${qString}`, undefined, { shallow: true });
+
+  }
   return (
     <>
       <Layout>
@@ -129,9 +194,9 @@ export default function paginationSSR({ pageNum, propCategory, prpPrice, prpSear
           </div>
         ) }
 
-          {dataSet.length > 0 ?   
+          {dataResSet.length > 0 ?   
 
-          (dataSet.map((product) => (
+          (dataResSet.map((product) => (
           
             <Grid item md={4} key={product.name}>
               <Card>
@@ -253,7 +318,15 @@ export default function paginationSSR({ pageNum, propCategory, prpPrice, prpSear
         </main>
       </div>
     </Layout>
-
+ 
+    <Pagination
+        count={totalPages}
+        variant='outlined'
+        color='primary'
+        className='pagination'
+        page={page}
+        onChange={handlePagination}
+      />
      
     </>
   );
@@ -263,14 +336,43 @@ export default function paginationSSR({ pageNum, propCategory, prpPrice, prpSear
 
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
+
+
+  let propCategory = context.query["category"] ? (context.query["category"]).toString() : "all";
+  
   let pageNum = context.query["page"] ? parseInt(context.query["page"]) : 1;
   let prpSearch = context.query["search"] ? context.query["search"].toString() : "";
-  let propCategory = context.query["category"] ? (context.query["category"]).toString() : "all";
+  
   let prpPrice = context.query["price"] ? (context.query["price"]).toString() : "any";
-  let prpLimit = context.query["limit"] ? parseInt(context.query["limit"]) : 8;
+  let prpLimit = context.query["limit"] ? parseInt(context.query["limit"]) : 2;
   let prpSkip = context.query["skip"] ? parseInt(context.query["skip"]) : 0;
+ 
+console.log(propCategory)
+  const API_URL = '/api/products/filter'
+  let quertyString = {
+    skip: prpSkip,
+    limit: prpLimit,
+    page: pageNum,
+    price: prpPrice,
+    search: '',
+    category:[]
+  }
 
+  // const res = await fetch(`http://localhost:3000/api/products/filter`)
+  // const data = await res.json()
 
+  const res = await axios.get("http://localhost:3000/api/products/filter", {
+    responseType: 'json',  
+  params: {
+      ...quertyString
+    }
+  })  // const data = await res 
+  // const { dataSet, totalPage } = data
+  let prpDataSet = res.data.dataSet
+  let prpTotalPages = res.data.totalPage
+  
+
+  // console.log(response)
   // In this example, we might call a database or an API with given ID from the query parameters
   // I'll call a fake API to get the players name from a fake database
   // const res = await fetch(`https://baseball.com/api/getTeamFromPlayerId/${id}`);
@@ -284,8 +386,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   // const products  = await Product.find({}).lean();
   // await db.disconnect();
 
-
-
+  // const res = await fetch(`https://.../data`)
+  // const data = await res.json()
+ 
+ 
   return {
     props: {
       pageNum,
@@ -293,7 +397,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       propCategory,
       prpPrice,
       prpLimit,
-      prpSkip
+      prpSkip,
+      prpDataSet,
+      prpTotalPages
       // products: products.map(db.convertDocToObj), 
     },
   };
@@ -327,3 +433,15 @@ function Page({ data }: InferGetServerSidePropsType<typeof getServerSideProps>) 
 
 export default Page
 */
+
+// paginationSSR.getInitialProps = async ctx => {
+//   const { dispatch } = ctx.store;
+
+//   const res = await dispatch(getProducts())
+//   const resSet  = res.payload;
+// console.log(resSet)
+//   return {
+//     name: "Jairo",
+//     weapons
+//   };
+// };

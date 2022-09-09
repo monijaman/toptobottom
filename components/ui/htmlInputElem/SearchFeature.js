@@ -14,16 +14,17 @@ function SearchFeature(props) {
         
 
 
-    useEffect(() => {
-      // dispatch(updateFilter())
-      dispatch(getProducts())
+    // useEffect(() => {
+    //   // dispatch(updateFilter())
+    //   dispatch(getProducts())
   
-    }, [SearchTerms])
+    // }, [SearchTerms])
 
     const onChangeSearch = (event) => {
         setSearchTerms(event.currentTarget.value)
       // console.log(event.currentTarget.value)
       dispatch(updatFilter(event.currentTarget.value))
+      dispatch(getProducts())
 
     }
 

@@ -83,7 +83,7 @@ export default function Header() {
         />
  
         
-            <SearchFeature    />
+            <SearchFeature      />
       </div>
       <div className={styles.rightContent}>
         <Link href="/cart">

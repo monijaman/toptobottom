@@ -42,7 +42,7 @@ const initialState: filterState = {
   dataSet: [],
   pagination: {
     skip: 0,
-    limit: 4,
+    limit: 2,
     page: 1,
     totalPage: 1,
     search: "",
@@ -60,7 +60,7 @@ export const getProducts = createAsyncThunk(
     try {
       
       const pagiData =  thunkAPI.getState().filter.pagination
-
+ 
      return await filterService.getProducts(pagiData)
     } catch (error) {
       
@@ -77,15 +77,17 @@ export const filterSlice = createSlice({
       // Action to set the authentication status
     
       updatFilter(state, action) {
-        
-        const newItem = action.payload.chkItm;
-        const price = action.payload.RadioItm;
-       const search = action.payload;
- 
+         
+      const newItem = action.payload.chkItm;
+      const price = action.payload.RadioItm;
+      const search = action.payload;
+      let page = action.payload.page;
+
        let category = []
-   
+       
        if(action.payload.type=="checkAll"){
          category = newItem;  
+         
        }else if(action.payload.type=="checkOutAll"){
           category =  []   
        }else{
@@ -98,22 +100,30 @@ export const filterSlice = createSlice({
        }
     
        if(newItem){
+        page = 1
         return {
           ...state,
-          pagination: { ...state.pagination, category },
+          pagination: { ...state.pagination, category, page },
           
         };
        }else if(price){
+        page = 1
         return {
           ...state,
-          pagination: { ...state.pagination,  price },
+          pagination: { ...state.pagination,  price, page },
           
         };
-       }else{
-        
+       }else if(page){
+          return {
+            ...state,
+            pagination: { ...state.pagination,   page },
+        }
+       
+        } else{
+          page = 1
         return {
          ...state,
-         pagination: { ...state.pagination,  search },
+         pagination: { ...state.pagination,  search, page },
      }
     }
       
@@ -171,7 +181,10 @@ export const filterSlice = createSlice({
         .addCase(getProducts.fulfilled, (state, action) => {
           state.isLoading = false
           state.isSuccess = true
-          state.dataSet= action.payload.data
+          state.dataSet= action.payload.dataSet
+          state.pagination.page= action.payload.page 
+          state.pagination.totalPage= action.payload.totalPage 
+          // state.pagination.pages= action.payload.pages
         })
         .addCase(getProducts.rejected, (state) => {
           state.isLoading = false

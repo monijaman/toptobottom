@@ -20,11 +20,11 @@ function RadioBox(props) {
     const [Checked, setChecked] = useState(props.selectedRdo)
     
 
-    useEffect(() => {
-        // dispatch(updateFilter())
-        dispatch(getProducts())
+    // useEffect(() => {
+    //     // dispatch(updateFilter())
+    //     dispatch(getProducts())
     
-      }, [Checked])
+    //   }, [Checked])
 
       
     const renderRadioBox = () => (
@@ -44,6 +44,7 @@ function RadioBox(props) {
     const handleChange = (event) => {
         setChecked(event.target.value)
         dispatch(updatFilter({RadioItm:event.target.value}  ))
+        dispatch(getProducts())
     }
 
     return (

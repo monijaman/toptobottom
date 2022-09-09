@@ -16,11 +16,11 @@ function CheckBox(props) {
     const slectedCat = pagination.category
     const [Checked, setChecked] = useState(slectedCat)
 
-  useEffect(() => {
-    // dispatch(updateFilter())
-    dispatch(getProducts())
+//   useEffect(() => {
+//     // dispatch(updateFilter())
+//     dispatch(getProducts())
 
-  }, [Checked])
+//   }, [Checked])
 
     const handleToggle = (chkItm:string) => {
 
@@ -52,8 +52,7 @@ function CheckBox(props) {
             setChecked(newChecked)
             dispatch(updatFilter({ chkItm , type:"single" }))
         }
-        // console.log(chkItm)
-        // dispatch(updatFilter({ chkItm  }))
+        dispatch(getProducts())
     }
 
 
