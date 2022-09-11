@@ -42,7 +42,7 @@ const initialState: filterState = {
   dataSet: [],
   pagination: {
     skip: 0,
-    limit: 8,
+    limit: 12,
     page: 1,
     totalPage: 1,
     search: "",

@@ -9,13 +9,22 @@
   direction: initial;
   overflow: hidden;
   position: relative;
-  cursor: pointer;
+  // cursor: pointer;
   transition: box-shadow 300ms ease-in-out;
   -webkit-transition: box-shadow 300ms ease-in-out;
   -moz-transition: box-shadow 300ms ease-in-out;
   -ms-transition: box-shadow 300ms ease-in-out;
   -o-transition: box-shadow 300ms ease-in-out;
 
+  .addToCart{
+    display: block;
+    font-size: 18px;
+    display: block;
+    position: absolute;
+    z-index: 999;
+    left: 9%;
+    bottom: 13%;
+  }
   &:hover {
     box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.2);
     .imageContainer,
@@ -26,9 +35,13 @@
       -moz-transform: scale(1.1);
       -ms-transform: scale(1.1);
       -o-transform: scale(1.1);
+     
     }
     .textContainer {
       z-index: 10;
+    }
+    .imageContainer{
+      cursor: pointer;
     }
   }
 

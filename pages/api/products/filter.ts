@@ -22,7 +22,7 @@ handler.get(async (req, res) => {
     const search = req.query.search || "";
     // let category = req.query['category[]'] || "all";
     const page = parseInt(req.query.page) || 1;
-    const pageSize = parseInt(req.query.limit) || 8;
+    const pageSize = parseInt(req.query.limit) || 2;
     const priceSelected = req.query.price || 'any';
     const skip = (page - 1) * pageSize;
 
