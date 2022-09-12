@@ -14,16 +14,16 @@ import { useSnackbar } from 'notistack';
 import { useEffect, useState } from 'react';
 import { IProduct } from "types/index";
 import CheckoutWizard from '../components/CheckoutWizard';
-import Layout from '../components/Layout';
+import Layout from "components/Layout/innerpage";
 import { getError } from '../utils/error';
 // import { StoreContext } from '../utils/Store';
 import { useDispatch, useSelector } from "react-redux";
 import useStyles from '../utils/styles';
- 
+
 import { clearCart, selectCartState } from "redux/cartSlice";
 
-const PlaceOrder: React.ReactNode = () =>  {
-// function PlaceOrder() {
+const PlaceOrder: React.ReactNode = () => {
+  // function PlaceOrder() {
   const classes = useStyles();
   const router = useRouter();
   const dispatch = useDispatch();
@@ -32,15 +32,15 @@ const PlaceOrder: React.ReactNode = () =>  {
   // const { state, dispatch} = useContext(StoreContext);
   const {
     userInfo,
-    cart: { cartItems,  paymentMethod },
+    cart: { cartItems, paymentMethod },
   } = useSelector(selectCartState);
 
- 
+
   const {
     cart: { shippingAddress },
   } = useSelector(selectCartState);
 
- 
+
   const round2 = (num: number) => Math.round(num * 100 + Number.EPSILON) / 100; // 123.456 => 123.46
   const itemsPrice = round2(
     (cartItems as IProduct[]).reduce((a, c) => a + c.price * c.quantity, 0)
@@ -88,25 +88,25 @@ const PlaceOrder: React.ReactNode = () =>  {
       enqueueSnackbar(getError(err), { variant: 'error' });
     }
   };
-  
+
   return (
     <Layout title="Order Page">
-        <CheckoutWizard activeStep={3}></CheckoutWizard>
+      <CheckoutWizard activeStep={3}></CheckoutWizard>
       <Typography component="h1" variant="h1">
         Place Order
       </Typography>
- 
+
       <Grid container spacing={1}>
         <Grid item md={9} xs={12}>
           <Card className={classes.section}>
-        
+
           </Card>
           <Card className={classes.section}>
-       
+
           </Card>
           <Card className={classes.section}>
-           
-               
+
+
           </Card>
         </Grid>
         <Grid item md={3} xs={12}>
@@ -172,7 +172,7 @@ const PlaceOrder: React.ReactNode = () =>  {
             </List>
           </Card>
         </Grid>
-      </Grid>  
+      </Grid>
     </Layout>
   );
 }

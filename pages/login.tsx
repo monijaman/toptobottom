@@ -12,13 +12,13 @@ import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
 import React, { useContext, useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
-import Layout from "../components/Layout"; 
+import Layout from "components/Layout/innerpage";
 import { getError } from '../utils/error';
 // import { actionTypes, StoreContext } from "../utils/Store";
 import useStyles from "../utils/styles";
 
 import { useDispatch, useSelector } from "react-redux";
-import {  selectCartState, userLogin } from 'redux/cartSlice';
+import { selectAuthState, userLogin } from 'redux/authSlice';
 import { UserSubmitForm } from "types/index";
 
 
@@ -36,7 +36,7 @@ const Login: React.ReactNode = () => {
   // const { state, dispatch } = useContext(StoreContext);
   // const { userInfo } = state;
 
-  const {    userInfo  }  = useSelector(selectCartState);
+  const { userInfo, authState } = useSelector(selectAuthState);
 
   const dispatch = useDispatch();
 
@@ -45,24 +45,23 @@ const Login: React.ReactNode = () => {
       //router.push("/");
     }
   }, []);
-  
+
   const classes = useStyles();
 
   const submitHandler = async ({ email, password }: UserSubmitForm) => {
     closeSnackbar();
-    
+
     try {
       const { data } = await axios.post("/api/users/login", {
         email,
         password,
       });
 
-      console.log(data);
-
       dispatch(userLogin(data));
       Cookies.set("userInfo", JSON.stringify(data));
+      Cookies.set("authState", JSON.stringify(true));
       router.push(redirect || "/");
-      
+
     } catch (err: any) {
       enqueueSnackbar(getError(err), { variant: 'error' });
     }

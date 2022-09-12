@@ -1,15 +1,21 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { HYDRATE } from "next-redux-wrapper";
 import { AppState } from "./store";
-
+import Cookies from "js-cookie";
+import { IAuthUser, IProduct } from "types/index";
 // Type for our state
 export interface AuthState {
   authState: boolean;
+  userInfo: IAuthUser | null;
 }
+
+const userCookie: string = Cookies.get("userInfo");
+const authState: string = Cookies.get("authState");
 
 // Initial state
 const initialState: AuthState = {
-  authState: false,
+  authState: authState ? authState : false,
+  userInfo: userCookie ? userCookie : null,
 };
 
 // Actual Slice
@@ -21,20 +27,41 @@ export const authSlice = createSlice({
     setAuthState(state, action) {
       state.authState = action.payload;
     },
-  },
-    // Special reducer for hydrating the state. Special case for next-redux-wrapper
-    extraReducers: {
-      [HYDRATE]: (state, action) => {
-        return {
-          ...state,
-          ...action.payload.auth,
-        };
-      },
+    userLogin(state, action) {
+      let authState = true
+      return {
+        ...state,
+        authState,
+        userInfo: action.payload as IAuthUser
+      };
     },
+
+    userLogout(state) {
+      return {
+        ...state,
+        userInfo: null,
+        cart: {
+          ...state.cart,
+          cartItems: [],
+          shippingAddress: null,
+          paymentMethod: "",
+        },
+      };
+    }
+  },
+  // Special reducer for hydrating the state. Special case for next-redux-wrapper
+  extraReducers: {
+    [HYDRATE]: (state, action) => {
+      return {
+        ...state,
+        ...action.payload.auth,
+      };
+    },
+  },
 });
 
-export const { setAuthState } = authSlice.actions;
+export const { setAuthState, userLogin, userLogout } = authSlice.actions;
 
-export const selectAuthState = (state: AppState) => state.auth.authState;
+export const selectAuthState = (state: AppState) => state.auth;
 
 export default authSlice.reducer;

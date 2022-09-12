@@ -23,7 +23,7 @@ import {
 } from "@material-ui/core";
 import { getError } from "../utils/error";
 import { StoreContext } from "../utils/Store";
-import Layout from "../components/Layout";
+import Layout from "components/Layout/innerpage";
 import useStyles from "../utils/styles";
 import { IOrder } from "../models/Order";
 

@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 // import { actionTypes, StoreContext } from '../utils/Store';
 import CheckoutWizard from '../components/CheckoutWizard';
-import Layout from '../components/Layout';
+import Layout from "components/Layout/innerpage";
 import useStyles from '../utils/styles';
 
 import { useDispatch, useSelector } from "react-redux";
@@ -22,7 +22,7 @@ import {
 } from '@material-ui/core';
 import { useSnackbar } from 'notistack';
 
-const Payment: React.ReactNode = () =>  {
+const Payment: React.ReactNode = () => {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const classes = useStyles();
   const router = useRouter();
@@ -42,20 +42,20 @@ const Payment: React.ReactNode = () =>  {
       setPaymentMethod(Cookies.get('paymentMethod') || '');
     }
   }, []);
-console.log(paymentMethod)
+  console.log(paymentMethod)
   const submitHandler = (e: React.FormEvent) => {
     closeSnackbar();
     e.preventDefault();
     if (!paymentMethod) {
       enqueueSnackbar('Payment method is required', { variant: 'error' });
     } else {
-      dispatch(savePaymentMethod({paymentMethod}));
-     
+      dispatch(savePaymentMethod({ paymentMethod }));
+
       Cookies.set('paymentMethod', paymentMethod);
       router.push('/placeorder');
     }
   };
-  
+
   return (
     <Layout title="Payment Method">
       <CheckoutWizard activeStep={2}></CheckoutWizard>

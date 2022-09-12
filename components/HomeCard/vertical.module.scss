@@ -117,10 +117,12 @@
     width: 100%;
   }
 
+    .likeContainer,
   .favContainer {
     position: absolute;
     display: flex;
     align-items: center;
+    z-index: 9;
     justify-content: center;
     top: 20px;
     right: 20px;
@@ -131,5 +133,20 @@
     border-radius: 6px;
     box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.2);
     border: 0;
+  }
+
+  .likeContainer{
+    background: none;
+    width: 30px;
+    left: 20px;
+    cursor: pointer;
+  }
+
+  &:hover {
+    box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.2);
+
+    .likeContainer {
+      transform: scale(1.1);
+    }
   }
 }

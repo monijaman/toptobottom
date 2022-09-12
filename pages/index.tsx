@@ -9,26 +9,16 @@ import { useRouter } from "next/router";
 import Head from "next/head";
 import {
   CircularProgress,
-  Card,
-  CardActionArea,
-  CardActions,
-  CardContent,
-  CardMedia,
-  Grid,
   makeStyles,
   Typography
 } from "@material-ui/core";
-import type { NextPage } from "next";
+
 import Layout from "components/Layout/";
 import { InferGetServerSidePropsType } from "next";
-import NextLink from "next/link";
 import { useDispatch, useSelector } from "react-redux";
 import { IProduct } from "types/index";
-import ImageSlider from 'components/ui/htmlInputElem/ImageSlider';
-
 import axios from "axios";
 const queryString = require('querystring');
-
 import { getProducts, updatFilter, selectFilterState } from "redux/filterSlice";
 import Product from "models/Product";
 
@@ -60,8 +50,6 @@ const useStyles = makeStyles({
 export default function HomePage({ prpTotalPages, prpDataSet }: props) {
 
   const dispatch = useDispatch();
-
-
   const { query } = useRouter();
   const classes = useStyles();
   const router = useRouter();
@@ -105,11 +93,12 @@ export default function HomePage({ prpTotalPages, prpDataSet }: props) {
     setLoading(false);
   }
 
-
+  let colors = ["#f6f6f6", "#99E6B0", "#f3e6c8", "#F9CADA", "#FBE285"]
   let partComponents = [];
 
   for (let i = 0; i < 3; i++) {
     partComponents[i] = []
+    let color = colors[(Math.random() * colors.length) | 0]
     let horizontal = 0;
     for (let j = i * 4; j < (i + 1) * 4; j++) {
 
@@ -118,7 +107,7 @@ export default function HomePage({ prpTotalPages, prpDataSet }: props) {
         if (horizontal < 2) {
           partComponents[i].push(
             <HorizontalCard key={dataResSet[j]}
-              bgColor="#BCE7F0"
+              bgColor={color}
               title={dataResSet[j].name}
               image={dataResSet[j].image}
               desc="Best of daily wear"
@@ -132,13 +121,14 @@ export default function HomePage({ prpTotalPages, prpDataSet }: props) {
         } else {
           partComponents[i].push(
             <VerticalCard key={dataResSet[j]}
-              bgColor="#f6f6f6"
+              bgColor={color}
               name={dataResSet[j].name}
               image={dataResSet[j].image}
               price="300"
               sale_price="200"
               price={dataResSet[j].price}
               sale_price="140"
+              price="900"
               slug={dataResSet[j].slug}
               product={dataResSet[j]}
             />

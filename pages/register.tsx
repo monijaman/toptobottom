@@ -11,18 +11,18 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import NextLink from "next/link";
 import React, { useContext, useEffect } from "react";
-import Layout from "../components/Layout";
- 
+import Layout from "components/Layout/innerpage";
+
 import useStyles from "../utils/styles";
 import Cookies from "js-cookie";
 import { Controller, useForm } from "react-hook-form";
 import { useSnackbar } from "notistack";
 import { useDispatch, useSelector } from "react-redux";
-import {  selectCartState, userLogin } from 'redux/cartSlice';
+import { selectAuthState, userLogin } from 'redux/authSlice';
 import { UserSubmitForm } from "types/index";
 
 
- 
+
 const Register: React.ReactNode = () => {
   const {
     handleSubmit,
@@ -34,10 +34,11 @@ const Register: React.ReactNode = () => {
   const router = useRouter();
 
   const redirect = router.query.redirect as string;
-  
+
   const dispatch = useDispatch();
 
-  const {    userInfo  }  = useSelector(selectCartState);
+  const { userInfo, authState } = useSelector(selectAuthState);
+
   useEffect(() => {
     if (userInfo) {
       router.push("/");
@@ -57,17 +58,22 @@ const Register: React.ReactNode = () => {
       return;
     }
     try {
-      const { data  } = await axios.post("/api/users/register", {
+      const { data } = await axios.post("/api/users/register", {
         name,
         email,
         password,
       });
+
+
       dispatch(userLogin(data));
-      Cookies.set("userInfo", data);
+      Cookies.set("userInfo", JSON.stringify(data));
       router.push(redirect || "/");
+
     } catch (err: any) {
+
+      console.log(err.response.data)
       enqueueSnackbar(
-        err.response.data ? err.response.data.message : err.message,
+        err.response.data ? err.response.data : err.message,
         { variant: "error" }
       );
     }

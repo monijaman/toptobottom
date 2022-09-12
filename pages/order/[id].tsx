@@ -2,7 +2,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useContext, useEffect, useReducer } from "react";
 import dynamic, { LoaderComponent } from "next/dynamic";
-import Layout from "../../components/Layout";
+import Layout from "components/Layout/innerpage";
 import { StoreContext } from "../../utils/Store";
 import Image from "next/image";
 import {
@@ -25,7 +25,7 @@ import useStyles from "../../utils/styles";
 import { getError } from "../../utils/error";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { IOrder, IOrderItems } from "../../models/Order";
-import {  DISPATCH_ACTION, PayPalButtons, SCRIPT_LOADING_STATE, usePayPalScriptReducer } from "@paypal/react-paypal-js";
+import { DISPATCH_ACTION, PayPalButtons, SCRIPT_LOADING_STATE, usePayPalScriptReducer } from "@paypal/react-paypal-js";
 import { useSnackbar } from "notistack";
 
 enum actionTypes {
@@ -163,7 +163,7 @@ const Order = ({
     });
   }
 
-  function onError(err:any) {
+  function onError(err: any) {
     enqueueSnackbar(getError(err), { variant: "error" });
   }
 

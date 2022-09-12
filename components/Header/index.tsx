@@ -7,21 +7,49 @@ import SearchIcon from "../icons/search";
 import CartIcon from "../icons/cart";
 import ArrowIcon from "../icons/arrow";
 import SearchFeature from 'components/ui/htmlInputElem/SearchFeature';
- 
+
 // import { useCart } from "hooks/cart.hook";
 import { useRouter } from "next/router";
 import MenuIcon from "../icons/menu";
+import { selectCartState } from "redux/cartSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { selectAuthState, userLogin } from "redux/authSlice";
+
+
+import Cookies from "js-cookie";
+import {
+  MenuItem
+} from "@material-ui/core";
 
 export default function Header() {
   const [showHeader, setShowHeader] = useState({
     transform: "translate3d(100vw, 0, 0)",
   });
   const [input, setInput] = useState(null);
+  const dispatch = useDispatch();
 
   const router = useRouter();
+  const { cart: { cartItems } } = useSelector(selectCartState);
+  const [cartLength, setCartLength] = useState(cartItems.length);
 
- 
- 
+  const { authState } = useSelector(selectAuthState);
+
+  // console.log(authState)
+  const logoutClickHandler = () => {
+    //  setAnchorEl(null);
+    Cookies.remove("userInfo");
+    Cookies.remove("cartItems");
+    Cookies.remove("authState");
+    dispatch(userLogin());
+    router.push("/login");
+  };
+
+
+  useEffect(() => {
+    setCartLength(cartItems.length)
+
+
+  }, [cartItems])
 
   return (
     <nav className={styles.container}>
@@ -34,7 +62,7 @@ export default function Header() {
             <div className={styles.cartContainer}>
               <CartIcon width={28} height={28} className={styles.cartIcon} />
               <div>
-                <span>3</span>
+                <span> {cartLength}</span>
               </div>
             </div>
           </Link>
@@ -52,19 +80,12 @@ export default function Header() {
       </div>
       <div className={styles.rightMenu}>
         <div className={styles.menuContent} style={showHeader}>
-          
-            
-              <Link href="/account">My Account</Link>
-              <Link href="/account/orders">My Orders</Link>
-              <Link href="/account/favorites">Favourites</Link>
-              <Link href="/account/logout">Logout</Link>
-      
-     
-        
-              <Link href="/login">Login</Link>
-              <Link href="/login">Register</Link>
-         
-        
+          <Link href="/">My Account</Link>
+          <Link href="/orders">My Orders</Link>
+          <Link href="/favorites">Favourites</Link>
+
+          <Link href="/login">Login</Link>
+          <Link href="/register">Register</Link>
         </div>
         <div
           className={styles.background}
@@ -81,49 +102,48 @@ export default function Header() {
           fill="grey"
           className={styles.searchIcon}
         />
- 
-        
-            <SearchFeature      />
+
+
+        <SearchFeature />
       </div>
       <div className={styles.rightContent}>
         <Link href="/cart">
           <div className={styles.cartContainer}>
             <CartIcon width={20} height={20} className={styles.cartIcon} />
-            <span>Cart: 3</span>
+            <span>Cart: {cartLength}</span>
           </div>
         </Link>
 
-        <Link href="/account">
-          <div className={styles.profileContainer}>
-            {/* <img
+
+        <div className={styles.profileContainer}>
+          {/* <img
               src={user?.photoUrl || "https://picsum.photos/200/200"}
               className={styles.profilePhoto}
               loading="lazy"
             /> */}
-            <span>
-              Hello{" "}
-              <span style={{ fontWeight: "normal" }}>
+          <span>
+            Hello{" "}
+            <span style={{ fontWeight: "normal" }}>
               Guest
-              </span>
             </span>
-            <ArrowIcon width={10} height={10} className={styles.arrowIcon} />
-            <div className={styles.dropdown}>
-              <div className={styles.arrowUp} />
-              <div className={styles.dropdownMenu}>
-                
-                  
-                    <Link href="/account">My Account</Link>
-                    <Link href="/account/orders">My Orders</Link>
-                    <Link href="/account/favorites">Favourites</Link>
-                    <Link href="/account/logout">Logout</Link>
-                
-                    <Link href="/login">Login</Link>
-                    <Link href="/login">Register</Link>
-                
-              </div>
+          </span>
+          <ArrowIcon width={10} height={10} className={styles.arrowIcon} />
+          <div className={styles.dropdown}>
+            <div className={styles.arrowUp} />
+            <div className={styles.dropdownMenu}>
+
+
+              <Link href="/">My Account</Link>
+              <Link href="/orders">My Orders</Link>
+              <Link href="/favorites">Favourites</Link>
+
+              {!authState && <Link href="/login">Login</Link>}
+              {!authState && <Link href="/register">Register</Link>}
+              {authState && <MenuItem onClick={logoutClickHandler}>Logout</MenuItem>}
             </div>
           </div>
-        </Link>
+        </div>
+
       </div>
     </nav>
   );

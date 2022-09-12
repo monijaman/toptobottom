@@ -8,12 +8,13 @@ import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import CheckoutWizard from '../components/CheckoutWizard';
-import Layout from '../components/Layout';
+import Layout from "components/Layout/innerpage";
 // import { actionTypes, ShippingAddressType, StoreContext } from '../utils/Store';
 import useStyles from '../utils/styles';
 
 import { useDispatch, useSelector } from "react-redux";
 import { saveShippingAddress, selectCartState } from "redux/cartSlice";
+import { selectAuthState } from "redux/authSlice";
 import { ShippingAddressType } from "types/index";
 
 const Shipping: React.ReactNode = () => {
@@ -25,16 +26,17 @@ const Shipping: React.ReactNode = () => {
   } = useForm();
   const router = useRouter();
   //const { state, dispatch } = useContext(StoreContext);
- 
+  const { authState } = useSelector(selectAuthState);
+
   const {
-    userInfo,
+
     cart: { shippingAddress },
-  }  = useSelector(selectCartState);
- 
+  } = useSelector(selectCartState);
+
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (!userInfo) {
+    if (!authState) {
       router.push('/login?redirect=/shipping');
     }
     setValue('fullName', shippingAddress?.fullName);
@@ -46,8 +48,8 @@ const Shipping: React.ReactNode = () => {
 
   const classes = useStyles();
   const submitHandler = ({ fullName, address, city, postalCode, country }: ShippingAddressType) => {
-    dispatch(saveShippingAddress( { fullName, address, city, postalCode, country }))
-    
+    dispatch(saveShippingAddress({ fullName, address, city, postalCode, country }))
+
     Cookies.set('shippingAddress', JSON.stringify({
       fullName,
       address,
@@ -55,10 +57,10 @@ const Shipping: React.ReactNode = () => {
       postalCode,
       country,
     }));
-    
+
     router.push('/payment');
-    
- 
+
+
   };
   return (
     <Layout title="Shipping Address">
@@ -85,7 +87,7 @@ const Shipping: React.ReactNode = () => {
                   label="Full Name"
                   error={Boolean(errors.fullName)}
                   helperText={
-                    
+
                     errors.fullName
                       ? errors.fullName.type === 'minLength'
                         ? 'Full Name length is more than 1'

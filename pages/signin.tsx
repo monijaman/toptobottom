@@ -8,7 +8,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import * as Yup from "yup";
 import styles from '../styles/Home.module.css';
- 
+
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useEffect } from 'react';
 import Button from 'react-bootstrap/Button';
@@ -21,28 +21,28 @@ interface IFormInput {
   password: string;
 }
 
-let userStorageInfo:string|null;
+let userStorageInfo: string | null;
 
 const schema = Yup.object().shape({
-   
-    email: Yup.string()
-      .required('Email is required')
-      .email('Email is invalid'),
-    password: Yup.string()
-      .required('Password is required')
-      .min(6, 'Password must be at least 6 characters')
-      .max(40, 'Password must not exceed 40 characters')
-  });
+
+  email: Yup.string()
+    .required('Email is required')
+    .email('Email is invalid'),
+  password: Yup.string()
+    .required('Password is required')
+    .min(6, 'Password must be at least 6 characters')
+    .max(40, 'Password must not exceed 40 characters')
+});
 
 // const [name, setName] = useState("")
 // const [option, setOption] = useState("")
 
 
- 
+
 
 const Register: NextPage = () => {
   // const notify = () => toast("Wow so easy!");
- 
+
   const {
     register,
     handleSubmit,
@@ -52,7 +52,7 @@ const Register: NextPage = () => {
     resolver: yupResolver(schema),
   });
 
- 
+
   const router = useRouter();
   const redirect = router.query.redirect as string;
   //const { state, dispatch } = useContext(StoreContext);
@@ -61,11 +61,11 @@ const Register: NextPage = () => {
 
   const dispatch = useDispatch();
   const { email, password } = useSelector(getUserState);
-  
+
   const onClick = () => {
     setTimeout(() => {
       dispatch(setName('9898998'));
-     // dispatch(setEmail('sulhadin@hotmail.com'));
+      // dispatch(setEmail('sulhadin@hotmail.com'));
     }, 1000);
   };
 
@@ -77,10 +77,10 @@ const Register: NextPage = () => {
   // }, []);
 
 
-  const {  userinfo, isLoading, isError, isSuccess } = useSelector(
+  const { userinfo, isLoading, isError, isSuccess } = useSelector(
     (state) => state.user
   )
-   
+
 
   useEffect(() => {
     if (isError) {
@@ -88,11 +88,11 @@ const Register: NextPage = () => {
     }
 
     if (isSuccess) {
-     // router.push(redirect || "/dashboard");
-    //    let info:string = JSON.stringify(userinfo[0])
-    //    Cookies.set("userInfo", info);
-       router.push(redirect || "/dashboard");
-    
+      // router.push(redirect || "/dashboard");
+      //    let info:string = JSON.stringify(userinfo[0])
+      //    Cookies.set("userInfo", info);
+      router.push(redirect || "/dashboard");
+
       //  let coookieInfo = JSON.parse(Cookies.get('userInfo'));
       //  console.log(coookieInfo.isAdmin)
     }
@@ -102,34 +102,32 @@ const Register: NextPage = () => {
     if (userStorageInfo) {
 
       router.push(redirect || "/dashboard");
-      
+
       // let getCookieInfo = JSON.parse(Cookies.get('userInfo'));
       // console.log(getCookieInfo)
-       
- 
-    }else{
+
+
+    } else {
       router.push(redirect || "/login");
     }
 
     // dispatch(reset())
-  }, [isError, isSuccess,  dispatch])
+  }, [isError, isSuccess, dispatch])
 
   const onSubmit = async (data: IFormInput) => {
     try {
-    dispatch(
+      dispatch(
         login(data)
-    );
+      );
 
-   
-    
-     
-    // dispatch({ type: "USER_LOGIN", payload: data });
-     toast.success("Successfully Signup")
-     
+
+      // dispatch({ type: "USER_LOGIN", payload: data });
+      toast.success("Successfully Signup")
+
     } catch (err: any) {
-    
+
     }
-   // setJson(JSON.stringify(data));
+    // setJson(JSON.stringify(data));
   };
 
 
@@ -146,40 +144,40 @@ const Register: NextPage = () => {
         {/* <link href="//netdna.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" /> */}
       </Head>
       <main className={styles.main}>
-      
-       
-      <ToastContainer position="bottom-center" />
-      
-      <h3>
-        Sign in Form   
-      </h3>
 
-  
 
-   
-      <Form onSubmit={handleSubmit(onSubmit)}>
-    <Form.Group className="mb-3" controlId="formEmail">
-        <Form.Label>Email address</Form.Label>
-        <Form.Control  {...register('email')} type="email" 
-         className={`form-control ${errors.email ? 'is-invalid' : ''}`} placeholder="Enter email" />
-        <Form.Text className="text-muted">
-          We'll never share your email with anyone else.
-        </Form.Text>
-      </Form.Group>
+        <ToastContainer position="bottom-center" />
 
-      <Form.Group className="mb-3" controlId="formBasicPassword">
-        <Form.Label>Confirm Password</Form.Label>
-        <Form.Control type="password"  {...register('password')} 
-        className={`form-control ${errors.email ? 'is-invalid' : ''}`}  placeholder="Password" />
-      </Form.Group>
-      <Button variant="primary" type="submit">
-        Signin
-      </Button>
-    </Form>
- 
- 
-    
-      
+        <h3>
+          Sign in Form
+        </h3>
+
+
+
+
+        <Form onSubmit={handleSubmit(onSubmit)}>
+          <Form.Group className="mb-3" controlId="formEmail">
+            <Form.Label>Email address</Form.Label>
+            <Form.Control  {...register('email')} type="email"
+              className={`form-control ${errors.email ? 'is-invalid' : ''}`} placeholder="Enter email" />
+            <Form.Text className="text-muted">
+              We'll never share your email with anyone else.
+            </Form.Text>
+          </Form.Group>
+
+          <Form.Group className="mb-3" controlId="formBasicPassword">
+            <Form.Label>Confirm Password</Form.Label>
+            <Form.Control type="password"  {...register('password')}
+              className={`form-control ${errors.email ? 'is-invalid' : ''}`} placeholder="Password" />
+          </Form.Group>
+          <Button variant="primary" type="submit">
+            Signin
+          </Button>
+        </Form>
+
+
+
+
       </main>
 
       <footer className={styles.footer}>
@@ -201,4 +199,3 @@ const Register: NextPage = () => {
 export default Register
 
 
- 

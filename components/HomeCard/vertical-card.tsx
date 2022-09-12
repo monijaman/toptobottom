@@ -55,6 +55,8 @@ export default function VerticalCard({
           border: border && "2px solid #eee",
         }}
       >
+
+        <HeartIcon className={styles.likeContainer} />
         {sale_price && price && (
           <button className={styles.favContainer}>
             {(((price - sale_price) / price) * 100) | 0}%
