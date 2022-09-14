@@ -8,19 +8,6 @@ import { categories, prices } from 'data/filterdata';
 
 export default function Layout({ children, noCategories }) {
 
-    const handleFilters = (selFilters, filterType) => {
-
-        const newFilters = { ...Filters }
-
-        if (filterType == "searchTerm") {
-            newFilters['search'] = selFilters
-        } else if (filterType === "category") {
-            newFilters['category'] = selFilters
-        } else if (filterType === "price") {
-            newFilters['price'] = selFilters
-        }
-    }
-
     return (
         <div className={styles.container}>
             <div className={styles.content}>

@@ -27,11 +27,10 @@ export const authSlice = createSlice({
     setAuthState(state, action) {
       state.authState = action.payload;
     },
+
     userLogin(state, action) {
-      let authState = true
       return {
         ...state,
-        authState,
         userInfo: action.payload as IAuthUser
       };
     },

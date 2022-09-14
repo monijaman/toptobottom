@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-
 import styles from "./header.module.scss";
-
 import SearchIcon from "../icons/search";
 import CartIcon from "../icons/cart";
 import ArrowIcon from "../icons/arrow";
@@ -13,7 +11,7 @@ import { useRouter } from "next/router";
 import MenuIcon from "../icons/menu";
 import { selectCartState } from "redux/cartSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { selectAuthState, userLogin } from "redux/authSlice";
+import { selectAuthState, setAuthState, userLogin } from "redux/authSlice";
 
 
 import Cookies from "js-cookie";
@@ -31,24 +29,22 @@ export default function Header() {
   const router = useRouter();
   const { cart: { cartItems } } = useSelector(selectCartState);
   const [cartLength, setCartLength] = useState(cartItems.length);
-
-  const { authState } = useSelector(selectAuthState);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const { authState, userInfo } = useSelector(selectAuthState);
 
   // console.log(authState)
   const logoutClickHandler = () => {
-    //  setAnchorEl(null);
     Cookies.remove("userInfo");
     Cookies.remove("cartItems");
     Cookies.remove("authState");
+    dispatch(setAuthState(false))
     dispatch(userLogin());
     router.push("/login");
   };
 
-
   useEffect(() => {
     setCartLength(cartItems.length)
-
-
+    setIsAdmin(userInfo?.isAdmin)
   }, [cartItems])
 
   return (
@@ -83,7 +79,7 @@ export default function Header() {
           <Link href="/">My Account</Link>
           <Link href="/orders">My Orders</Link>
           <Link href="/favorites">Favourites</Link>
-
+          {!authState && <Link href="/login">Login</Link>}
           <Link href="/login">Login</Link>
           <Link href="/register">Register</Link>
         </div>
@@ -131,12 +127,11 @@ export default function Header() {
           <div className={styles.dropdown}>
             <div className={styles.arrowUp} />
             <div className={styles.dropdownMenu}>
-
-
               <Link href="/">My Account</Link>
               <Link href="/orders">My Orders</Link>
               <Link href="/favorites">Favourites</Link>
-
+              {authState && isAdmin && <Link href="/admin">Admin Panel</Link>}
+              {!authState && <Link href="/favorites">Login</Link>}
               {!authState && <Link href="/login">Login</Link>}
               {!authState && <Link href="/register">Register</Link>}
               {authState && <MenuItem onClick={logoutClickHandler}>Logout</MenuItem>}

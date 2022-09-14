@@ -18,7 +18,7 @@ import { getError } from '../utils/error';
 import useStyles from "../utils/styles";
 
 import { useDispatch, useSelector } from "react-redux";
-import { selectAuthState, userLogin } from 'redux/authSlice';
+import { selectAuthState, setAuthState, userLogin } from 'redux/authSlice';
 import { UserSubmitForm } from "types/index";
 
 
@@ -57,6 +57,7 @@ const Login: React.ReactNode = () => {
         password,
       });
 
+      dispatch(setAuthState(true))
       dispatch(userLogin(data));
       Cookies.set("userInfo", JSON.stringify(data));
       Cookies.set("authState", JSON.stringify(true));
