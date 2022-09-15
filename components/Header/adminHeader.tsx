@@ -39,7 +39,8 @@ export default function Header() {
         Cookies.remove("userInfo");
         Cookies.remove("cartItems");
         Cookies.remove("authState");
-        dispatch(userLogin());
+        let payloadParam: string = "Remove"
+        dispatch(userLogin(payloadParam));
         router.push("/login");
     };
 

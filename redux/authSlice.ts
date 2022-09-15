@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { HYDRATE } from "next-redux-wrapper";
 import { AppState } from "./store";
 import Cookies from "js-cookie";
-import { IAuthUser, IProduct } from "types/index";
+import { IAuthUser } from "types/index";
 // Type for our state
 export interface AuthState {
   authState: boolean;
@@ -35,7 +35,7 @@ export const authSlice = createSlice({
       };
     },
 
-    userLogout(state) {
+    userLogout(state, action) {
       return {
         ...state,
         userInfo: null,
