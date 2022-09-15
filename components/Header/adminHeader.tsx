@@ -25,7 +25,7 @@ export default function Header() {
     const [showHeader, setShowHeader] = useState({
         transform: "translate3d(100vw, 0, 0)",
     });
-    const [input, setInput] = useState(null);
+
     const dispatch = useDispatch();
 
     const router = useRouter();

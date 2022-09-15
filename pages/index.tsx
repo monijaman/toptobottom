@@ -58,12 +58,12 @@ export default function HomePage({ prpTotalPages, prpDataSet }: props) {
   const [totalPages, setTotalPages] = useState(prpTotalPages);
   const isMounted = useRef(false);
 
-  const { isLoading, isError, isSuccess, dataSet, pagination }
+  const { isLoading, isError, dataSet, pagination }
     = useSelector(selectFilterState)
 
 
   const [loading, setLoading] = useState(isLoading);
-  const [error, setError] = useState(isError);
+
   const [page, setPage] = useState(pageNumber);
 
 
@@ -74,8 +74,8 @@ export default function HomePage({ prpTotalPages, prpDataSet }: props) {
       router.push(`?${qString}`, undefined, { shallow: true });
 
       setDataResSet(dataSet)
-      setPage(pagination.page);
-      setTotalPages(pagination.totalPage);
+      setPage(pagination?.page);
+      setTotalPages(pagination?.totalPage);
     } else {
       // dispatch(updatFilter())
       isMounted.current = true;

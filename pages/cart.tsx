@@ -44,7 +44,7 @@ const CartScreen: NextPage = () => {
   };
 
   return (
-    <Layout title="Shopping Cart">
+    <Layout >
       <Typography component="h1" variant="h1">
         Shopping Cart
       </Typography>
