@@ -23,3 +23,5 @@ https://blog.logrocket.com/using-styled-components-in-typescript-a-tutorial-with
 https://npm.io/package/@brajevicm/next-redux-wrapper
 
 https://codesandbox.io/examples/package/next-redux-wrapper
+
+https://codesandbox.io/s/6ti2l?file=/src/pages/dashboard.tsx

@@ -20,6 +20,8 @@ import Cookies from "js-cookie";
 import {
     MenuItem
 } from "@material-ui/core";
+import { boolean } from "yup/lib/locale";
+import { number } from "yup";
 
 export default function Header() {
     const [showHeader, setShowHeader] = useState({
@@ -39,8 +41,8 @@ export default function Header() {
         Cookies.remove("userInfo");
         Cookies.remove("cartItems");
         Cookies.remove("authState");
-        let payloadParam: string = "Remove"
-        dispatch(userLogin(payloadParam));
+
+        dispatch(userLogin(false));
         router.push("/login");
     };
 

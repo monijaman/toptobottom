@@ -1,11 +1,12 @@
 import styles from "../index.module.scss";
-
+import React from "react"
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/router";
 import Head from "next/head";
-import FileUpload from 'utils/FileUpload'
+// import FileUpload from 'utils/FileUpload'
 import { Controller, useForm } from "react-hook-form";
 import { useSnackbar } from "notistack";
+import type { NextPage } from 'next';
 import Axios from 'axios';
 import {
     Button,
@@ -26,6 +27,10 @@ const queryString = require('querystring');
 import { getProducts, updatFilter, selectFilterState } from "redux/filterSlice";
 import Product from "models/Product";
 
+type FormData = {
+    name: string;
+    price: number;
+};
 
 const useStyles = makeStyles({
     root: {
@@ -50,8 +55,9 @@ const useStyles = makeStyles({
     },
 });
 
+const Home: NextPage = () => {
 
-const Admin: React.ReactNode = () => {
+
     const {
         handleSubmit,
         control,
@@ -59,131 +65,61 @@ const Admin: React.ReactNode = () => {
     } = useForm<FormData>();
 
     const dispatch = useDispatch();
-    const { query } = useRouter();
-
-
+    const [isLoading, setIsLoading] = React.useState(false);
+    const inputFileRef = React.useRef<HTMLInputElement | null>(null);
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
     const router = useRouter();
-    const redirect = router.query.redirect as string; // login?redirect=/shipping
-    // const { state, dispatch } = useContext(StoreContext);
-    // const { userInfo } = state;
-
-    // const { userInfo, authState } = useSelector(selectAuthState);
-
-
-    useEffect(() => {
-
-
-
-    }, [])
-
-
-    const [image, setImage] = useState(null);
-    const [createObjectURL, setCreateObjectURL] = useState(null);
-
-    const uploadToClient = (event) => {
-        if (event.target.files && event.target.files[0]) {
-            const i = event.target.files[0];
-
-            setImage(i);
-            setCreateObjectURL(URL.createObjectURL(i));
-        }
-    };
-
-    const uploadToServer = async (event) => {
-        const body = new FormData();
-        body.append("file", image);
-        const response = await fetch("/api/file", {
-            method: "POST",
-            body
-        });
-    };
-
-
-
-
-    const [TitleValue, setTitleValue] = useState("")
-    const [DescriptionValue, setDescriptionValue] = useState("")
-    const [PriceValue, setPriceValue] = useState(0)
-    const [ContinentValue, setContinentValue] = useState(1)
-
-    const [Images, setImages] = useState([])
-
-
-    const onTitleChange = (event) => {
-        setTitleValue(event.currentTarget.value)
-    }
-
-    const onDescriptionChange = (event) => {
-        setDescriptionValue(event.currentTarget.value)
-    }
-
-    const onPriceChange = (event) => {
-        setPriceValue(event.currentTarget.value)
-    }
-
-    const onContinentsSelectChange = (event) => {
-        setContinentValue(event.currentTarget.value)
-    }
-
-    const updateImages = (newImages) => {
-        setImages(newImages)
-    }
-    const onSubmit = (event) => {
-        event.preventDefault();
-
-
-        if (!TitleValue || !DescriptionValue || !PriceValue ||
-            !ContinentValue || !Images) {
-            return alert('fill all the fields first!')
-        }
-
-        const variables = {
-            writer: props.user.userData._id,
-            title: TitleValue,
-            description: DescriptionValue,
-            price: PriceValue,
-            images: Images,
-            continents: ContinentValue,
-        }
-
-        Axios.post('/api/products/fileupload', variables)
-            .then(response => {
-                if (response.data.success) {
-                    alert('Product Successfully Uploaded')
-                    props.history.push('/')
-                } else {
-                    alert('Failed to upload Product')
-                }
-            })
-
-    }
-
-
+    const redirect = router.query.redirect as string;
 
     const classes = useStyles();
 
-    const submitHandler = async ({ email, password }: UserSubmitForm) => {
-        closeSnackbar();
+    const submitHandler = async ({
+        name,
+        price
+    }: IProduct) => {
 
-        try {
-            const { data } = await axios.post("/api/users/login", {
-                email,
-                password,
-            });
+        /* Prevent form from submitting by default */
+        // e.preventDefault();
 
-            dispatch(setAuthState(true))
-            dispatch(userLogin(data));
-            Cookies.set("userInfo", JSON.stringify(data));
-            Cookies.set("authState", JSON.stringify(true));
-            router.push(redirect || "/");
-
-        } catch (err: any) {
-            enqueueSnackbar(getError(err), { variant: 'error' });
+        /* If file is not selected, then show alert message */
+        if (!inputFileRef.current?.files?.length) {
+            alert('Please, select file you want to upload');
+            return;
         }
+        console.log(inputFileRef)
+
+        setIsLoading(true);
+
+        /* Add files to FormData */
+        const formData = new FormData();
+
+        formData.append("name", name)
+        formData.append("price", price)
+
+        Object.values(inputFileRef.current.files).forEach(file => {
+            formData.append('file', file);
+        })
+
+        /* Send request to our api route */
+        const response = await fetch('/api/products/upload', {
+            method: 'POST',
+            body: formData
+        });
+
+        const body = await response.json() as { status: 'ok' | 'fail', message: string };
+
+        console.log(body);
+
+        if (body.status === 'ok') {
+            inputFileRef.current.value = '';
+            // Do some stuff on successfully upload
+        } else {
+            // Do some stuff on error
+        }
+
+        setIsLoading(false);
     };
 
-    /* Invoked when pagination button is called */
     return (
         <>
             <Layout>
@@ -200,7 +136,13 @@ const Admin: React.ReactNode = () => {
                         </Typography>
                         <form onSubmit={handleSubmit(submitHandler)} className={classes.form}>
                             {/* DropZone */}
-                            <input type="file" name="myImage" onChange={uploadToClient} />
+
+                            <input type="file" name="myfile"
+                                ref={inputFileRef} multiple
+                                onChange={(e) => {
+                                    submitHandler
+                                }}
+                            />
 
                             <List>
                                 <ListItem>
@@ -261,7 +203,35 @@ const Admin: React.ReactNode = () => {
                                         )}
                                     ></Controller>
                                 </ListItem>
-
+                                <ListItem>
+                                    <Controller
+                                        name="price"
+                                        control={control}
+                                        defaultValue=""
+                                        rules={{
+                                            required: true,
+                                            minLength: 2,
+                                        }}
+                                        render={({ field }) => (
+                                            <Input
+                                                variant="outlined"
+                                                fullWidth
+                                                id="price"
+                                                label="price"
+                                                inputProps={{ type: "name" }}
+                                                error={Boolean(errors.price)}
+                                                helperText={
+                                                    errors.name
+                                                        ? errors.name.type === "minLength"
+                                                            ? "price length is more than 1"
+                                                            : "price is required"
+                                                        : ""
+                                                }
+                                                {...field}
+                                            ></TextField>
+                                        )}
+                                    ></Controller>
+                                </ListItem>
                             </List>
 
                             <List>
@@ -270,28 +240,22 @@ const Admin: React.ReactNode = () => {
                             </List>
 
 
-                            <label>Price($)</label>
-                            <Input
-                                onChange={onPriceChange}
-                                value={PriceValue}
-                                type="number"
-                            />
 
-
-                            <Button onClick={onSubmit}>Submit </Button>
-                            <button
+                            {/* <Button onClick={onSubmit}>Submit </Button> */}
+                            {/* <button
                                 className="btn btn-primary"
                                 type="submit"
                                 onClick={uploadToServer}
-                            >
-                                Send to server
-                            </button>
+                            > */}
+                            <input type="submit" value="Upload" disabled={isLoading} />
+
                         </form>
 
                     </main>
-                </div >
+                </div>
             </Layout >
         </>
-    );
+    )
 }
-export default Admin;
+
+export default Home

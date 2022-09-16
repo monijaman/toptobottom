@@ -68,8 +68,72 @@ const categories = [
     }
 ]
 
+const colors = [
+    {
+        "name": "red",
+        "code": "#FF0000"
+    },
+    {
+        "name": "Cyan",
+        "code": "#00FFFF"
+    },
+    {
+        "name": "Blue",
+        "code": "#00008B"
+    },
+    {
+        "name": "FFFF00",
+        "code": "#Yellow"
+    },
+    {
+        "name": "Lime",
+        "code": "#00FF00"
+    },
+    {
+        "name": "Magenta",
+        "code": "#FF00FF"
+    },
+    {
+        "name": "Magenta",
+        "code": "#FF00FF"
+    },
+    {
+        "name": "Pink",
+        "code": "#FFC0CB"
+    },
+    {
+        "name": "White",
+        "code": "#FFFFFF"
+    },
+    {
+        "name": "Black",
+        "code": "#000000"
+    },
+    {
+        "name": "Orange",
+        "code": "#FFA500"
+    },
+    {
+        "name": "Green",
+        "code": "#008000"
+    },
+    {
+        "name": "Brown",
+        "code": "#A52A2A"
+    }
+]
 
+const brands = [
+    {
+        "name": "brand 1",
+    },
+    {
+        "name": "brand 2",
+    }
+]
 export {
     prices,
-    categories
+    categories,
+    colors,
+    brands
 }

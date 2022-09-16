@@ -38,7 +38,7 @@ export default function Header() {
     Cookies.remove("cartItems");
     Cookies.remove("authState");
     dispatch(setAuthState(false))
-    dispatch(userLogin());
+    dispatch(userLogin(false));
     router.push("/login");
   };
 

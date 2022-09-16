@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
 import { selectAuthState, userLogin } from "redux/authSlice";
 
-export default function adminLayout({ children, noCategories }) {
+export default function adminLayout({ children }) {
 
     const [isAdmin, setIsAdmin] = useState(false);
     const { authState, userInfo } = useSelector(selectAuthState);
