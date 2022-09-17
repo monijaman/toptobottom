@@ -96,7 +96,7 @@ const Layout: React.FC<Props> = ({ title, description, children }) => {
       </Head>
 
       <Header />
--------------------------------
+ 
 
       <ThemeProvider theme={theme}>
         <div className={classes.parent}>

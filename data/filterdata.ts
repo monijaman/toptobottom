@@ -70,7 +70,7 @@ const categories = [
 
 const colors = [
     {
-        "name": "red",
+        "name": "Red",
         "code": "#FF0000"
     },
     {
@@ -82,8 +82,8 @@ const colors = [
         "code": "#00008B"
     },
     {
-        "name": "FFFF00",
-        "code": "#Yellow"
+        "name": "Yellow",
+        "code": "#FFFF00"
     },
     {
         "name": "Lime",
@@ -125,10 +125,10 @@ const colors = [
 
 const brands = [
     {
-        "name": "brand 1",
+        "name": "Brand 1",
     },
     {
-        "name": "brand 2",
+        "name": "Brand 2",
     }
 ]
 export {

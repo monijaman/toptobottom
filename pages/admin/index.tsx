@@ -3,7 +3,7 @@ import styles from "../index.module.scss";
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/router";
 import Head from "next/head";
-import FileUpload from 'utils/FileUpload'
+// import FileUpload from 'utils/FileUpload'
 import { Controller, useForm } from "react-hook-form";
 import { useSnackbar } from "notistack";
 import Axios from 'axios';

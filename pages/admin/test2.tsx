@@ -8,16 +8,18 @@ import { Controller, useForm } from "react-hook-form";
 import { useSnackbar } from "notistack";
 import type { NextPage } from 'next';
 import Axios from 'axios';
-import { colors, brands } from 'data/filterdata';
-
+import { colors, brands, categories } from 'data/filterdata';
+import RadioBtn from 'components/ui/htmlInputElem/RadioBtn';
 import {
     Button,
     Link, List,
     ListItem, TextField,
     CircularProgress,
     makeStyles,
-    Typography
+    Typography,
 } from "@material-ui/core";
+import TextareaAutosize from '@mui/material/TextareaAutosize';
+import Divider from '@mui/material/Divider';
 
 import Input from '@mui/material/Input';
 import Layout from "components/Layout/adminLayout";
@@ -37,7 +39,7 @@ import FormControl from '@mui/material/FormControl';
 import ListItemText from '@mui/material/ListItemText';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import Checkbox from '@mui/material/Checkbox';
-import Radio from '@mui/material/Radio';
+// import RadioBtn from 'components/ui/htmlInputElem/RadioBtn';
 
 type FormData = {
     name: string;
@@ -67,7 +69,6 @@ const useStyles = makeStyles({
     },
 });
 
-
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -80,31 +81,11 @@ const MenuProps = {
 };
 
 const Home: NextPage = () => {
-    const names = [
-        'Oliver Hansen',
-        'Van Henry',
-        'April Tucker',
-        'Ralph Hubbard',
-        'Omar Alexander',
-        'Carlos Abbott',
-        'Miriam Wagner',
-        'Bradley Wilkerson',
-        'Virginia Andrews',
-        'Kelly Snyder',
-    ];
+ 
+    const [category, setCategory] = React.useState<string[]>([]);
+    const [color, setColor] = React.useState<string[]>([]);
+    const [brandName, setBrandName] = React.useState<string[]>([]);
 
-    const [personName, setPersonName] = React.useState<string[]>([]);
-
-    const handleChange = (event: SelectChangeEvent<typeof personName>) => {
-        const {
-            target: { value },
-        } = event;
-        setPersonName(
-            // On autofill we get a stringified value.
-            typeof value === 'string' ? value.split(',') : value,
-        );
-        console.log(personName)
-    };
     const {
         handleSubmit,
         control,
@@ -119,10 +100,33 @@ const Home: NextPage = () => {
     const redirect = router.query.redirect as string;
     const [selectedFile, setSelectedFile] = React.useState(null);
     const classes = useStyles();
+    const [brand, setBrand] = React.useState('');
+
+    /* Functionaltiyr for controlling checkbox, radio and search */
+    const handleFilters = (checkedItem, filterType) => {
+        if (filterType == "color") {
+            setColor(checkedItem)
+        }
+
+    }
+
+    const handleBrandChange = (event: SelectChangeEvent<typeof Brand>) => {
+        setBrand(event.target.value as string);
+    };
+    const handleChange = (event: SelectChangeEvent<typeof Categories>) => {
+        const {
+            target: { value },
+        } = event;
+        setCategory(
+            // On autofill we get a stringified value.
+            typeof value === 'string' ? value.split(',') : value,
+        );
+
+    };
 
     const submitHandler = async ({
         name,
-        price,
+        price
     }: IProduct) => {
 
         /* Prevent form from submitting by default */
@@ -139,44 +143,36 @@ const Home: NextPage = () => {
 
         /* Add files to FormData */
         const formData = new FormData();
-
-        formData.append("name", name)
-        formData.append("price", price)
-        formData.append("personName", personName)
-        console.log(formData)
+        const content = {
+            name,
+            price,
+            category,
+            color,
+            brand
+          };
+        
+        formData.append("data", JSON.stringify(content))
         Object.values(inputFileRef.current.files).forEach(file => {
             formData.append('file', file);
         })
 
-        /* Send request to our api route */
-        // const response = await fetch('/api/products/upload', {
-        //     method: 'POST',
-        //     body: formData
-        // });
-
-        const { data } = await axios.post("/api/users/register", {
-            name,
-            price,
-            formData,
-        });
-
-        console.log(data)
-        //   const body = await response.json() as { status: 'ok' | 'fail', message: string };
-
-        console.log(body);
-
-        // if (body.status === 'ok') {
-        //     inputFileRef.current.value = '';
-        //     // Do some stuff on successfully upload
-        // } else {
-        //     // Do some stuff on error
-        // }
+        try {
+            const response = await axios({
+                method: "post",
+                url: "/api/products/upload",
+                data: formData,
+                headers: { "Content-Type": "multipart/form-data" },
+            });
+        } catch (error) {
+            console.log(error)
+        }
 
         setIsLoading(false);
     };
 
     const handleFileSelect = (event) => {
         setSelectedFile(event.target.files[0])
+        console.log(selectedFile)
     }
 
 
@@ -192,17 +188,68 @@ const Home: NextPage = () => {
                         {/* <Form onSubmit={onSubmit} > */}
 
                         <Typography component="h1" variant="h1">
-                            Register
+                            Add/Edit Product
                         </Typography>
+                        <br />
+                        <Divider />
+                      
+                        
                         <form onSubmit={handleSubmit(submitHandler)} className={classes.form}>
-                            {/* DropZone */}
-
-                            <input type="file" name="myfile"
-                                ref={inputFileRef} multiple
-                                onChange={handleFileSelect}
-                            />
 
                             <List>
+                           
+                            <ListItem>
+                                    <FormControl sx={{ m: 1, width: 300 }}>
+                                        <InputLabel id="demo-simple-select-label">Brands</InputLabel>
+                                        <Select
+                                            labelId="Brand"
+                                            id="Brands"
+                                            value={brand}
+                                            label="Brand"
+                                            inputProps={{ type: "name", style: { fontSize: 20 } }} // font size of input text                                               error={Boolean(errors.price)}
+                                            // InputLabelProps={{style: {fontSize: 20}}} // font size of input label
+                                            onChange={handleBrandChange}
+                                        >
+
+                                            {brands.map((brand) => (
+                                                <MenuItem key={brand.name} value={brand.name}>
+                                                    {brand.name}
+                                                </MenuItem>
+                                            ))}
+
+                                        </Select>
+                                    </FormControl>
+                                    <FormControl sx={{ m: 1, width: 300 }}>
+                                        <InputLabel id="CategoryInput">Category</InputLabel>
+                                        <Select
+                                            labelId="categories"
+                                            id="categories"
+                                            multiple
+                                            value={category}
+                                            onChange={handleChange}
+                                            input={<OutlinedInput label="Category" />}
+                                            renderValue={(selected) => selected.join(', ')}
+                                            MenuProps={MenuProps}
+                                            inputProps={{ type: "name", style: { fontSize: 20 } }} // font size of input text                                               error={Boolean(errors.price)}
+
+                                        >
+                                            {categories.map((category) => (
+                                                <MenuItem key={category._id} value={category.name}>
+                                                    <Checkbox checked={categories.indexOf(category.name) > -1} />
+                                                    <ListItemText primary={category.name} />
+                                                </MenuItem>
+                                            ))}
+                                        </Select>
+                                    </FormControl>
+                               
+                            </ListItem>   
+                            <ListItem>
+                                    <RadioBtn
+                                        list={colors} //selectedRdo={prpPrice}
+                                        handleRadioBtn={checkedItem => handleFilters(checkedItem, "color")}
+                                    />
+                                </ListItem>
+                          
                                 <ListItem>
                                     <Controller
                                         name="name"
@@ -219,6 +266,7 @@ const Home: NextPage = () => {
                                                 id="name"
                                                 label="Name"
                                                 inputProps={{ type: "name" }}
+
                                                 error={Boolean(errors.name)}
                                                 helperText={
                                                     errors.name
@@ -261,6 +309,10 @@ const Home: NextPage = () => {
                                         )}
                                     ></Controller>
                                 </ListItem>
+
+                                
+
+                               
                                 <ListItem>
                                     <Controller
                                         name="description"
@@ -274,15 +326,18 @@ const Home: NextPage = () => {
                                             <TextField
                                                 variant="outlined"
                                                 fullWidth
+                                                multiline
+                                                minRows={4}
+                                                maxRows={6}
                                                 id="description"
-                                                label="description"
-                                                inputProps={{ type: "name" }}
-                                                error={Boolean(errors.price)}
+                                                label="Description"
+                                                inputProps={{ type: "name", style: { fontSize: 20 } }} // font size of input text                                               error={Boolean(errors.price)}
+                                                InputLabelProps={{ style: { fontSize: 20 } }} // font size of input label
                                                 helperText={
                                                     errors.name
                                                         ? errors.name.type === "minLength"
-                                                            ? "description length is more than 1"
-                                                            : "description is required"
+                                                            ? "Description length is more than 1"
+                                                            : "Description is required"
                                                         : ""
                                                 }
                                                 {...field}
@@ -291,47 +346,16 @@ const Home: NextPage = () => {
                                     ></Controller>
                                 </ListItem>
                                 <ListItem>
-                                    <div>
-                                        <FormControl sx={{ m: 1, width: 300 }}>
-                                            <InputLabel id="demo-multiple-checkbox-label">Tag</InputLabel>
-                                            <Select
-                                                labelId="demo-multiple-checkbox-label"
-                                                id="demo-multiple-checkbox"
-                                                multiple
-                                                value={personName}
-                                                onChange={handleChange}
-                                                input={<OutlinedInput label="Tag" />}
-                                                renderValue={(selected) => selected.join(', ')}
-                                                MenuProps={MenuProps}
-                                            >
-                                                {names.map((name) => (
-                                                    <MenuItem key={name} value={name}>
-                                                        <Checkbox checked={personName.indexOf(name) > -1} />
-                                                        <ListItemText primary={name} />
-                                                    </MenuItem>
-                                                ))}
-                                            </Select>
-                                        </FormControl>
-
-                                        
-                                    </div>
-                                </ListItem>
-                            </List>
-
-                            <List>
-                                <ListItem>
-                                </ListItem>
+                            <input type="file" name="myfile"
+                                ref={inputFileRef} multiple
+                                onChange={handleFileSelect}
+                            />
+                            </ListItem>
                             </List>
 
 
 
-                            {/* <Button onClick={onSubmit}>Submit </Button> */}
-                            {/* <button
-                                className="btn btn-primary"
-                                type="submit"
-                                onClick={uploadToServer}
-                            > */}
-                            <input type="submit" value="Upload" disabled={isLoading} />
+                            <input className="btn btn-primary" type="submit" value="Upload"   />
 
                         </form>
 
