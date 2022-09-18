@@ -126,7 +126,8 @@ const Home: NextPage = () => {
 
     const submitHandler = async ({
         name,
-        price
+        price,
+        description
     }: IProduct) => {
 
         /* Prevent form from submitting by default */
@@ -148,7 +149,8 @@ const Home: NextPage = () => {
             price,
             category,
             color,
-            brand
+            brand,
+            description
           };
         
         formData.append("data", JSON.stringify(content))

@@ -7,25 +7,38 @@ import User from 'models/Product';
 import db from 'utils/db';
 import Product from 'models/Product';
 
+ 
 export const config = {
     api: {
         bodyParser: false,
     }
 };
 
+type ProcessedFiles = Array<[string, File]>;
+
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     let status = 200,
         resultBody = { status: 'ok', message: 'Files were uploaded successfully' };
-   
- 
-    const asyncParse = (req: NextApiRequest) =>
-    new Promise((resolve, reject) => {
-      const form = new formidable.IncomingForm({ multiples: true });
-      form.parse(req, (err, fields, files) => {
-        if (err) return reject(err);
-        resolve({ fields, files });
-      });
+
+    /* Get files using formidable */
+    const formData = await new Promise<ProcessedFiles | undefined>((resolve, reject) => {
+        const form = new formidable.IncomingForm();
+        const files: ProcessedFiles = [];
+        const fields: ProcessedFiles = [];
+     
+        form.on('file', function (field, file) {
+            files.push([field, file]);
+        })
+
+        form.on('field', function (field, value) {
+            fields.push([field, value]);
+        })
+        form.on('end', () => resolve({files, fields}));
+        form.on('error', err => reject(err));
+        form.parse(req, () => {
+            //fields.push
+        });
     }).catch(e => {
         console.log(e);
         status = 500;
@@ -34,15 +47,31 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         }
     });
 
-     
-
-    const result = await asyncParse(req);
- 
-// Destructuring files 
-   const {files:{file:allFiles}, fields = {}} = result
-//    const {education: {school: {name}} = {}} = user;
- 
-    if (allFiles.length > 0) {
+    // Destructure form data
+    const string_to_slug =(str:string) =>{
+        str = str.replace(/^\s+|\s+$/g, ''); // trim
+        str = str.toLowerCase();
+      
+        // remove accents, swap ñ for n, etc
+        var from = "àáäâèéëêìíïîòóöôùúüûñç·/_,:;";
+        var to   = "aaaaeeeeiiiioooouuuunc------";
+        for (var i=0, l=from.length ; i<l ; i++) {
+            str = str.replace(new RegExp(from.charAt(i), 'g'), to.charAt(i));
+        }
+    
+        str = str.replace(/[^a-z0-9 -]/g, '') // remove invalid chars
+            .replace(/\s+/g, '-') // collapse whitespace and replace by -
+            .replace(/-+/g, '-'); // collapse dashes
+    
+        return str;
+    }
+    
+    const { files, fields} = formData
+    const jsonData:string = fields[0][1]
+    // console.log(fields[0][1])
+    const parsedData = JSON.parse(jsonData)
+    const insertedFiles: string[] = []
+    if (files?.length >0 ) {
 
         /* Create directory for uploads */
         const targetPath = path.join(process.cwd(), `/uploads/`);
@@ -53,29 +82,32 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         }
 
         /* Move uploaded files to directory */
-        for (const file of allFiles) {
-           const tempPath = file.filepath;
+        for (const file of files) {
+           const tempPath = file[1].filepath;
+           insertedFiles.push(file[1].originalFilename)
             //await fs.rename(tempPath, targetPath + file[1].originalFilename);
- 
-           await mv(tempPath, targetPath + file.originalFilename, { mkdirp: true }, function (err) {
+            await mv(tempPath, targetPath + file[1].originalFilename, { mkdirp: true }, function (err) {
                 // done. it first created all the necessary directories, and then
                 // tried fs.rename, then falls back to using ncp to copy the dir
                 // to dest and then rimraf to remove the source dir
            });
 
         }
-console.log(result.fields)
-        // Save all data
-        // const newProduct = new Product({
-        //     name: req.body.name,
-        //     price: req.body.email,
-        //     categoty: req.body.categoty,
-        //     color: req.body.username,
-        //     brand:req.body.username,
-        //     });
-    
-        //     const product = await newProduct.save();
-        //     await db.disconnect();
+
+        let puerSlug:string = string_to_slug(parsedData.name)
+        const newProduct = new Product({
+            name: parsedData.name,
+            price: parsedData.price,
+            slug:puerSlug,
+            description: parsedData.description,
+            image:insertedFiles.toString(),
+            category: parsedData.category.toString(),
+            color: parsedData.color,
+            brand:parsedData.brand,
+            });
+    // console.log(parsedData.category.toString())
+          const product = await newProduct.save();
+           await db.disconnect();
     }
 
     res.status(status).json(resultBody);
