@@ -27,3 +27,5 @@ https://codesandbox.io/examples/package/next-redux-wrapper
 https://codesandbox.io/s/6ti2l?file=/src/pages/dashboard.tsx
 
 query: https://towardsdev.com/mongodb-query-exercises-and-solutions-a60b2646a14c
+
+https://www.smashingmagazine.com/2021/06/client-side-routing-next-js/

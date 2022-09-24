@@ -95,15 +95,15 @@ export default function Header() {
                 />
             </div>
             <div className={styles.searchContainer}>
-                <SearchIcon
+                {/* <SearchIcon
                     width={20}
                     height={20}
                     fill="grey"
                     className={styles.searchIcon}
-                />
+                /> */}
 
 
-                <SearchFeature />
+                {/* <SearchFeature /> */}
             </div>
             <div className={styles.rightContent}>
                 <Link href="/cart">

@@ -2,7 +2,6 @@ import React, { useContext } from "react";
 import { InferGetServerSidePropsType } from "next";
 import NextLink from "next/link";
 import Image from "next/image";
-
 import {
   Grid,
   Link,

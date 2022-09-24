@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import nc from 'next-connect';
 import Product from '../../../models/Product';
 import db from '../../../utils/db';
-import { categories, price } from 'data/filterdata';
+import { categories, prices } from 'data/filterdata';
 
 const handler = nc<NextApiRequest, NextApiResponse>();
 
@@ -12,7 +12,7 @@ handler.get(async (req, res) => {
   try {
 
     let category = [];
-
+    console.log(category)
     if (req.query.type && req.query.type == "server") {
       category = (req.query.category).split(",") || "all";
     } else {

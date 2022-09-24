@@ -48,30 +48,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     });
 
     // Destructure form data
-    const string_to_slug =(str:string) =>{
-        str = str.replace(/^\s+|\s+$/g, ''); // trim
-        str = str.toLowerCase();
-      
-        // remove accents, swap ñ for n, etc
-        var from = "àáäâèéëêìíïîòóöôùúüûñç·/_,:;";
-        var to   = "aaaaeeeeiiiioooouuuunc------";
-        for (var i=0, l=from.length ; i<l ; i++) {
-            str = str.replace(new RegExp(from.charAt(i), 'g'), to.charAt(i));
-        }
     
-        str = str.replace(/[^a-z0-9 -]/g, '') // remove invalid chars
-            .replace(/\s+/g, '-') // collapse whitespace and replace by -
-            .replace(/-+/g, '-'); // collapse dashes
-    
-        return str;
-    }
     
     const { files, fields} = formData
     const jsonData:string = fields[0][1]
     // console.log(fields[0][1])
     const parsedData = JSON.parse(jsonData)
     const insertedFiles: string[] = []
-    if (files?.length >0 ) {
+    if (parsedData) {
 
         /* Create directory for uploads */
         const targetPath = path.join(process.cwd(), `/public/images/`);
@@ -94,20 +78,29 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
         }
 
-        let puerSlug:string = string_to_slug(parsedData.name)
-       // console.log(parsedData)
-        const newProduct = new Product({
+      //  let puerSlug:string = string_to_slug(parsedData.name)
+     
+        
+            
+            const filter = { _id: parsedData.prodId };
+            
+           const update = {     
             name: parsedData.name,
             price: parsedData.price,
-            slug:puerSlug,
-            description: parsedData.description,
             image:insertedFiles.toString(),
+            description: parsedData.description,
             category: parsedData.category.toString(),
             colors: parsedData.color,
-            brand:parsedData.brand,
-            });
-    
-          const product = await newProduct.save();
+            brand:parsedData.brand
+         }
+       
+         //console.log(parsedData)
+            let product = await Product.findOneAndUpdate(filter, update, {
+                new: true
+              });
+           
+       // console.log(product)
+         // const product = await newProduct.save();
            await db.disconnect();
     }
 

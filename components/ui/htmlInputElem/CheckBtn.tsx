@@ -3,11 +3,24 @@ import React, { useState, useEffect } from 'react'
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Box from '@mui/material/Box';
+import {
+    Grid,
+    makeStyles,
+    Typography
+  } from "@material-ui/core";
 
+const useStyles = makeStyles({
+    root: {
+      marginTop: 20,
+      background:"#efefef"
+    },
+    
+  });
+  
 function CheckBox(props) {
 
     const [Checked, setChecked] = useState(props.selectedChk.split(","))
-
+    const classes = useStyles();
     const handleToggle = (value) => {
 
         const currentIndex = Checked.indexOf(value)
@@ -40,8 +53,10 @@ function CheckBox(props) {
     }
 
     const renderCheckboxLists = () => props.list && props.list.map((value, index) => (
-        <React.Fragment key={index}>
-            <FormControlLabel control={
+        <React.Fragment key={index}  >
+            <FormControlLabel
+             
+            control={ 
             <Checkbox
                 label='My checkbox' 
                 onChange={() => handleToggle(value._id)}
@@ -54,7 +69,7 @@ function CheckBox(props) {
     
 
     return (
-        <div>
+        <div className={classes.root} >
             {renderCheckboxLists()}
         </div>
     )

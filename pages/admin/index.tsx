@@ -1,20 +1,25 @@
 import styles from "../index.module.scss";
-
+import React from "react"
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/router";
 import Head from "next/head";
 // import FileUpload from 'utils/FileUpload'
 import { Controller, useForm } from "react-hook-form";
 import { useSnackbar } from "notistack";
+import type { NextPage } from 'next';
 import Axios from 'axios';
+import { colors, brands, categories } from 'data/filterdata';
+import RadioBtn from 'components/ui/htmlInputElem/RadioBtn';
 import {
     Button,
     Link, List,
     ListItem, TextField,
     CircularProgress,
     makeStyles,
-    Typography
+    Typography,
 } from "@material-ui/core";
+import TextareaAutosize from '@mui/material/TextareaAutosize';
+import Divider from '@mui/material/Divider';
 
 import Input from '@mui/material/Input';
 import Layout from "components/Layout/adminLayout";
@@ -26,6 +31,20 @@ const queryString = require('querystring');
 import { getProducts, updatFilter, selectFilterState } from "redux/filterSlice";
 import Product from "models/Product";
 
+
+import OutlinedInput from '@mui/material/OutlinedInput';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import ListItemText from '@mui/material/ListItemText';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import Checkbox from '@mui/material/Checkbox';
+// import RadioBtn from 'components/ui/htmlInputElem/RadioBtn';
+
+type FormData = {
+    name: string;
+    price: number;
+};
 
 const useStyles = makeStyles({
     root: {
@@ -50,8 +69,23 @@ const useStyles = makeStyles({
     },
 });
 
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+    PaperProps: {
+        style: {
+            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+            width: 250,
+        },
+    },
+};
 
-const Admin: React.ReactNode = () => {
+const Home: NextPage = () => {
+ 
+    const [category, setCategory] = React.useState<string[]>([]);
+    const [color, setColor] = React.useState<string[]>([]);
+    const [brandName, setBrandName] = React.useState<string[]>([]);
+
     const {
         handleSubmit,
         control,
@@ -59,131 +93,95 @@ const Admin: React.ReactNode = () => {
     } = useForm<FormData>();
 
     const dispatch = useDispatch();
-    const { query } = useRouter();
-
-
+    const [isLoading, setIsLoading] = React.useState(false);
+    const inputFileRef = React.useRef<HTMLInputElement | null>(null);
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
     const router = useRouter();
-    const redirect = router.query.redirect as string; // login?redirect=/shipping
-    // const { state, dispatch } = useContext(StoreContext);
-    // const { userInfo } = state;
-
-    // const { userInfo, authState } = useSelector(selectAuthState);
-
-
-    useEffect(() => {
-
-
-
-    }, [])
-
-
-    const [image, setImage] = useState(null);
-    const [createObjectURL, setCreateObjectURL] = useState(null);
-
-    const uploadToClient = (event) => {
-        if (event.target.files && event.target.files[0]) {
-            const i = event.target.files[0];
-
-            setImage(i);
-            setCreateObjectURL(URL.createObjectURL(i));
-        }
-    };
-
-    const uploadToServer = async (event) => {
-        const body = new FormData();
-        body.append("file", image);
-        const response = await fetch("/api/file", {
-            method: "POST",
-            body
-        });
-    };
-
-
-
-
-    const [TitleValue, setTitleValue] = useState("")
-    const [DescriptionValue, setDescriptionValue] = useState("")
-    const [PriceValue, setPriceValue] = useState(0)
-    const [ContinentValue, setContinentValue] = useState(1)
-
-    const [Images, setImages] = useState([])
-
-
-    const onTitleChange = (event) => {
-        setTitleValue(event.currentTarget.value)
-    }
-
-    const onDescriptionChange = (event) => {
-        setDescriptionValue(event.currentTarget.value)
-    }
-
-    const onPriceChange = (event) => {
-        setPriceValue(event.currentTarget.value)
-    }
-
-    const onContinentsSelectChange = (event) => {
-        setContinentValue(event.currentTarget.value)
-    }
-
-    const updateImages = (newImages) => {
-        setImages(newImages)
-    }
-    const onSubmit = (event) => {
-        event.preventDefault();
-
-
-        if (!TitleValue || !DescriptionValue || !PriceValue ||
-            !ContinentValue || !Images) {
-            return alert('fill all the fields first!')
-        }
-
-        const variables = {
-            writer: props.user.userData._id,
-            title: TitleValue,
-            description: DescriptionValue,
-            price: PriceValue,
-            images: Images,
-            continents: ContinentValue,
-        }
-
-        Axios.post('/api/products/fileupload', variables)
-            .then(response => {
-                if (response.data.success) {
-                    alert('Product Successfully Uploaded')
-                    props.history.push('/')
-                } else {
-                    alert('Failed to upload Product')
-                }
-            })
-
-    }
-
-
-
+    const redirect = router.query.redirect as string;
+    const [selectedFile, setSelectedFile] = React.useState(null);
     const classes = useStyles();
+    const [brand, setBrand] = React.useState('');
 
-    const submitHandler = async ({ email, password }: UserSubmitForm) => {
-        closeSnackbar();
+    /* Functionaltiyr for controlling checkbox, radio and search */
+    const handleFilters = (checkedItem, filterType) => {
+        if (filterType == "color") {
+            setColor(checkedItem)
+        }
+
+    }
+
+    const handleBrandChange = (event: SelectChangeEvent<typeof Brand>) => {
+        setBrand(event.target.value as string);
+        console.log(brand)
+    };
+
+    const handleChange = (event: SelectChangeEvent<typeof category>) => {
+        const {
+            target: { value },
+        } = event;
+        setCategory(  
+            // On autofill we get a stringified value.
+             typeof value === 'string' ? value.split(',') : value,
+           // typeof value === 'string' ? value.split(',') : value,
+        );
+// console.log(value) 
+console.log(typeof category)
+    };
+
+    const submitHandler = async ({
+        name,
+        price,
+        description
+    }: IProduct) => {
+
+        /* Prevent form from submitting by default */
+        // e.preventDefault();
+
+        /* If file is not selected, then show alert message */
+        if (!inputFileRef.current?.files?.length) {
+            alert('Please, select file you want to upload');
+            return;
+        }
+        // console.log(inputFileRef)
+
+        setIsLoading(true);
+
+        /* Add files to FormData */
+        const formData = new FormData();
+        const content = {
+            name,
+            price,
+            category,
+            color,
+            brand,
+            description
+          };
+        
+        formData.append("data", JSON.stringify(content))
+        Object.values(inputFileRef.current.files).forEach(file => {
+            formData.append('file', file);
+        })
 
         try {
-            const { data } = await axios.post("/api/users/login", {
-                email,
-                password,
+            const response = await axios({
+                method: "post",
+                url: "/api/products/upload",
+                data: formData,
+                headers: { "Content-Type": "multipart/form-data" },
             });
-
-            dispatch(setAuthState(true))
-            dispatch(userLogin(data));
-            Cookies.set("userInfo", JSON.stringify(data));
-            Cookies.set("authState", JSON.stringify(true));
-            router.push(redirect || "/");
-
-        } catch (err: any) {
-            enqueueSnackbar(getError(err), { variant: 'error' });
+        } catch (error) {
+            console.log(error)
         }
+
+        setIsLoading(false);
     };
 
-    /* Invoked when pagination button is called */
+    const handleFileSelect = (event) => {
+        setSelectedFile(event.target.files[0])
+        console.log(selectedFile)
+    }
+
+
     return (
         <>
             <Layout>
@@ -196,13 +194,68 @@ const Admin: React.ReactNode = () => {
                         {/* <Form onSubmit={onSubmit} > */}
 
                         <Typography component="h1" variant="h1">
-                            Register
+                            Add/Edit Product
                         </Typography>
+                        <br />
+                        <Divider />
+                      
+                        
                         <form onSubmit={handleSubmit(submitHandler)} className={classes.form}>
-                            {/* DropZone */}
-                            <input type="file" name="myImage" onChange={uploadToClient} />
 
                             <List>
+                           
+                            <ListItem>
+                                    <FormControl sx={{ m: 1, width: 300 }}>
+                                        <InputLabel id="demo-simple-select-label">Brands</InputLabel>
+                                        <Select
+                                            labelId="Brand"
+                                            id="Brands"
+                                            value={brand}
+                                            label="Brand"
+                                            inputProps={{ type: "name", style: { fontSize: 20 } }} // font size of input text                                               error={Boolean(errors.price)}
+                                            // InputLabelProps={{style: {fontSize: 20}}} // font size of input label
+                                            onChange={handleBrandChange}
+                                        >
+
+                                            {brands.map((brand) => (
+                                                <MenuItem key={brand.name} value={brand.name}>
+                                                    {brand.name}
+                                                </MenuItem>
+                                            ))}
+
+                                        </Select>
+                                    </FormControl>
+                                    <FormControl sx={{ m: 1, width: 300 }}>
+                                        <InputLabel id="CategoryInput">Category</InputLabel>
+                                        <Select
+                                            labelId="categories"
+                                            id="categories"
+                                            multiple
+                                            value={category}
+                                            onChange={handleChange}
+                                            input={<OutlinedInput label="Category" />}
+                                            renderValue={(selected) => selected.join(', ')}
+                                            MenuProps={MenuProps}
+                                            inputProps={{ type: "name", style: { fontSize: 20 } }} // font size of input text                                               error={Boolean(errors.price)}
+
+                                        >
+                                            {categories.map((cat) => (
+                                                <MenuItem key={cat._id} value={cat.name}>
+                                                    <Checkbox checked={category.indexOf(cat.name) > -1} />
+                                                    <ListItemText primary={cat.name} />
+                                                </MenuItem>
+                                            ))}
+                                        </Select>
+                                    </FormControl>
+                               
+                            </ListItem>   
+                            <ListItem>
+                                    <RadioBtn
+                                        list={colors} //selectedRdo={prpPrice}
+                                        handleRadioBtn={checkedItem => handleFilters(checkedItem, "color")}
+                                    />
+                                </ListItem>
+                          
                                 <ListItem>
                                     <Controller
                                         name="name"
@@ -219,6 +272,7 @@ const Admin: React.ReactNode = () => {
                                                 id="name"
                                                 label="Name"
                                                 inputProps={{ type: "name" }}
+
                                                 error={Boolean(errors.name)}
                                                 helperText={
                                                     errors.name
@@ -262,36 +316,60 @@ const Admin: React.ReactNode = () => {
                                     ></Controller>
                                 </ListItem>
 
-                            </List>
+                                
 
-                            <List>
+                               
                                 <ListItem>
+                                    <Controller
+                                        name="description"
+                                        control={control}
+                                        defaultValue=""
+                                        rules={{
+                                            required: true,
+                                            minLength: 2,
+                                        }}
+                                        render={({ field }) => (
+                                            <TextField
+                                                variant="outlined"
+                                                fullWidth
+                                                multiline
+                                                minRows={4}
+                                                maxRows={6}
+                                                id="description"
+                                                label="Description"
+                                                inputProps={{ type: "name", style: { fontSize: 20 } }} // font size of input text                                               error={Boolean(errors.price)}
+                                                InputLabelProps={{ style: { fontSize: 20 } }} // font size of input label
+                                                helperText={
+                                                    errors.name
+                                                        ? errors.name.type === "minLength"
+                                                            ? "Description length is more than 1"
+                                                            : "Description is required"
+                                                        : ""
+                                                }
+                                                {...field}
+                                            ></TextField>
+                                        )}
+                                    ></Controller>
                                 </ListItem>
+                                <ListItem>
+                            <input type="file" name="myfile"
+                                ref={inputFileRef} multiple
+                                onChange={handleFileSelect}
+                            />
+                            </ListItem>
                             </List>
 
 
-                            <label>Price($)</label>
-                            <Input
-                                onChange={onPriceChange}
-                                value={PriceValue}
-                                type="number"
-                            />
 
+                            <input className="btn btn-primary" type="submit" value="Upload"   />
 
-                            <Button onClick={onSubmit}>Submit </Button>
-                            <button
-                                className="btn btn-primary"
-                                type="submit"
-                                onClick={uploadToServer}
-                            >
-                                Send to server
-                            </button>
                         </form>
 
                     </main>
-                </div >
+                </div>
             </Layout >
         </>
-    );
+    )
 }
-export default Admin;
+
+export default Home

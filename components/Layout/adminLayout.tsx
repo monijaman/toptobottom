@@ -5,6 +5,8 @@ import Header from "../Header/adminHeader";
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
 import { selectAuthState, userLogin } from "redux/authSlice";
+import {List,
+    ListItem} from "@material-ui/core";
 
 export default function adminLayout({ children }) {
 
@@ -25,10 +27,18 @@ export default function adminLayout({ children }) {
                 <Header />
                 <div className={styles.main}>
                     <div style={{ width: "30%" }}>
-                        <h4>Page</h4>
-                        {authState && isAdmin && <Link href="/add">Manage Products</Link>}
-                        {authState && isAdmin && <Link href="/login">Manage Users</Link>}
-                        {authState && isAdmin && <Link href="/login">Sales</Link>}
+                        <h4>Pages</h4>
+                        <List>
+                            <ListItem>
+                        {authState && isAdmin && <Link href="/admin/products">Manage Products</Link>}
+                        </ListItem>
+                        <ListItem>
+                        {authState && isAdmin && <Link href="/admin/orders">Manage Users</Link>}
+                        </ListItem>
+                        <ListItem>
+                        {authState && isAdmin && <Link href="/admin/users">Sales</Link>}
+                        </ListItem>
+                        </List>
                     </div>
                     {children}
                 </div>

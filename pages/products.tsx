@@ -1,7 +1,7 @@
 import Container from "components/ui/Container"
 import { InferGetStaticPropsType } from 'next'
 // import * as React from 'react'
-import AddPost from '../components/AddPost'
+// import AddPost from '../components/AddPost'
 import Post from '../components/Post'
 import { IPost } from '../types'
 // const BASE_URL: string = 'https://jsonplaceholder.typicode.com/photos'
