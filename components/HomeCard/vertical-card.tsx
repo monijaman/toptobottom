@@ -3,26 +3,31 @@ import React from "react";
 import styles from "./vertical.module.scss";
 import { Button } from "@material-ui/core";
 import HeartIcon from "../icons/heart";
-import Link from "next/link";
 import NextLink from "next/link";
 import { additem, selectCartState } from "redux/cartSlice";
 import { IProduct } from "types/index";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
-
+import Image from "next/image";
+type CarDProps = {
+  bgColor: string;
+  title: string;
+  desc: string;
+  image: string;
+  slug: string;
+  product: IProduct;
+  price: number;
+  sale_price:number;
+};
 
 export default function VerticalCard({
   bgColor,
-  brand,
-  name,
-  price,
-  sale_price,
-  image,
-  border,
+   image,
   slug,
   product,
-  ...props
-}) {
+  price,
+  sale_price 
+} : CarDProps) {
 
 
   const { cart: { cartItems } } = useSelector(selectCartState);
@@ -52,7 +57,7 @@ export default function VerticalCard({
         className={styles.verticalCard}
         style={{
           backgroundColor: bgColor || "",
-          border: border && "2px solid #eee",
+          border:  "2px solid #eee",
         }}
       >
 
@@ -66,12 +71,12 @@ export default function VerticalCard({
 
         <div className={styles.imageContainer}>
           <NextLink href={`/product/${slug}`} passHref>
-            {image && <img className={styles.image} src={image} loading="lazy" />}
+            {image && <Image alt="" className={styles.image} src={image} loading="lazy" />}
           </NextLink>
         </div>
         <div className={styles.textContainer}>
-          <h4 className={styles.brandText}>{brand}</h4>
-          <h4>{name}</h4>
+          {/* <h4 className={styles.brandText}>{brand}</h4> */}
+          {/* <h4>{name}</h4> */}
           {sale_price ? (
             <div className={styles.priceContainer}>
               <div className={styles.prices}>

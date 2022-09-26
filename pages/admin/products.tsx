@@ -68,7 +68,7 @@ const useStyles = makeStyles({
 });
 
 
-export default function paginationSSR({ pageNum, propCategory, prpPrice, prpSearch, prpLimit }: props) {
+export default function Products({ pageNum, propCategory, prpPrice, prpSearch, prpLimit }: props) {
   const { query } = useRouter();
   const classes = useStyles();
   const router = useRouter();
@@ -83,7 +83,7 @@ export default function paginationSSR({ pageNum, propCategory, prpPrice, prpSear
   const dispatch = useDispatch();
   // const { state, dispatch } = useContext(StoreContext);
   const [Skip, setSkip] = useState(0)
-  const [Limit, setLimit] = useState(2)
+  const [Limit, setLimit] = useState(12)
 
   const [SearchTerms, setSearchTerms] = useState(prpSearch)
 
@@ -92,8 +92,6 @@ export default function paginationSSR({ pageNum, propCategory, prpPrice, prpSear
     category: [],
     price: []
   })
-
-
 
   useEffect(() => {
 
@@ -105,22 +103,22 @@ export default function paginationSSR({ pageNum, propCategory, prpPrice, prpSear
 
     setFilters(newFilters)
     showFilteredResults(newFilters)
-
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
 
   /* Add products to cart  */
-  const addToCartHandler = async (product: IProduct) => {
+  const removeProduct = async (productId) => {
 
-    const existItem = cartItems.find((x) => x._id === product._id);
-    const quantity = existItem ? existItem.quantity + 1 : 1;
-    const { data } = await axios.get(`/api/products/${product._id}`);
-    if (data.countInStock < quantity) {
-      window.alert('Sorry. Product is out of stock');
-      return;
+    const response = await fetch(`/api/products/crud/`, {
+      method: 'DELETE',
+      body: JSON.stringify({ data: productId })
+    })
+    console.log(response.status)
+    if (response.status) {
+      router.reload(window.location.pathname)
     }
-
-    dispatch(additem({ ...product, quantity }))
+ 
 
   };
 
@@ -129,7 +127,7 @@ export default function paginationSSR({ pageNum, propCategory, prpPrice, prpSear
   const handlePaginationChange = async (e: React.ChangeEvent<HTMLInputElement>, value: any) => {
     setLoading(true);
     setPageNumber(parseInt(value));
- 
+
     router.query.page = value;
     router.query.type = "server"
     let qString = querystring.stringify(router.query);
@@ -138,7 +136,7 @@ export default function paginationSSR({ pageNum, propCategory, prpPrice, prpSear
 
     const { dataSet, totalPage: totalPage, count: count } = await res.json();
     setPages(totalPage)
-   
+
 
     setPage(value);
     setProducts(dataSet);
@@ -147,8 +145,8 @@ export default function paginationSSR({ pageNum, propCategory, prpPrice, prpSear
     router.push(`/admin/products/?${qString}`, undefined, { shallow: true });
 
   }
- 
-/* Response according handleFilters function or on load with useeffect */
+
+  /* Response according handleFilters function or on load with useeffect */
   const showFilteredResults = (filters) => {
 
     // alert(JSON.stringify(filters, null, 4))
@@ -163,8 +161,8 @@ export default function paginationSSR({ pageNum, propCategory, prpPrice, prpSear
       category: filters['category'].join(','),
       type: "server"
     }
- 
-    
+
+
     getProducts(queryParama)
 
     router.push({
@@ -181,24 +179,24 @@ export default function paginationSSR({ pageNum, propCategory, prpPrice, prpSear
     // alert(JSON.stringify(queryParama, null, 4) + "getproducts")
     setLoading(true);
     const res = await fetch(`/api/products/filter?${qString}`);
- 
+
     const { dataSet, totalPage: totalPage, count: count } = await res.json();
     setPages(totalPage)
-   
+
 
     if (res.status == 200) {
       setProducts(dataSet);
       setLoading(false);
-     
+
     } else {
       setLoading(false);
       setProducts([]);
     }
- 
-  }
- 
 
-/* Functionaltiyr for controlling checkbox, radio and search */
+  }
+
+
+  /* Functionaltiyr for controlling checkbox, radio and search */
   const handleFilters = (selFilters, filterType) => {
 
     const newFilters = { ...Filters }
@@ -213,167 +211,154 @@ export default function paginationSSR({ pageNum, propCategory, prpPrice, prpSear
       newFilters['price'] = selFilters
     }
 
-console.log(22222)
+ 
     showFilteredResults(newFilters)
     setFilters(newFilters)
   }
 
- 
+
 
 
   return (
     <>
       <Layout>
-      <div className={styles.container}>
-        <Head>
-          <title>Cart Page</title>
-          <link rel="icon" href="/favicon.ico" />
-        </Head>
+        <div className={styles.container}>
+          <Head>
+            <title>Cart Page</title>
+            <link rel="icon" href="/favicon.ico" />
+          </Head>
 
-        <main className={styles.main}>
-          <div className={styles.header}>
-            <h1 className={styles.title}>
-              <span className={styles.emoji}>⚡</span>New In
-            </h1>
-            <div className={styles.headerButtons}>
-              <Button type="sort" style={{ marginRight: 20 }} />
-              <Button count={0} />
+          <main className={styles.main}>
+            <div className={styles.header}>
+              <h1 className={styles.title}>
+                <span className={styles.emoji}>⚡</span>New In
+              </h1>
+              <div className={styles.headerButtons}>
+                <Button type="sort" style={{ marginRight: 20 }} />
+                <Button count={0} />
+              </div>
             </div>
+
+
+          </main>
+
+          <h1>Products</h1>
+
+          <Typography component="h2" variant="h2">Filter</Typography>
+          <div>
+            <SearchFeature
+              searchTrm={prpSearch}
+              handleFilters={filters => handleFilters(filters, "searchTerm")}
+            />
           </div>
 
-           
-        </main>
-
-        <h1>Products</h1>
-
-        <Typography component="h2" variant="h2">Filter</Typography>
-        <div>
-          <SearchFeature
-            searchTrm={prpSearch}
-            handleFilters={filters => handleFilters(filters, "searchTerm")}
-          />
-        </div>
-
-        <div>
-          Categories
-          <CheckBtn
-            list={categories} selectedChk={propCategory}
-            handleFilters={chkFilters => handleFilters(chkFilters, "category")}
-          />
-        </div>
-        
-        <div>
-          Price
-          <RadioPrice
-            list={prices} selectedRdo={prpPrice}
-            handleFilters={rdoFilters => handleFilters(rdoFilters, "price")}
-          />
-        </div>
-      
- 
-        <Grid container spacing={3}>
-          {loading && (
-          <div className={classes.loader}>
-            <CircularProgress size="3rem" thickness={5} />
+          <div>
+            Categories
+            <CheckBtn
+              list={categories} selectedChk={propCategory}
+              handleFilters={chkFilters => handleFilters(chkFilters, "category")}
+            />
           </div>
-        ) }
+
+          <div>
+            Price
+            <RadioPrice
+              list={prices} selectedRdo={prpPrice}
+              handleFilters={rdoFilters => handleFilters(rdoFilters, "price")}
+            />
+          </div>
 
 
+          <Grid container spacing={3}>
+            {loading && (
+              <div className={classes.loader}>
+                <CircularProgress size="3rem" thickness={5} />
+              </div>
+            )}
 
-  
-          {products && products.length > 0? 
+            {products && products.length > 0 ?
 
+              (products.map((product) => (
 
-          
-          (products.map((product) => (
+               
+                  <Grid container   key={product._id} spacing={2}>
+                    <Grid item>
+                      <ButtonBase sx={{ width: 128, height: 128 }}>
+                        <Img alt="{product.name}" src={"/images/" + product.image} />
+                      </ButtonBase>
+                    </Grid>
+                    <Grid item  sm container>
+                      <Grid item xs container direction="column" spacing={2}>
+                        <Grid item xs>
+                          <Typography gutterBottom variant="subtitle1" component="div">
+                            Name: {product.name}
+                          </Typography>
+                          <Typography variant="body2" gutterBottom>
+                            {product.description}
+                          </Typography>
+                          <Typography variant="body2"  >
+                            Price: ${product.price}
+                          </Typography>
+                          <Typography sx={{ cursor: 'pointer' }} variant="body2">
+                            Category: {product.category}
+                          </Typography>
 
-            <Paper
-      sx={{
-        p: 2,
-        margin: 'auto',
-        maxWidth: 500,
-        flexGrow: 1,
-        backgroundColor: (theme) =>
-          theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-      }}
-    >
-      <Grid container spacing={2}>
-        <Grid item>
-          <ButtonBase sx={{ width: 128, height: 128 }}>
-            <Img alt="{product.name}" src={product.image} />
-          </ButtonBase>
-        </Grid>
-        <Grid item xs={12} sm container>
-          <Grid item xs container direction="column" spacing={2}>
-            <Grid item xs>
-              <Typography gutterBottom variant="subtitle1" component="div">
-              Name: {product.name}
-              </Typography>
-              <Typography variant="body2" gutterBottom>
-              {product.description}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-              Price: ${product.price}
-              </Typography>
-            </Grid>
-            <Grid item>
-              <Typography sx={{ cursor: 'pointer' }} variant="body2">
-              Category: {product.category}
-              </Typography>
-                  
-                 
-                 <NextLink href={`/admin/${product.slug}`} passHref>
-                 Edit
-                 </NextLink>
-                 <Button size="small"
-                    color="primary"
-                    onClick={() => addToCartHandler(product as IProduct)}>
-                   Remove
-                 </Button>
+                        </Grid>
+                        <Grid item>
+                          
 
-            </Grid>
+                          <NextLink href={`/admin/${product.slug}`} passHref>
+                            Edit
+                          </NextLink>
+                          <Button size="small"
+                            color="primary"
+                            onClick={() => removeProduct(product._id)}>
+                            Remove
+                          </Button>
+
+                        </Grid>
+                      </Grid>
+                      <Grid item>
+                        <Typography variant="subtitle1" component="div">
+                          $19.00
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+              
+                // <Grid item md={4} key={product.name}>
+                //   <Card>
+                //     <NextLink href={`/product/${product.slug}`} passHref>
+                //       <CardActionArea>
+                //         <CardMedia
+                //           component="img"
+                //           image={product.image}
+                //           title={product.name}
+                //         ></CardMedia>
+                //         <CardContent>
+                //           <Typography>{product.name}</Typography>
+                //         </CardContent>
+                //       </CardActionArea>
+                //     </NextLink>
+
+                //     <CardActions>
+                //       <Typography>${product.price}</Typography>
+                //       <Button size="small"
+                //         color="primary"
+                //         onClick={() => addToCartHandler(product as IProduct)}>
+                //         Add to cart
+                //       </Button>
+                //     </CardActions>
+                //   </Card>
+
+                // </Grid>
+              )))
+              :
+
+              <h2>No Data</h2>
+
+            }
           </Grid>
-          <Grid item>
-            <Typography variant="subtitle1" component="div">
-              $19.00
-            </Typography>
-          </Grid>
-        </Grid>
-      </Grid>
-    </Paper>
-            // <Grid item md={4} key={product.name}>
-            //   <Card>
-            //     <NextLink href={`/product/${product.slug}`} passHref>
-            //       <CardActionArea>
-            //         <CardMedia
-            //           component="img"
-            //           image={product.image}
-            //           title={product.name}
-            //         ></CardMedia>
-            //         <CardContent>
-            //           <Typography>{product.name}</Typography>
-            //         </CardContent>
-            //       </CardActionArea>
-            //     </NextLink>
-
-            //     <CardActions>
-            //       <Typography>${product.price}</Typography>
-            //       <Button size="small"
-            //         color="primary"
-            //         onClick={() => addToCartHandler(product as IProduct)}>
-            //         Add to cart
-            //       </Button>
-            //     </CardActions>
-            //   </Card>
-
-            // </Grid>
-          )))
-          : 
-          
-          <h2>No Data</h2>
-          
-          }
-        </Grid>
         </div>
       </Layout>
 
@@ -402,7 +387,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   let prpLimit = context.query["limit"] ? parseInt(context.query["limit"]) : 8;
   let prpSkip = context.query["skip"] ? parseInt(context.query["skip"]) : 0;
 
- 
+
 
   return {
     props: {
@@ -422,4 +407,3 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
 
 
- 

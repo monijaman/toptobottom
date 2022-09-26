@@ -23,7 +23,7 @@ export default function Header() {
   const [showHeader, setShowHeader] = useState({
     transform: "translate3d(100vw, 0, 0)",
   });
-  const [input, setInput] = useState(null);
+ 
   const dispatch = useDispatch();
 
   const router = useRouter();
@@ -43,8 +43,16 @@ export default function Header() {
   };
 
   useEffect(() => {
-    setCartLength(cartItems.length)
-    setIsAdmin(userInfo?.isAdmin)
+    if (cartItems?.length > 0) {
+      setCartLength(cartItems?.length)
+    }
+ 
+    if(userInfo?.isAdmin){
+      setIsAdmin(isAdmin)
+    }
+  
+
+       // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cartItems])
 
   return (

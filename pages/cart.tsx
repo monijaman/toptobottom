@@ -34,9 +34,7 @@ const CartScreen: NextPage = () => {
   };
 
   const removeItemHandler = (item: IProduct) => {
-
     dispatch(removeitems({ item }))
-
   };
 
   const checkoutHandler = () => {
@@ -76,11 +74,11 @@ const CartScreen: NextPage = () => {
                         <NextLink href={`/product/${item.slug}`} passHref>
                           <Link>
                             <Image
-                              src={item.image}
+                              src={"/images/"+item.image}
                               alt={item.name}
                               width={50}
                               height={50}
-                            ></Image>
+                            /> 
                           </Link>
                         </NextLink>
                       </TableCell>

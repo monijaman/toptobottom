@@ -132,6 +132,8 @@ const Page: NextPage = ({ product }: props) => {
     // console.log(value) 
   };
 
+ 
+
   const submitHandler = async ({
     name,
     price,

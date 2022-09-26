@@ -1,6 +1,7 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import type { NextPage } from 'next';
 import Head from 'next/head';
+
 import { useRouter } from 'next/router';
 import { useForm } from "react-hook-form";
 import { toast, ToastContainer } from 'react-toastify';
@@ -100,7 +101,7 @@ const Register: NextPage = () => {
       router.push(redirect || "/dashboard");       
     } 
     
-    // dispatch(reset())
+   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isError, isSuccess,  dispatch])
 
   const onSubmit = async (data: IFormInput) => {
@@ -162,7 +163,7 @@ const Register: NextPage = () => {
         <Form.Control  {...register('email')} type="email" 
          className={`form-control ${errors.email ? 'is-invalid' : ''}`} placeholder="Enter email" />
         <Form.Text className="text-muted">
-          We'll never share your email with anyone else.
+          We&apos;ll never share your email with anyone else.
         </Form.Text>
       </Form.Group>
 

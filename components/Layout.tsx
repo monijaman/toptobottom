@@ -15,21 +15,19 @@ import { useState } from "react";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import NextLink from "next/link";
-import React, { useContext } from "react";
 import useStyles from "../utils/styles";
 import Cookies from "js-cookie";
 // import { StoreContext } from "../utils/Store";
 import { IAuthUser } from "../models/User";
 import { useDispatch, useSelector } from "react-redux";
-import {  selectCartState, userLogin } from "redux/cartSlice";
-
-import styles from "./layout.module.scss";
+import {  selectCartState } from "redux/cartSlice";
+import {  selectAuthState } from "redux/authSlice";
 import Header from "./Header/";
-import CategoriesBar from "components/Categories";
 
 interface Props {
   title?: string;
   description?: string;
+  children: React.ReactNode; 
 }
 
 /**Layout represents a page wrapper to wrap pages
@@ -38,8 +36,9 @@ interface Props {
  */
 const Layout: React.FC<Props> = ({ title, description, children }) => {
   const router = useRouter()  
-  const {    cart: { cartItems }, darkMode,  userInfo   } = useSelector(selectCartState);
-  // const { darkMode, cart, userInfo } = state;
+  const {    cart: { cartItems }   } = useSelector(selectCartState);
+  
+  const { userInfo } = useSelector(selectAuthState);
   const dispatch = useDispatch();
   
   const theme = createTheme({
@@ -80,7 +79,7 @@ const Layout: React.FC<Props> = ({ title, description, children }) => {
   };
   const logoutClickHandler = () => {
     setAnchorEl(null);
-    dispatch(userLogin());
+   // dispatch(userLogin());
     Cookies.remove("userInfo");
     Cookies.remove("cartItems");
     router.push("/");

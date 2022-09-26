@@ -9,12 +9,13 @@ let mv = require('mv');
 import User from 'models/Product';
 import db from 'utils/db';
 import Product from 'models/Product';
+// import handler from './agg';
 
  
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 	const { method } = req;
-
+console.log(method)
 	switch (method) {
 		case "GET":
 			try {
@@ -31,23 +32,32 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 					success: false,
 				});
 			}
-		case "POST":
+		case "DELETE":
 			try {
-				const producs = await Product.create(req.body);
-				return res.status(201).json({
-					success: true,
-					data: producs,
-				});
+			 
+				const productId     = JSON.parse(req.body)
+				const proID = productId.data
+
+				Product.findOneAndDelete({ _id:proID }).remove( ).exec() 
+			//	const producs = await Product.create(req.body);
+
+			return res.status(201).json({
+				success: true,
+				data: proID,
+			});
+				
 			} catch (error) {
 				return res.status(400).json({
 					success: false,
 				});
 			}
 		default:
-			res.setHeaders("Allow", ["GET", "POST"]);
+			res.setHeaders("Allow", ["GET", "POST", "DELETE"]);
 			return res
 				.status(405)
 				.json({ success: false })
 				.end(`Method ${method} Not Allowed`);
 	}
 };
+
+export default handler

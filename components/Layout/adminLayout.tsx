@@ -8,7 +8,7 @@ import { selectAuthState, userLogin } from "redux/authSlice";
 import {List,
     ListItem} from "@material-ui/core";
 
-export default function adminLayout({ children }) {
+export default function AdminLayout({ children }) {
 
     const [isAdmin, setIsAdmin] = useState(false);
     const { authState, userInfo } = useSelector(selectAuthState);
@@ -18,6 +18,8 @@ export default function adminLayout({ children }) {
 
     useEffect(() => {
         userInfo ? setIsAdmin(jsonObje?.isAdmin) : false
+
+            // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
 

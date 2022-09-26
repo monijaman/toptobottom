@@ -69,13 +69,7 @@ const Register: NextPage = () => {
     }, 1000);
   };
 
-
-  // useEffect(() => {
-  //   if (userInfo) {
-  //     router.push("/");
-  //   }
-  // }, []);
-
+ 
 
   const { userinfo, isLoading, isError, isSuccess } = useSelector(
     (state) => state.user
@@ -88,30 +82,19 @@ const Register: NextPage = () => {
     }
 
     if (isSuccess) {
-      // router.push(redirect || "/dashboard");
-      //    let info:string = JSON.stringify(userinfo[0])
-      //    Cookies.set("userInfo", info);
+   
       router.push(redirect || "/dashboard");
-
-      //  let coookieInfo = JSON.parse(Cookies.get('userInfo'));
-      //  console.log(coookieInfo.isAdmin)
+ 
     }
 
-    // let coookieInfo:string = Cookies.get('userInfo');
-
     if (userStorageInfo) {
-
       router.push(redirect || "/dashboard");
-
-      // let getCookieInfo = JSON.parse(Cookies.get('userInfo'));
-      // console.log(getCookieInfo)
-
 
     } else {
       router.push(redirect || "/login");
     }
 
-    // dispatch(reset())
+     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isError, isSuccess, dispatch])
 
   const onSubmit = async (data: IFormInput) => {
@@ -161,7 +144,7 @@ const Register: NextPage = () => {
             <Form.Control  {...register('email')} type="email"
               className={`form-control ${errors.email ? 'is-invalid' : ''}`} placeholder="Enter email" />
             <Form.Text className="text-muted">
-              We'll never share your email with anyone else.
+              We&apos;ll never share your email with anyone else.
             </Form.Text>
           </Form.Group>
 

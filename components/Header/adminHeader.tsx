@@ -3,10 +3,9 @@ import Link from "next/link";
 
 import styles from "./header.module.scss";
 
-import SearchIcon from "../icons/search";
+// import SearchIcon from "../icons/search";
 import CartIcon from "../icons/cart";
 import ArrowIcon from "../icons/arrow";
-import SearchFeature from 'components/ui/htmlInputElem/SearchFeature';
 
 // import { useCart } from "hooks/cart.hook";
 import { useRouter } from "next/router";
@@ -20,8 +19,6 @@ import Cookies from "js-cookie";
 import {
     MenuItem
 } from "@material-ui/core";
-import { boolean } from "yup/lib/locale";
-import { number } from "yup";
 
 export default function Header() {
     const [showHeader, setShowHeader] = useState({
@@ -47,8 +44,16 @@ export default function Header() {
     };
 
     useEffect(() => {
-        setCartLength(cartItems.length)
-        setIsAdmin(userInfo?.isAdmin)
+        if (cartItems?.length > 0) {
+            setCartLength(cartItems?.length)
+          }
+       
+          if(userInfo?.isAdmin){
+            setIsAdmin(isAdmin)
+          }
+        
+    
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [cartItems])
 
     return (

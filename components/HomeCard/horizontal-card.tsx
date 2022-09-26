@@ -7,6 +7,18 @@ import { IProduct } from "types/index";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import HeartIcon from "../icons/heart";
+import Image from "next/image";
+type CarDProps = {
+  bgColor: string;
+  title: string;
+  desc: string;
+  image: string;
+  slug: string;
+  product: IProduct;
+  price: number;
+  sale_price:number;
+};
+
 
 export default function HorizontalCard({
   bgColor,
@@ -16,9 +28,8 @@ export default function HorizontalCard({
   slug,
   product,
   price,
-  sale_price,
-  ...props
-}) {
+  sale_price 
+} : CarDProps) {
 
 
 
@@ -78,7 +89,7 @@ export default function HorizontalCard({
           )}
 
         </NextLink>
-        <img className={styles.bgImage} src={image} />
+        <Image alt="" className={styles.bgImage} src={image} />
       </div>
     );
   }
@@ -121,7 +132,7 @@ export default function HorizontalCard({
       {image && (
         <NextLink href={`/product/${slug}`} passHref>
           <div className={styles.imageContainer}>
-            <img className={styles.image} src={image} />
+            <Image alt="" className={styles.image} src={image} />
           </div>
         </NextLink>
       )}

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { IPost } from 'types';
 import { CardBOx, CardBtn } from "./ProductBox.styles";
+import Image from 'next/image';
 
 type Props = {
   item: IPost;
@@ -16,7 +17,7 @@ const ProductCom: React.FC<Props> =  ({ item, addToCart }) => {
 
       <div className='Card--body'>
       
-      <img src={item.thumbnailUrl} />
+      <Image alt="" src={item.thumbnailUrl} />
       
         <p className='Card--body-text'>{item.title}</p>
       </div>

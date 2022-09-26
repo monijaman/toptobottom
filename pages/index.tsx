@@ -80,7 +80,7 @@ export default function HomePage({ prpTotalPages, prpDataSet }: props) {
       // dispatch(updatFilter())
       isMounted.current = true;
     }
-
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dataSet])
 
   /* Invoked when pagination button is called */
@@ -103,13 +103,16 @@ export default function HomePage({ prpTotalPages, prpDataSet }: props) {
     for (let j = i * 4; j < (i + 1) * 4; j++) {
 
       if (dataResSet[j]) {
+        let imgpath = "images/"+dataResSet[j].image
         //partComponents[i].push(dataResSet[j].name)
         if (horizontal < 2) {
+
+         
           partComponents[i].push(
             <HorizontalCard key={dataResSet[j]}
               bgColor={color}
               title={dataResSet[j].name}
-              image={dataResSet[j].image}
+              image={imgpath}
               desc="Best of daily wear"
               price={dataResSet[j].price}
               sale_price="140"
@@ -123,12 +126,9 @@ export default function HomePage({ prpTotalPages, prpDataSet }: props) {
             <VerticalCard key={dataResSet[j]}
               bgColor={color}
               name={dataResSet[j].name}
-              image={dataResSet[j].image}
-              price="300"
+              image={imgpath}
               sale_price="200"
               price={dataResSet[j].price}
-              sale_price="140"
-              price="900"
               slug={dataResSet[j].slug}
               product={dataResSet[j]}
             />

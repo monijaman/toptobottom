@@ -3,7 +3,6 @@ import { promises as fs } from "fs";
 import path from "path";
 import formidable, { File } from 'formidable';
 let mv = require('mv');
-import User from 'models/Product';
 import db from 'utils/db';
 import Product from 'models/Product';
 

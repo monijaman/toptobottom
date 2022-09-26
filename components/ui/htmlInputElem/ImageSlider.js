@@ -1,6 +1,6 @@
 import React from 'react'
 import { Carousel } from 'antd';
-
+import Image from 'next/image';
 function ImageSlider(props) {
     return (
         <div>
@@ -8,8 +8,8 @@ function ImageSlider(props) {
             <Carousel autoplay>
                 {props.images.map((image, index) => (
                     <div key={index}>
-                        <img style={{ width: '100%', maxHeight: '150px' }}
-                            src={`http://localhost:3000/${image}`} alt="productImage" />
+                        <Image alt="" style={{ width: '100%', maxHeight: '150px' }}
+                            src={`http://localhost:3000/${image}`}   />
                     </div>
                 ))}
             </Carousel>

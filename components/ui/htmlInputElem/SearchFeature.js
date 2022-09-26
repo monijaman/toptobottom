@@ -11,14 +11,6 @@ function SearchFeature(props) {
         = useSelector(selectFilterState)
     const slectedSearch = pagination.search
     const [SearchTerms, setSearchTerms] = useState("")
-        
-
-
-    // useEffect(() => {
-    //   // dispatch(updateFilter())
-    //   dispatch(getProducts())
-  
-    // }, [SearchTerms])
 
     const onChangeSearch = (event) => {
         setSearchTerms(event.currentTarget.value)

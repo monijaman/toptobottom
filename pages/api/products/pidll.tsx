@@ -1,7 +1,7 @@
 import Employee from "@/models/Employee";
 import "@/utils/dbConnect";
 
-export default async (req, res) => {
+const cruxExample = async (req, res) => {
 	const {
 		query: { id },
 		method,
@@ -58,3 +58,5 @@ export default async (req, res) => {
 				.end(`Method ${method} Not Allowed`);
 	}
 };
+
+export default cruxExample;
