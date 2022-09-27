@@ -25,6 +25,6 @@
     "baseUrl": ".",
     "types": ["cypress"]
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "store/slices/services", "../signupform.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "types/index"],
   "exclude": ["node_modules"]
 }
