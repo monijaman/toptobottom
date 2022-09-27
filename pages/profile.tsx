@@ -35,7 +35,7 @@ function Profile() {
     setValue,
   } = useForm();
 
-  const dispatch = useDispatch();
+ 
   
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const router = useRouter();
