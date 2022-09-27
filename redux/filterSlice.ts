@@ -5,7 +5,7 @@ import filterService from './services/filterService';
 const querystring = require('querystring');
 
 
-import { AppState } from "./store";
+ 
 // import {configureStore, createAction, createSlice, ThunkAction} from '@reduxjs/toolkit';
 import { Action } from 'redux';
 import { createWrapper, HYDRATE } from 'next-redux-wrapper';
@@ -52,7 +52,7 @@ const initialState: filterState = {
 
 };
 
-
+ 
 export const getProducts = createAsyncThunk(
   'cart/getproduct',
   async (_, thunkAPI) => {

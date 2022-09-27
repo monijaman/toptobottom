@@ -132,7 +132,7 @@ export default function HorizontalCard({
       {image && (
         <NextLink href={`/product/${slug}`} passHref>
           <div className={styles.imageContainer}>
-            <Image alt="" className={styles.image} src={image} />
+            <Image alt=""   layout='fill' className={styles.image} src={image} />
           </div>
         </NextLink>
       )}

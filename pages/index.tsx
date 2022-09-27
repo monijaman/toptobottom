@@ -103,7 +103,7 @@ export default function HomePage({ prpTotalPages, prpDataSet }: props) {
     for (let j = i * 4; j < (i + 1) * 4; j++) {
 
       if (dataResSet[j]) {
-        let imgpath = "images/"+dataResSet[j].image
+        let imgpath = "/images/"+dataResSet[j].image
         //partComponents[i].push(dataResSet[j].name)
         if (horizontal < 2) {
 

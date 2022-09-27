@@ -25,7 +25,7 @@ function CheckBox(props) {
 
         const currentIndex = Checked.indexOf(value)
         const newChecked = [...Checked]
-        const allCat = []
+        const allCat:string[] = []
 
         if(value=="All" && currentIndex===-1){
            

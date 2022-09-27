@@ -8,7 +8,16 @@ import FormLabel from '@mui/material/FormLabel';
 import { selectFilterState, updatFilter, getProducts } from "redux/filterSlice";
 import { useDispatch, useSelector } from "react-redux";
 
-function RadioBox(props) {
+
+interface radioProps {
+    list : {
+        _id: number;
+        name: string;
+        array: string[] | number[];
+    }[]
+}
+
+function RadioBox({list}: radioProps) {
 
 
     //const [Value, setValue] = useState(props.selectedRdo)
@@ -16,33 +25,26 @@ function RadioBox(props) {
     const { pagination }
         = useSelector(selectFilterState)
 
-    const slectedprice = pagination.price
-    const [Checked, setChecked] = useState(props.selectedRdo)
-    
-
-    // useEffect(() => {
-    //     // dispatch(updateFilter())
-    //     dispatch(getProducts())
-    
-    //   }, [Checked])
-
+    const slectedprice = pagination?.price
+    const [Checked, setChecked] = useState(slectedprice)
+     
       
     const renderRadioBox = () => (
-        props.list && props.list.map((value, index) => (
+        list && list.map((value, index) => (
             <React.Fragment key={index}>
                 <FormControlLabel value={`${value._id}`} control={
                     <Radio 
                     color="primary"
                     key={value._id} 
-                    checked={`${value.array}` === Checked}
+                    checked={`${value?.array}` === Checked}
                     value={`${value.array}`}>{value.name}</Radio>}
                     label={value.name} />
             </React.Fragment>
         ))
     )
 
-    const handleChange = (event) => {
-        setChecked(event.target.value)
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setChecked(event.target?.value)
         dispatch(updatFilter({RadioItm:event.target.value}  ))
         dispatch(getProducts())
     }

@@ -19,7 +19,7 @@ import useStyles from "../utils/styles";
 import Cookies from "js-cookie";
 // import { StoreContext } from "../utils/Store";
 import { IAuthUser } from "../models/User";
-import { useDispatch, useSelector } from "react-redux";
+import {  useSelector } from "react-redux";
 import {  selectCartState } from "redux/cartSlice";
 import {  selectAuthState } from "redux/authSlice";
 import Header from "./Header/";
@@ -39,7 +39,7 @@ const Layout: React.FC<Props> = ({ title, description, children }) => {
   const {    cart: { cartItems }   } = useSelector(selectCartState);
   
   const { userInfo } = useSelector(selectAuthState);
-  const dispatch = useDispatch();
+ 
   
   const theme = createTheme({
     typography: {
@@ -54,15 +54,7 @@ const Layout: React.FC<Props> = ({ title, description, children }) => {
         margin: "1rem 0",
       },
     },
-    palette: {
-      type: darkMode ? "dark" : "light",
-      primary: {
-        main: "#f0c000",
-      },
-      secondary: {
-        main: "#208080",
-      },
-    },
+ 
   });
 
   const classes = useStyles();
@@ -71,7 +63,7 @@ const Layout: React.FC<Props> = ({ title, description, children }) => {
   const loginClickHandler = (e: React.ChangeEvent<any>) => {
     setAnchorEl(e.currentTarget);
   };
-  const loginMenuCloseHandler = (e: React.MouseEvent, redirect: string) => {
+  const loginMenuCloseHandler = (redirect: string) => {
     setAnchorEl(null);
     if (redirect) {
       router.push(redirect);
@@ -142,13 +134,13 @@ const Layout: React.FC<Props> = ({ title, description, children }) => {
                       onClose={loginMenuCloseHandler}
                     >
                       <MenuItem
-                        onClick={(e) => loginMenuCloseHandler(e, "/profile")}
+                        onClick={() => loginMenuCloseHandler("/profile")}
                       >
                         Profile
                       </MenuItem>
                       <MenuItem
-                        onClick={(e) =>
-                          loginMenuCloseHandler(e, "/order-history")
+                        onClick={() =>
+                          loginMenuCloseHandler("/order-history")
                         }
                       >
                         Order History

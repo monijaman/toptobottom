@@ -71,7 +71,7 @@ export default function VerticalCard({
 
         <div className={styles.imageContainer}>
           <NextLink href={`/product/${slug}`} passHref>
-            {image && <Image alt="" className={styles.image} src={image} loading="lazy" />}
+            {image && <Image alt=""   layout='fill' className={styles.image} src={image} loading="lazy" />}
           </NextLink>
         </div>
         <div className={styles.textContainer}>

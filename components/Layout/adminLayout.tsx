@@ -1,19 +1,22 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, ReactNode } from "react";
 import styles from "./layout.module.scss";
 import Header from "../Header/adminHeader";
 
 import Link from "next/link";
-import { useDispatch, useSelector } from "react-redux";
-import { selectAuthState, userLogin } from "redux/authSlice";
-import {List,
-    ListItem} from "@material-ui/core";
+import {  useSelector } from "react-redux";
+import { selectAuthState } from "redux/authSlice";
+import {List, ListItem} from "@material-ui/core";
 
-export default function AdminLayout({ children }) {
+    interface Props {
+        children?: ReactNode
+        // any props that come into the component
+    }
+
+export default function AdminLayout({ children }: Props) {
 
     const [isAdmin, setIsAdmin] = useState(false);
     const { authState, userInfo } = useSelector(selectAuthState);
-    const dispatch = useDispatch();
-    ''
+     
     let jsonObje = (typeof userInfo == "string") ? JSON.parse(userInfo) : userInfo
 
     useEffect(() => {

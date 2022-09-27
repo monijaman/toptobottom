@@ -1,12 +1,16 @@
 import React from "react";
 import styles from "./layout.module.scss";
 import Header from "../Header/";
-import CategoriesBar from "components/Categories";
 import CheckBox from 'components/ui/htmlInputElem/CheckBox';
 import RadioBox from 'components/ui/htmlInputElem/RadioBox';
 import { categories, prices } from 'data/filterdata';
 
-export default function Layout({ children, noCategories }) {
+interface Props {
+
+  children: React.ReactNode; 
+}
+  
+export default function Layout({ children }: Props) {
 
   return (
     <div className={styles.container}>
@@ -16,8 +20,7 @@ export default function Layout({ children, noCategories }) {
 
           <div style={{ width: "20%" }}>
             <h4>Category</h4>
-            <CheckBox list={categories} />
-
+            <CheckBox   lists={categories} />
             <h4>Price Range</h4>
 
             <RadioBox list={prices} />
