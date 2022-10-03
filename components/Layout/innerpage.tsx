@@ -1,12 +1,13 @@
 import React from "react";
 import styles from "./layout.module.scss";
 import Header from "../Header/";
-import CategoriesBar from "components/Categories";
-import CheckBox from 'components/ui/htmlInputElem/CheckBox';
-import RadioBox from 'components/ui/htmlInputElem/RadioBox';
-import { categories, prices } from 'data/filterdata';
 
-export default function Layout({ children, noCategories }) {
+interface Props {
+    children?: React.ReactNode
+    // any props that come into the component
+}
+
+export default function Layout({ children  }: Props) {
 
     return (
         <div className={styles.container}>

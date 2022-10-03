@@ -3,6 +3,7 @@ import Pagination from "@material-ui/lab/Pagination";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Head from "next/head";
+import Link from "next/link";
 import {
   CircularProgress,
   Button, Card,
@@ -231,8 +232,9 @@ export default function Products({ pageNum, propCategory, prpPrice, prpSearch, p
           <main className={styles.main}>
             <div className={styles.header}>
               <h1 className={styles.title}>
-                <span className={styles.emoji}>⚡</span>New In
+                <span className={styles.emoji}>⚡</span>Products
               </h1>
+              <Link href="/admin/" >New Product</Link>
               <div className={styles.headerButtons}>
                 <Button type="sort" style={{ marginRight: 20 }} />
                 <Button count={0} />

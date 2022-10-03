@@ -38,10 +38,10 @@ export default function AdminLayout({ children }: Props) {
                         {authState && isAdmin && <Link href="/admin/products">Manage Products</Link>}
                         </ListItem>
                         <ListItem>
-                        {authState && isAdmin && <Link href="/admin/orders">Manage Users</Link>}
+                        {authState && isAdmin && <Link href="/admin/users">Manage Users</Link>}
                         </ListItem>
                         <ListItem>
-                        {authState && isAdmin && <Link href="/admin/users">Sales</Link>}
+                        {authState && isAdmin && <Link href="/admin/orders">Manage Orders</Link>}
                         </ListItem>
                         </List>
                     </div>
