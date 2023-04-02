@@ -29,7 +29,6 @@
     "bcryptjs": "^2.4.3",
     "bootstrap": "^5.2.0",
     "filepond": "^4.30.4",
-    "firebase": "7.17.1",
     "fp-ts": "^2.12.3",
     "graphql": "^16.6.0",
     "hoist-non-react-statics": "^3.3.2",
