@@ -10,11 +10,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-   
-    "lint": "next lint",
+    "lint": "next lint"
   },
   "dependencies": {
-    "@apollo/client": "^3.6.9",
     "@emotion/react": "^11.10.4",
     "@emotion/styled": "^11.10.4",
     "@hookform/resolvers": "^2.9.7",
@@ -73,7 +71,6 @@
     "@types/redux": "^3.6.0",
     "@types/redux-thunk": "^2.1.0",
     "@types/styled-components": "^5.1.26",
-    
     "eslint": "8.21.0",
     "eslint-config-next": "12.2.4",
     "formidable": "^2.0.1",
