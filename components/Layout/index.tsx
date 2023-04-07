@@ -18,7 +18,7 @@ export default function Layout({ children }: Props) {
         <Header />
         <div className={styles.main}>
 
-          <div style={{ width: "20%" }}>
+          <div style={{ width: "25%" }}>
             <h4>Category</h4>
             <CheckBox   lists={categories} />
             <h4>Price Range</h4>

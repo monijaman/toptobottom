@@ -248,3 +248,7 @@ export interface Address {
 
 
 
+export interface AuthState {
+  authState: boolean | string;
+  userInfo: IAuthUser | null;
+}

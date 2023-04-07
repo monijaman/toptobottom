@@ -32,6 +32,7 @@ export default function Header() {
     const [cartLength, setCartLength] = useState(cartItems.length);
     const [isAdmin, setIsAdmin] = useState(false);
     const { authState, userInfo } = useSelector(selectAuthState);
+    let userJsonInfo = (typeof userInfo == "string") ? JSON.parse(userInfo) : userInfo
 
     // console.log(authState)
     const logoutClickHandler = () => {
@@ -60,7 +61,15 @@ export default function Header() {
         <nav className={styles.container}>
             <div className={styles.logoContainer}>
                 <Link href="/">
-                    <a className={styles.logo}>Shopping</a>
+                    <a className={styles.logo}>sssssss
+                    <Image
+                    loader={myLoader}
+                    src="/static/moucak.png"
+                    alt="Moucak"
+                    width={500}
+                    height={500}
+                    />
+                      </a>
                 </Link>
                 <div className={styles.rightContentMobile}>
                     <Link href="/cart">

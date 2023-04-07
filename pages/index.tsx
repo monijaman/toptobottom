@@ -93,7 +93,7 @@ export default function HomePage({ prpTotalPages, prpDataSet }: props) {
     setLoading(false);
   }
 
-  let colors = ["#f6f6f6", "#99E6B0", "#f3e6c8", "#F9CADA", "#FBE285"]
+  let colors = ["#f6f6f6", "#e6eaed", "#f3f0e8", "#d8f1ff", "#fbf7e9"]
   let partComponents = [];
 
   for (let i = 0; i < 3; i++) {
@@ -148,7 +148,7 @@ export default function HomePage({ prpTotalPages, prpDataSet }: props) {
       <Layout>
         <div className={styles.container}>
           <Head>
-            <title>Create Next App</title>
+            <title>Mouck.com</title>
             <link rel="icon" href="/favicon.ico" />
           </Head>
 

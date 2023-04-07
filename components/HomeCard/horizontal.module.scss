@@ -23,13 +23,22 @@
     position: absolute;
     z-index: 999;
     left: 9%;
-    bottom: 13%;
+    bottom: 8%;
+    color: #FFFFFF;
+    padding: 1px 10px;
+    margin-top: 5px;
+    background: #dc5126;
+    &:hover {
+      background: #ac3f1e;  
+    }
+
   }
   &:hover {
     box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.2);
     .imageContainer,
     .bgImage,
     .textContainer {
+          
       transform: scale(1.1);
       -webkit-transform: scale(1.1);
       -moz-transform: scale(1.1);
@@ -59,6 +68,7 @@
       margin-top: 0px;
       z-index: 10;
       text-shadow: 2px 2px #00000022;
+      text-transform: capitalize;
     }
 
     .description {

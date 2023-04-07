@@ -2,16 +2,14 @@ import { createSlice } from "@reduxjs/toolkit";
 import { HYDRATE } from "next-redux-wrapper";
 import { AppState } from "./store";
 import Cookies from "js-cookie";
-import { IAuthUser } from "types/index";
+import { IAuthUser, AuthState } from "types/index";
 // Type for our state
-export interface AuthState {
-  authState: boolean;
-  userInfo: IAuthUser | null;
-}
 
 const userCookie: string = Cookies.get("userInfo");
-const authState: string = Cookies.get("authState");
-
+const authState: AuthState = Cookies.get("authState");
+console.log(454545)
+console.log(userCookie)
+ 
 // Initial state
 const initialState: AuthState = {
   authState: authState ? authState : false,
