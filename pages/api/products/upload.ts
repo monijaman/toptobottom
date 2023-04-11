@@ -40,7 +40,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             //fields.push
         });
     }).catch(e => {
-        console.log(e);
         status = 500;
         resultBody = {
             status: 'fail', message: 'Upload error'
@@ -68,7 +67,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     
     const { files, fields} = formData
     const jsonData:string = fields[0][1]
-    // console.log(fields[0][1])
     const parsedData = JSON.parse(jsonData)
     const insertedFiles: string[] = []
     if (files?.length >0 ) {
@@ -95,7 +93,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         }
 
         let puerSlug:string = string_to_slug(parsedData.name)
-       // console.log(parsedData)
         const newProduct = new Product({
             name: parsedData.name,
             price: parsedData.price,

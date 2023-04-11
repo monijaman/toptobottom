@@ -12,7 +12,6 @@ handler.get(async (req, res) => {
   try {
 
     let category = [];
-    console.log(category)
     if (req.query.type && req.query.type == "server") {
       category = (req.query.category).split(",") || "all";
     } else {
@@ -33,7 +32,6 @@ handler.get(async (req, res) => {
       let prices = priceSelected.split(",")
       min = prices[0]
       max = prices[1]
-      console.log(555555)
     }
 
 
@@ -83,7 +81,6 @@ handler.get(async (req, res) => {
     }
 
 
-    // console.log('category', selcategory)
     query = query
       .where("category")
       .in(category)
@@ -106,7 +103,6 @@ handler.get(async (req, res) => {
 
     });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({
       status: "error",
       message: "Server Error",

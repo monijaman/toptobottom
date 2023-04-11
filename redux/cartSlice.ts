@@ -16,7 +16,7 @@ export type cartState = {
   cart: {
     cartItems: IProduct[] | [];
     shippingAddress: ShippingAddressType | null;
-    paymentMethod: string | undefined;
+    SelPaymentMethod: string | undefined;
   };
 
 };
@@ -26,9 +26,9 @@ export type ContextType = {
   dispatch: React.Dispatch<any>;
 };
 
-const cartCookie: string = Cookies.get("cartItems");
-const shippingCookie: string = Cookies.get("shippingAddress");
-const paymentCookie: string = Cookies.get("paymentMethod");
+const cartCookie  = Cookies.get("cartItems");
+const shippingCookie = Cookies.get("shippingAddress");
+const paymentCookie = Cookies.get("paymentMethod");
 //  const userCookie:string = Cookies.get("userInfo");
 // console.log(shippingCookie) 
 
@@ -38,7 +38,7 @@ const initialState: cartState = {
   cart: {
     cartItems: cartCookie ? JSON.parse(cartCookie) : [],
     shippingAddress: shippingCookie ? JSON.parse(shippingCookie) : {},
-    paymentMethod: paymentCookie ? paymentCookie : "",
+    SelPaymentMethod: paymentCookie ? paymentCookie : "",
   },
   //  userInfo: userCookie  ? userCookie : null,
   // userInfo: userCookie ? userCookie : null,
@@ -94,7 +94,7 @@ export const cartSlice = createSlice({
     savePaymentMethod(state, action) {
       return {
         ...state,
-        cart: { ...state.cart, paymentMethod: action.payload as string },
+        cart: { ...state.cart, SelPaymentMethod: action.payload as string },
       };
     },
 

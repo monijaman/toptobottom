@@ -112,7 +112,7 @@ const Home: NextPage = () => {
 
     const handleBrandChange = (event: SelectChangeEvent<typeof Brand>) => {
         setBrand(event.target.value as string);
-        console.log(brand)
+   
     };
 
     const handleChange = (event: SelectChangeEvent<typeof category>) => {
@@ -124,8 +124,7 @@ const Home: NextPage = () => {
              typeof value === 'string' ? value.split(',') : value,
            // typeof value === 'string' ? value.split(',') : value,
         );
-// console.log(value) 
-console.log(typeof category)
+ 
     };
 
     const submitHandler = async ({
@@ -178,7 +177,6 @@ console.log(typeof category)
 
     const handleFileSelect = (event) => {
         setSelectedFile(event.target.files[0])
-        console.log(selectedFile)
     }
 
 

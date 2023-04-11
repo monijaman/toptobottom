@@ -12,6 +12,7 @@ handler.use(isAuth);
 
 handler.post(async (req, res) => {
   await db.connect();
+   
   const newOrder = new Order({
     ...req.body,
     user: req.user._id,

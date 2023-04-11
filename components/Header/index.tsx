@@ -103,12 +103,12 @@ export default function Header() {
       </div>
       <div className={styles.rightMenu}>
         <div className={styles.menuContent} style={showHeader}>
-          <Link href="/">My Account</Link>
-          {authState && <Link href="/login">My Account</Link>}
+          <Link href="/">My Account 123</Link>
+          {authState && <Link href="/account">My Account</Link>}
           {authState && <Link href="/orders">My Orders</Link>}
-          {authState && <Link href="/favorites">Favourites</Link>}
-          {!authState && <Link href="/login">Profile</Link>}
-          {!authState && <Link href="/login">Login</Link>}
+          {authState && <Link href="/favorites">Favourites e</Link>}
+          {authState && <Link href="/profile">Profile</Link>}
+          {!authState && <Link href="/login">Login </Link>}
           {!authState && <Link href="/register">register</Link>}
           
         </div>
@@ -156,7 +156,7 @@ export default function Header() {
           <div className={styles.dropdown}>
             <div className={styles.arrowUp} />
             <div className={styles.dropdownMenu}>
-              {authState && <Link href="/login">My Account</Link>}
+              {authState && <Link href="/acount">My Account</Link>}
               {authState && <Link href="/orders">My Orders</Link>}
               {authState && <Link href="/favorites">Favourites</Link>}
               {authState && <Link href="/login">Profile</Link>}

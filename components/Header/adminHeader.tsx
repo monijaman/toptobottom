@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-
+import Image from 'next/image'
 import styles from "./header.module.scss";
 
 // import SearchIcon from "../icons/search";
@@ -33,7 +33,10 @@ export default function Header() {
     const [isAdmin, setIsAdmin] = useState(false);
     const { authState, userInfo } = useSelector(selectAuthState);
     let userJsonInfo = (typeof userInfo == "string") ? JSON.parse(userInfo) : userInfo
-
+    const myLoader = ({ src, width, quality }) => {
+        return `https://example.com/${src}?w=${width}&q=${quality || 75}`
+      }
+      
     // console.log(authState)
     const logoutClickHandler = () => {
         Cookies.remove("userInfo");
@@ -94,7 +97,7 @@ export default function Header() {
             </div>
             <div className={styles.rightMenu}>
                 <div className={styles.menuContent} style={showHeader}>
-                    <Link href="/">My Account</Link>
+                    <Link href="/">My Account ww</Link>
 
                     {!authState && <Link href="/login">Login</Link>}
                     <Link href="/login">Login</Link>

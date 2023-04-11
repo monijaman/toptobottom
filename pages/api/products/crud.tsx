@@ -15,7 +15,6 @@ import Product from 'models/Product';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 	const { method } = req;
-console.log(method)
 	switch (method) {
 		case "GET":
 			try {

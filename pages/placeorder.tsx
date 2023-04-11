@@ -12,13 +12,14 @@ import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 import { useEffect, useState } from 'react';
-import { IProduct } from "types/index";
+import { IProduct, IAuthUser } from "types/index";
 import CheckoutWizard from '../components/CheckoutWizard';
 import Layout from "components/Layout/innerpage";
 import { getError } from '../utils/error';
 // import { StoreContext } from '../utils/Store';
 import { useDispatch, useSelector } from "react-redux";
 import useStyles from '../utils/styles';
+import { selectAuthState } from 'redux/authSlice';
 
 import { clearCart, selectCartState } from "redux/cartSlice";
 
@@ -30,16 +31,25 @@ const PlaceOrder: React.ReactNode = () => {
   const { closeSnackbar, enqueueSnackbar } = useSnackbar();
   const [loading, setLoading] = useState(false);
   // const { state, dispatch} = useContext(StoreContext);
-  const {
-    userInfo,
-    cart: { cartItems, paymentMethod },
-  } = useSelector(selectCartState);
 
+  const { userInfo, authState } = useSelector(selectAuthState);
+ 
+  const {
+    cart: { cartItems, SelPaymentMethod : paymentMethodObj  },
+  } = useSelector(selectCartState);
 
   const {
     cart: { shippingAddress },
   } = useSelector(selectCartState);
+ 
+  let userInfoArray  = JSON.parse(userInfo);
+ 
+  const { paymentMethod  } =  paymentMethodObj;
 
+  // console.log(paymentMethod)
+  // const jsonData:string = fields[0][1]
+ 
+  // const parsedData = JSON.parse(jsonData)
 
   const round2 = (num: number) => Math.round(num * 100 + Number.EPSILON) / 100; // 123.456 => 123.46
   const itemsPrice = round2(
@@ -48,8 +58,8 @@ const PlaceOrder: React.ReactNode = () => {
   const shippingPrice = itemsPrice > 200 ? 0 : 15;
   const taxPrice = round2(itemsPrice * 0.15);
   const totalPrice = round2(itemsPrice + shippingPrice + taxPrice);
-
-  useEffect(() => {
+ 
+   useEffect(() => {
     if (!paymentMethod) {
       router.push('/payment');
     }
@@ -75,7 +85,7 @@ const PlaceOrder: React.ReactNode = () => {
         },
         {
           headers: {
-            authorization: `Bearer ${userInfo?.token}`,
+            authorization: `Bearer ${userInfoArray?.token}`,
           },
         }
       );

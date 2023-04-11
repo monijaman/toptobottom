@@ -39,7 +39,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             //fields.push
         });
     }).catch(e => {
-        console.log(e);
         status = 500;
         resultBody = {
             status: 'fail', message: 'Upload error'
@@ -51,7 +50,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     
     const { files, fields} = formData
     const jsonData:string = fields[0][1]
-    // console.log(fields[0][1])
     const parsedData = JSON.parse(jsonData)
     const insertedFiles: string[] = []
     if (parsedData) {
@@ -90,15 +88,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             description: parsedData.description,
             category: parsedData.category.toString(),
             colors: parsedData.color,
-            brand:parsedData.brand
+            brand:parsedData.brand,
+            countInStock:parsedData.countInStock
          }
        
-         //console.log(parsedData)
             let product = await Product.findOneAndUpdate(filter, update, {
                 new: true
               });
            
-       // console.log(product)
          // const product = await newProduct.save();
            await db.disconnect();
     }

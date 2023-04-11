@@ -115,7 +115,6 @@ export default function Products({ pageNum, propCategory, prpPrice, prpSearch, p
       method: 'DELETE',
       body: JSON.stringify({ data: productId })
     })
-    console.log(response.status)
     if (response.status) {
       router.reload(window.location.pathname)
     }

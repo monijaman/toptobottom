@@ -7,8 +7,7 @@ import { IAuthUser, AuthState } from "types/index";
 
 const userCookie: string = Cookies.get("userInfo");
 const authState: AuthState = Cookies.get("authState");
-console.log(454545)
-console.log(userCookie)
+ 
  
 // Initial state
 const initialState: AuthState = {
