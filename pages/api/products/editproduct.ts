@@ -5,7 +5,7 @@ import formidable, { File } from 'formidable';
 let mv = require('mv');
 import db from 'utils/db';
 import Product from 'models/Product';
-
+import { IProduct } from "types/index";
  
 export const config = {
     api: {
@@ -80,18 +80,22 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         
             
             const filter = { _id: parsedData.prodId };
-            
-           const update = {     
+        
+
+           const update:IProduct = {     
             name: parsedData.name,
             price: parsedData.price,
-            image:insertedFiles.toString(),
             description: parsedData.description,
             category: parsedData.category.toString(),
             colors: parsedData.color,
             brand:parsedData.brand,
             countInStock:parsedData.countInStock
          }
-       
+         
+
+         if(insertedFiles.length> 0){
+            update.image = insertedFiles.toString();
+        } 
             let product = await Product.findOneAndUpdate(filter, update, {
                 new: true
               });

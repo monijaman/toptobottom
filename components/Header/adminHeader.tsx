@@ -64,7 +64,7 @@ export default function Header() {
         <nav className={styles.container}>
             <div className={styles.logoContainer}>
                 <Link href="/">
-                    <a className={styles.logo}>sssssss
+                    <a className={styles.logo}> 
                     <Image
                     loader={myLoader}
                     src="/static/moucak.png"
@@ -97,7 +97,7 @@ export default function Header() {
             </div>
             <div className={styles.rightMenu}>
                 <div className={styles.menuContent} style={showHeader}>
-                    <Link href="/">My Account ww</Link>
+                    <Link href="/">My Account </Link>
 
                     {!authState && <Link href="/login">Login</Link>}
                     <Link href="/login">Login</Link>
@@ -140,7 +140,7 @@ export default function Header() {
                     <span>
                         Hello{" "}
                         <span style={{ fontWeight: "normal" }}>
-                            Guest
+                            Admin
                         </span>
                     </span>
                     <ArrowIcon width={10} height={10} className={styles.arrowIcon} />

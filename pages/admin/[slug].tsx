@@ -83,6 +83,7 @@ const MenuProps = {
 };
 
 const Page: NextPage = ({ product }: props) => {
+  
   const [prodId, setprodId] =   React.useState(product._id);
   const [category, setCategory] = React.useState<string[]>([product.category]);
   const [color, setColor] = React.useState<string[]>(product.color);

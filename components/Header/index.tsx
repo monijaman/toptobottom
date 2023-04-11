@@ -30,13 +30,12 @@ export default function Header() {
   const router = useRouter();
   const { cart: { cartItems } } = useSelector(selectCartState);
   const [cartLength, setCartLength] = useState(cartItems.length);
-  const [isAdmin, setIsAdmin] = useState(false);
   const { authState, userInfo } = useSelector(selectAuthState);
   const [userName, setUserName] = useState(false);
-  let jsonObje = (typeof userInfo == "string") ? JSON.parse(userInfo) : userInfo
+  let jsonObje = (typeof userInfo == "string") ? JSON.parse(userInfo) : ""
+  const [isAdmin, setIsAdmin] = useState(jsonObje.isAdmin);
  
- 
-  console.log(authState)
+
   const logoutClickHandler = () => {
     Cookies.remove("userInfo");
     Cookies.remove("cartItems");
@@ -156,10 +155,11 @@ export default function Header() {
           <div className={styles.dropdown}>
             <div className={styles.arrowUp} />
             <div className={styles.dropdownMenu}>
-              {authState && <Link href="/acount">My Account</Link>}
-              {authState && <Link href="/orders">My Orders</Link>}
-              {authState && <Link href="/favorites">Favourites</Link>}
-              {authState && <Link href="/login">Profile</Link>}
+              {authState && <Link href="/">My Account</Link>}
+              {authState && isAdmin && <Link href="/admin/products">Admin Panel</Link>}
+              {authState && <Link href="/order-history">My Orders</Link>}
+              {/* {authState && <Link href="/favorites">Favourites</Link>} */}
+              {authState && <Link href="/profile">Profile</Link>}
               {authState && isAdmin && <Link href="/admin">Admin Panel</Link>}
               {!authState && <Link href="/login">Login</Link>}
               {!authState && <Link href="/register">Register</Link>}
