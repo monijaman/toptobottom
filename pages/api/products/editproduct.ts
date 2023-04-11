@@ -5,7 +5,7 @@ import formidable, { File } from 'formidable';
 let mv = require('mv');
 import db from 'utils/db';
 import Product from 'models/Product';
-
+import { IProduct } from "types/index";
  
 export const config = {
     api: {
@@ -39,7 +39,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             //fields.push
         });
     }).catch(e => {
-        console.log(e);
         status = 500;
         resultBody = {
             status: 'fail', message: 'Upload error'
@@ -51,7 +50,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     
     const { files, fields} = formData
     const jsonData:string = fields[0][1]
-    // console.log(fields[0][1])
     const parsedData = JSON.parse(jsonData)
     const insertedFiles: string[] = []
     if (parsedData) {
@@ -82,23 +80,26 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         
             
             const filter = { _id: parsedData.prodId };
-            
-           const update = {     
+        
+
+           const update:IProduct = {     
             name: parsedData.name,
             price: parsedData.price,
-            image:insertedFiles.toString(),
             description: parsedData.description,
             category: parsedData.category.toString(),
             colors: parsedData.color,
-            brand:parsedData.brand
+            brand:parsedData.brand,
+            countInStock:parsedData.countInStock
          }
-       
-         //console.log(parsedData)
+         
+
+         if(insertedFiles.length> 0){
+            update.image = insertedFiles.toString();
+        } 
             let product = await Product.findOneAndUpdate(filter, update, {
                 new: true
               });
            
-       // console.log(product)
          // const product = await newProduct.save();
            await db.disconnect();
     }

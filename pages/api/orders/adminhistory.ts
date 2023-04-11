@@ -1,4 +1,4 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextApiRequest, NextApiResponse } from 'next';
 import nc from 'next-connect';
 import Order from '../../../models/Order';
 import { isAuth } from '../../../utils/auth';
@@ -10,15 +10,10 @@ const handler = nc<NextApiRequest, NextApiResponse>({
 });
 handler.use(isAuth);
 
-handler.post(async (req, res) => {
+handler.get(async (req, res) => {
   await db.connect();
-   
-  const newOrder = new Order({
-    ...req.body,
-    user: req.user._id,
-  });
-  const order = await newOrder.save();
-  res.status(201).send(order);
+  const orders = await Order.find();
+  res.send(orders);
 });
 
 export default handler;

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-
+import Image from 'next/image'
 import styles from "./header.module.scss";
 
 // import SearchIcon from "../icons/search";
@@ -32,7 +32,11 @@ export default function Header() {
     const [cartLength, setCartLength] = useState(cartItems.length);
     const [isAdmin, setIsAdmin] = useState(false);
     const { authState, userInfo } = useSelector(selectAuthState);
-
+    let userJsonInfo = (typeof userInfo == "string") ? JSON.parse(userInfo) : userInfo
+    const myLoader = ({ src, width, quality }) => {
+        return `https://example.com/${src}?w=${width}&q=${quality || 75}`
+      }
+      
     // console.log(authState)
     const logoutClickHandler = () => {
         Cookies.remove("userInfo");
@@ -60,7 +64,15 @@ export default function Header() {
         <nav className={styles.container}>
             <div className={styles.logoContainer}>
                 <Link href="/">
-                    <a className={styles.logo}>Shopping</a>
+                    <a className={styles.logo}> 
+                    <Image
+                    loader={myLoader}
+                    src="/static/moucak.png"
+                    alt="Moucak"
+                    width={500}
+                    height={500}
+                    />
+                      </a>
                 </Link>
                 <div className={styles.rightContentMobile}>
                     <Link href="/cart">
@@ -85,7 +97,7 @@ export default function Header() {
             </div>
             <div className={styles.rightMenu}>
                 <div className={styles.menuContent} style={showHeader}>
-                    <Link href="/">My Account</Link>
+                    <Link href="/">My Account </Link>
 
                     {!authState && <Link href="/login">Login</Link>}
                     <Link href="/login">Login</Link>
@@ -128,7 +140,7 @@ export default function Header() {
                     <span>
                         Hello{" "}
                         <span style={{ fontWeight: "normal" }}>
-                            Guest
+                            Admin
                         </span>
                     </span>
                     <ArrowIcon width={10} height={10} className={styles.arrowIcon} />

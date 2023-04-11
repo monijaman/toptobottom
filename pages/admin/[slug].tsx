@@ -83,6 +83,7 @@ const MenuProps = {
 };
 
 const Page: NextPage = ({ product }: props) => {
+  
   const [prodId, setprodId] =   React.useState(product._id);
   const [category, setCategory] = React.useState<string[]>([product.category]);
   const [color, setColor] = React.useState<string[]>(product.color);
@@ -129,7 +130,7 @@ const Page: NextPage = ({ product }: props) => {
       typeof value === 'string' ? value.split(',') : value,
       // typeof value === 'string' ? value.split(',') : value,
     );
-    // console.log(value) 
+   
   };
 
  
@@ -137,7 +138,8 @@ const Page: NextPage = ({ product }: props) => {
   const submitHandler = async ({
     name,
     price,
-    description
+    description,
+    countInStock
   }: IProduct) => {
 
     /* Prevent form from submitting by default */
@@ -148,7 +150,6 @@ const Page: NextPage = ({ product }: props) => {
       alert('Please, select file you want to upload');
       return;
     }
-    // console.log(inputFileRef)
 
     setIsLoading(true);
 
@@ -161,7 +162,8 @@ const Page: NextPage = ({ product }: props) => {
       category,
       color,
       brand,
-      description
+      description,
+      countInStock
     };
 
     formData.append("data", JSON.stringify(content))
@@ -188,7 +190,6 @@ const Page: NextPage = ({ product }: props) => {
 
   const handleFileSelect = (event) => {
     setSelectedFile(event.target.files[0])
-    console.log(selectedFile)
   }
 
 
@@ -264,6 +265,37 @@ const Page: NextPage = ({ product }: props) => {
                     list={colors} selectedRdo={product.color}
                     handleRadioBtn={checkedItem => handleFilters(checkedItem, "color")}
                   />
+                </ListItem>
+
+                <ListItem>
+                  <Controller
+                    name="countInStock"
+                    control={control}
+                    defaultValue={product.countInStock}
+                    rules={{
+                      required: true,
+                      minLength: 1,
+                    }}
+                    render={({ field }) => (
+                      <TextField
+                        variant="outlined"
+                        fullWidth
+                        id="countInStock"
+                        label="Count in Stock"
+                        inputProps={{ type: "name" }}
+
+                        error={Boolean(errors.name)}
+                        helperText={
+                          errors.name
+                            ? errors.name.type === "minLength"
+                              ? "Count In Stock length is more than 1"
+                              : "Count In Stock is required"
+                            : ""
+                        }
+                        {...field}
+                      ></TextField>
+                    )}
+                  ></Controller>
                 </ListItem>
 
                 <ListItem>

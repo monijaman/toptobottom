@@ -249,12 +249,13 @@ const Order = ({
                           {(orderItems as Array<IOrderItems>).map((item) => (
                             <TableRow key={item._id}>
                               <TableCell>
-                                <Image
-                                  src={item.image}
-                                  alt={item.name}
-                                  width={50}
-                                  height={50}
-                                ></Image>
+                              <Image
+                              src={"/images/"+item.image}
+                              alt={item.name}
+                              width={50}
+                              height={50}
+                            /> 
+                              
                               </TableCell>
 
                               <TableCell>

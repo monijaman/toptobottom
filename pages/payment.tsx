@@ -42,7 +42,7 @@ const Payment: React.ReactNode = () => {
       setPaymentMethod(Cookies.get('paymentMethod') || '');
     }
   }, []);
-  console.log(paymentMethod)
+ 
   const submitHandler = (e: React.FormEvent) => {
     closeSnackbar();
     e.preventDefault();
@@ -51,7 +51,7 @@ const Payment: React.ReactNode = () => {
     } else {
       dispatch(savePaymentMethod({ paymentMethod }));
 
-      Cookies.set('paymentMethod', paymentMethod);
+      Cookies.set('paymentMethod', paymentMethod); 
       router.push('/placeorder');
     }
   };

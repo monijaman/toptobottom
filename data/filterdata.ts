@@ -6,28 +6,48 @@ const prices = [
     },
     {
         "_id": 1,
-        "name": "$0 to $199",
+        "name": "৳0 to ৳200",
         "array": [0, 199]
     },
     {
         "_id": 2,
-        "name": "$200 to $249",
-        "array": [200, 250]
+        "name": "৳200 to ৳400",
+        "array": [200, 400]
     },
     {
         "_id": 3,
-        "name": "$250 to $279",
-        "array": [250, 279]
+        "name": "৳400 to ৳700",
+        "array": [400, 700]
     },
     {
         "_id": 4,
-        "name": "$280 to $299",
-        "array": [280, 299]
+        "name": "৳1200 to ৳2000",
+        "array": [1200, 2000]
     },
     {
         "_id": 5,
-        "name": "More than $300",
-        "array": [300, 99999999]
+        "name": "৳2000 to ৳3000",
+        "array": [2000, 3000]
+    },
+    {
+        "_id": 5,
+        "name": "৳3000 to ৳6000",
+        "array": [3000, 6000]
+    },
+    {
+        "_id": 5,
+        "name": "৳6000 to ৳9000",
+        "array": [6000, 9000]
+    },
+    {
+        "_id": 5,
+        "name": "৳9000 to ৳12000",
+        "array": [9000, 12000]
+    },
+    {
+        "_id": 5,
+        "name": "More Than ৳12000",
+        "array": [12000, 60000]
     }
 ]
 
@@ -39,10 +59,17 @@ const categories = [
         "name": "All"
     },
     {
-        "_id": "Shirts",
-        "name": "Shirts"
+        "_id": "organic",
+        "name": "Organic Products"
     },
     {
+        "_id": "Computer",
+        "name": "Computer Equipment"
+    },
+    {
+        "_id": "Shirts",
+        "name": "Shirts"
+    }, {
         "_id": "Pants",
         "name": "Pants"
     },
@@ -83,7 +110,7 @@ const colors = [
     },
     {
         "name": "Yellow",
-        "code": "#FFFF00"
+        "code": "#fdffc9"
     },
     {
         "name": "Lime",

@@ -71,7 +71,7 @@ const Register: React.ReactNode = () => {
 
     } catch (err: any) {
 
-      console.log(err.response.data)
+ 
       enqueueSnackbar(
         err.response.data ? err.response.data : err.message,
         { variant: "error" }

@@ -38,7 +38,6 @@ handler.get(async (req, res) => {
       data: result,
     });
   } catch (error) {
-    console.log(error);
     res.status(500).json({
       status: "error",
       message: "Server Error",

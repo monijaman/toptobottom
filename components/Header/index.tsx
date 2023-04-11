@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from 'next/image'
 import styles from "./header.module.scss";
 import SearchIcon from "../icons/search";
 import CartIcon from "../icons/cart";
@@ -29,10 +30,12 @@ export default function Header() {
   const router = useRouter();
   const { cart: { cartItems } } = useSelector(selectCartState);
   const [cartLength, setCartLength] = useState(cartItems.length);
-  const [isAdmin, setIsAdmin] = useState(false);
   const { authState, userInfo } = useSelector(selectAuthState);
+  const [userName, setUserName] = useState(false);
+  let jsonObje = (typeof userInfo == "string") ? JSON.parse(userInfo) : ""
+  const [isAdmin, setIsAdmin] = useState(jsonObje.isAdmin);
+ 
 
-  // console.log(authState)
   const logoutClickHandler = () => {
     Cookies.remove("userInfo");
     Cookies.remove("cartItems");
@@ -46,12 +49,18 @@ export default function Header() {
     if (cartItems?.length > 0) {
       setCartLength(cartItems?.length)
     }
+
+      if(jsonObje){
+        setUserName(jsonObje?.name)  
+      } else{
+        setUserName("Guest")
+      } 
  
     if(userInfo?.isAdmin){
       setIsAdmin(isAdmin)
     }
   
-
+  
        // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cartItems])
 
@@ -59,7 +68,16 @@ export default function Header() {
     <nav className={styles.container}>
       <div className={styles.logoContainer}>
         <Link href="/">
-          <a className={styles.logo}>Shopping</a>
+          <a className={styles.logo}>  
+          <Image
+      // loader={myLoader}
+      src="/static/moucak.png"
+      alt="Moucak"
+      width={180}
+      height={44}
+    />
+       
+          </a>
         </Link>
         <div className={styles.rightContentMobile}>
           <Link href="/cart">
@@ -84,12 +102,14 @@ export default function Header() {
       </div>
       <div className={styles.rightMenu}>
         <div className={styles.menuContent} style={showHeader}>
-          <Link href="/">My Account</Link>
-          <Link href="/orders">My Orders</Link>
-          <Link href="/favorites">Favourites</Link>
-          {!authState && <Link href="/login">Login</Link>}
-          <Link href="/login">Login</Link>
-          <Link href="/register">Register</Link>
+          <Link href="/">My Account 123</Link>
+          {authState && <Link href="/account">My Account</Link>}
+          {authState && <Link href="/orders">My Orders</Link>}
+          {authState && <Link href="/favorites">Favourites e</Link>}
+          {authState && <Link href="/profile">Profile</Link>}
+          {!authState && <Link href="/login">Login </Link>}
+          {!authState && <Link href="/register">register</Link>}
+          
         </div>
         <div
           className={styles.background}
@@ -128,18 +148,19 @@ export default function Header() {
           <span>
             Hello{" "}
             <span style={{ fontWeight: "normal" }}>
-              Guest
+              {userName}
             </span>
           </span>
           <ArrowIcon width={10} height={10} className={styles.arrowIcon} />
           <div className={styles.dropdown}>
             <div className={styles.arrowUp} />
             <div className={styles.dropdownMenu}>
-              <Link href="/">My Account</Link>
-              <Link href="/orders">My Orders</Link>
-              <Link href="/favorites">Favourites</Link>
+              {authState && <Link href="/">My Account</Link>}
+              {authState && isAdmin && <Link href="/admin/products">Admin Panel</Link>}
+              {authState && <Link href="/order-history">My Orders</Link>}
+              {/* {authState && <Link href="/favorites">Favourites</Link>} */}
+              {authState && <Link href="/profile">Profile</Link>}
               {authState && isAdmin && <Link href="/admin">Admin Panel</Link>}
-              {!authState && <Link href="/favorites">Login</Link>}
               {!authState && <Link href="/login">Login</Link>}
               {!authState && <Link href="/register">Register</Link>}
               {authState && <MenuItem onClick={logoutClickHandler}>Logout</MenuItem>}
