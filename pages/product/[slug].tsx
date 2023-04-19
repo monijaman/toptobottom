@@ -42,7 +42,7 @@ const ProductDetail: React.ReactNode = ({
     dispatch({ type: "CART_ADD_ITEM", payload: { ...product, quantity } });
     router.push("/cart");
   };
-
+  let imgpath = "/images/"+product.image
   return (
     <Layout title={product.name} description={product.description}>
       <div className={classes.section}>
@@ -55,7 +55,7 @@ const ProductDetail: React.ReactNode = ({
       <Grid container spacing={1}>
         <Grid item md={6} xs={12}>
           <Image
-            src={product.image}
+            src={imgpath}
             alt={product.name}
             width={640}
             height={640}
@@ -75,6 +75,7 @@ const ProductDetail: React.ReactNode = ({
             <ListItem>
               <Typography>Brand: {product.brand}</Typography>
             </ListItem>
+            
             <ListItem>
               <Typography>
                 Rating: {product.rating} stars ({product.numReviews} reviews)
