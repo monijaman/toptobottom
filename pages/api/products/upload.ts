@@ -91,8 +91,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
            });
 
         }
-
+      
         let puerSlug:string = string_to_slug(parsedData.name)
+        let color =  parsedData.color;
+
+        if (parsedData.color === undefined || parsedData.color.length == 0) {
+             color =  "";
+        }
+        
         const newProduct = new Product({
             name: parsedData.name,
             price: parsedData.price,
@@ -100,15 +106,16 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             description: parsedData.description,
             image:insertedFiles.toString(),
             category: parsedData.category.toString(),
-            colors: parsedData.color,
+            colors: color,
             brand:parsedData.brand,
             });
-    
+   // console.log(newProduct)
           const product = await newProduct.save();
            await db.disconnect();
     }
 
     res.status(status).json(resultBody);
+    
 }
 
 export default handler;

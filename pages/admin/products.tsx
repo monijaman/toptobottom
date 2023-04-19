@@ -298,6 +298,9 @@ export default function Products({ pageNum, propCategory, prpPrice, prpSearch, p
                             {product.description}
                           </Typography>
                           <Typography variant="body2"  >
+                          Count In Stock: {product.countInStock}
+                          </Typography>
+                          <Typography variant="body2"  >
                             Price: ${product.price}
                           </Typography>
                           <Typography sx={{ cursor: 'pointer' }} variant="body2">

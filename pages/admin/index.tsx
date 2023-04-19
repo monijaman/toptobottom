@@ -168,6 +168,11 @@ const Home: NextPage = () => {
                 data: formData,
                 headers: { "Content-Type": "multipart/form-data" },
             });
+
+            if(response.status==200){
+                router.back()
+              }
+            
         } catch (error) {
             console.log(error)
         }
@@ -247,6 +252,9 @@ const Home: NextPage = () => {
                                     </FormControl>
                                
                             </ListItem>   
+
+                            
+
                             <ListItem>
                                     <RadioBtn
                                         list={colors} //selectedRdo={prpPrice}
@@ -314,7 +322,35 @@ const Home: NextPage = () => {
                                     ></Controller>
                                 </ListItem>
 
-                                
+                                <ListItem>
+                  <Controller
+                    name="countInStock"
+                    control={control}
+                    rules={{
+                      required: true,
+                      minLength: 1,
+                    }}
+                    render={({ field }) => (
+                      <TextField
+                        variant="outlined"
+                        fullWidth
+                        id="countInStock"
+                        label="Count in Stock"
+                        inputProps={{ type: "name" }}
+
+                        error={Boolean(errors.name)}
+                        helperText={
+                          errors.name
+                            ? errors.name.type === "minLength"
+                              ? "Count In Stock length is more than 1"
+                              : "Count In Stock is required"
+                            : ""
+                        }
+                        {...field}
+                      ></TextField>
+                    )}
+                  ></Controller>
+                </ListItem>
 
                                
                                 <ListItem>

@@ -12,19 +12,21 @@ handler.get(async (req, res) => {
   try {
 
     let category = [];
+
     if (req.query.type && req.query.type == "server") {
       category = (req.query.category).split(",") || "all";
     } else {
       category = req.query['category[]'] || "all";
     }
 
+
     const search = req.query.search || "";
-    // let category = req.query['category[]'] || "all";
+
     const page = parseInt(req.query.page) || 1;
     const pageSize = parseInt(req.query.limit) || 10;
     const priceSelected = req.query.price || 'any';
     const skip = (page - 1) * pageSize;
-
+ 
     let min = 0
     let max = 999999999999
 
@@ -34,13 +36,11 @@ handler.get(async (req, res) => {
       max = prices[1]
     }
 
-
+    
     if (category == 'all') {
-      category = categories.map(catName => catName._id);
-    }
-
-
-
+      category = categories.map(catName => catName._id); 
+    } 
+ 
     let query = Product.find({
       $or: [
         { name: { $regex: search, $options: "i" } },
@@ -61,8 +61,6 @@ handler.get(async (req, res) => {
     })
       .where("category")
       .in(category)
-
-
 
     const totalPage = Math.ceil(total / pageSize);
 
