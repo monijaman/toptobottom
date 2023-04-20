@@ -109,7 +109,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             colors: color,
             brand:parsedData.brand,
             });
-   // console.log(newProduct)
+   
           const product = await newProduct.save();
            await db.disconnect();
     }

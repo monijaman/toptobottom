@@ -200,8 +200,6 @@ export default function Products({ pageNum, propCategory, prpPrice, prpSearch, p
   const handleFilters = (selFilters, filterType) => {
 
     const newFilters = { ...Filters }
-    //  alert(JSON.stringify(selFilters, null, 4))
-
 
     if (filterType == "searchTerm") {
       newFilters['search'] = selFilters

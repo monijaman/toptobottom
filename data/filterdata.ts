@@ -63,34 +63,34 @@ const categories = [
         "name": "Organic Products"
     },
     {
-        "_id": "Computer",
+        "_id": "computer",
         "name": "Computer Equipment"
     },
     {
-        "_id": "Shirts",
+        "_id": "shirts",
         "name": "Shirts"
     }, {
-        "_id": "Pants",
+        "_id": "pants",
         "name": "Pants"
     },
     {
-        "_id": "Tshirt",
+        "_id": "tshirt",
         "name": "Tshirt"
     },
     {
-        "_id": "Gown",
+        "_id": "gown",
         "name": "Night Gown"
     },
     {
-        "_id": "Sports",
+        "_id": "sports",
         "name": "Sports Wear"
     },
     {
-        "_id": "Shoes",
+        "_id": "shoes",
         "name": "Shoes"
     },
     {
-        "_id": "Watch",
+        "_id": "watch",
         "name": "Watch"
     }
 ]
@@ -152,10 +152,7 @@ const colors = [
 
 const brands = [
     {
-        "name": "Brand 1",
-    },
-    {
-        "name": "Brand 2",
+        "name": "Moucak",
     }
 ]
 export {

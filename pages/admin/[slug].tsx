@@ -241,7 +241,7 @@ const Page: NextPage = ({ product }: props) => {
                     <Select
                       labelId="categories"
                       id="categories"
-                      multiple
+                      // multiple
                       value={category}
                       onChange={handleChange}
                       input={<OutlinedInput label="Category" />}
@@ -251,7 +251,7 @@ const Page: NextPage = ({ product }: props) => {
 
                     >
                       {categories.map((cat) => (
-                        <MenuItem key={cat._id} value={cat.name}>
+                        <MenuItem key={cat._id} value={cat._id}>
                           <Checkbox checked={category.indexOf(cat.name) > -1} />
                           <ListItemText primary={cat.name} />
                         </MenuItem>

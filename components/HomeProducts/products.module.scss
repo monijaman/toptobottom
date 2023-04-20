@@ -25,10 +25,11 @@
 
   @include lg {
     grid-template-areas:
-      "first first third fourth"
-      "second second third fourth";
-    grid-template-rows: 1fr 1fr;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
+      "first second third"
+      "first second third"
+      "first second third";
+    grid-template-rows: repeat(3, 1fr  1fr 1fr); 
+    grid-template-columns: 1fr 1fr 1fr ;
     width: 100%;
   }
 }

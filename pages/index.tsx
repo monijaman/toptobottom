@@ -96,33 +96,22 @@ export default function HomePage({ prpTotalPages, prpDataSet }: props) {
   let colors = ["#f6f6f6", "#e6eaed", "#f3f0e8", "#d8f1ff", "#fbf7e9"]
   let partComponents = [];
 
-  for (let i = 0; i < 3; i++) {
-    partComponents[i] = []
-    let color = colors[(Math.random() * colors.length) | 0]
-    let horizontal = 0;
-    for (let j = i * 4; j < (i + 1) * 4; j++) {
+    
+    for (let j = 0; j < dataResSet.length; j++) {
 
+
+      partComponents[j] = []
+      let color = colors[(Math.random() * colors.length) | 0]
+
+
+      
       if (dataResSet[j]) {
         let imgpath = "/images/"+dataResSet[j].image
         //partComponents[i].push(dataResSet[j].name)
-        if (horizontal < 2) {
-
-         
-          partComponents[i].push(
-            <HorizontalCard key={dataResSet[j]}
-              bgColor={color}
-              title={dataResSet[j].name}
-              image={imgpath}
-              desc="Best of daily wear"
-              price={dataResSet[j].price}
-              sale_price="140"
-              slug={dataResSet[j].slug}
-              product={dataResSet[j]}
-            />
-
-          )
-        } else {
-          partComponents[i].push(
+     
+   
+       
+          partComponents[j].push(
             <VerticalCard key={dataResSet[j]}
               bgColor={color}
               name={dataResSet[j].name}
@@ -133,14 +122,13 @@ export default function HomePage({ prpTotalPages, prpDataSet }: props) {
               product={dataResSet[j]}
             />
           )
-        }
+        
       }
 
-      horizontal++
+   
 
     }
-
-  }
+ console.log(partComponents)
 
 
   return (
@@ -171,16 +159,11 @@ export default function HomePage({ prpTotalPages, prpDataSet }: props) {
 
 
             < Products >
-              {partComponents[0]}
+              {partComponents}
             </Products>
 
-            <Products reverse>
-              {partComponents[1]}
-            </Products>
-            < Products >
-              {partComponents[2]}
-            </Products>
-
+         
+         
           </main>
         </div >
       </Layout >

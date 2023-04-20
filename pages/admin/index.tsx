@@ -81,7 +81,7 @@ const MenuProps = {
 };
 
 const Home: NextPage = () => {
- 
+
     const [category, setCategory] = React.useState<string[]>([]);
     const [color, setColor] = React.useState<string[]>([]);
     const [brandName, setBrandName] = React.useState<string[]>([]);
@@ -112,19 +112,19 @@ const Home: NextPage = () => {
 
     const handleBrandChange = (event: SelectChangeEvent<typeof Brand>) => {
         setBrand(event.target.value as string);
-   
+
     };
 
     const handleChange = (event: SelectChangeEvent<typeof category>) => {
         const {
             target: { value },
         } = event;
-        setCategory(  
+        setCategory(
             // On autofill we get a stringified value.
-             typeof value === 'string' ? value.split(',') : value,
-           // typeof value === 'string' ? value.split(',') : value,
+            typeof value === 'string' ? value.split(',') : value,
+            // typeof value === 'string' ? value.split(',') : value,
         );
- 
+
     };
 
     const submitHandler = async ({
@@ -154,8 +154,8 @@ const Home: NextPage = () => {
             color,
             brand,
             description
-          };
-        
+        };
+
         formData.append("data", JSON.stringify(content))
         Object.values(inputFileRef.current.files).forEach(file => {
             formData.append('file', file);
@@ -169,10 +169,10 @@ const Home: NextPage = () => {
                 headers: { "Content-Type": "multipart/form-data" },
             });
 
-            if(response.status==200){
+            if (response.status == 200) {
                 router.back()
-              }
-            
+            }
+
         } catch (error) {
             console.log(error)
         }
@@ -201,13 +201,13 @@ const Home: NextPage = () => {
                         </Typography>
                         <br />
                         <Divider />
-                      
-                        
+
+
                         <form onSubmit={handleSubmit(submitHandler)} className={classes.form}>
 
                             <List>
-                           
-                            <ListItem>
+
+                                <ListItem>
                                     <FormControl sx={{ m: 1, width: 300 }}>
                                         <InputLabel id="demo-simple-select-label">Brands</InputLabel>
                                         <Select
@@ -229,7 +229,7 @@ const Home: NextPage = () => {
                                         </Select>
                                     </FormControl>
                                     <FormControl sx={{ m: 1, width: 300 }}>
-                                        <InputLabel id="CategoryInput">Category</InputLabel>
+                                        <InputLabel id="CategoryInput">Category </InputLabel>
                                         <Select
                                             labelId="categories"
                                             id="categories"
@@ -243,25 +243,25 @@ const Home: NextPage = () => {
 
                                         >
                                             {categories.map((cat) => (
-                                                <MenuItem key={cat._id} value={cat.name}>
-                                                    <Checkbox checked={category.indexOf(cat.name) > -1} />
-                                                    <ListItemText primary={cat.name} />
+                                                <MenuItem key={cat._id} value={cat._id}>
+                                                    <Checkbox checked={category.indexOf(cat._id) > -1} />
+                                                    <ListItemText primary={cat._id} />
                                                 </MenuItem>
                                             ))}
                                         </Select>
                                     </FormControl>
-                               
-                            </ListItem>   
 
-                            
+                                </ListItem>
 
-                            <ListItem>
+
+
+                                <ListItem>
                                     <RadioBtn
                                         list={colors} //selectedRdo={prpPrice}
                                         handleRadioBtn={checkedItem => handleFilters(checkedItem, "color")}
                                     />
                                 </ListItem>
-                          
+
                                 <ListItem>
                                     <Controller
                                         name="name"
@@ -323,36 +323,36 @@ const Home: NextPage = () => {
                                 </ListItem>
 
                                 <ListItem>
-                  <Controller
-                    name="countInStock"
-                    control={control}
-                    rules={{
-                      required: true,
-                      minLength: 1,
-                    }}
-                    render={({ field }) => (
-                      <TextField
-                        variant="outlined"
-                        fullWidth
-                        id="countInStock"
-                        label="Count in Stock"
-                        inputProps={{ type: "name" }}
+                                    <Controller
+                                        name="countInStock"
+                                        control={control}
+                                        rules={{
+                                            required: true,
+                                            minLength: 1,
+                                        }}
+                                        render={({ field }) => (
+                                            <TextField
+                                                variant="outlined"
+                                                fullWidth
+                                                id="countInStock"
+                                                label="Count in Stock"
+                                                inputProps={{ type: "name" }}
 
-                        error={Boolean(errors.name)}
-                        helperText={
-                          errors.name
-                            ? errors.name.type === "minLength"
-                              ? "Count In Stock length is more than 1"
-                              : "Count In Stock is required"
-                            : ""
-                        }
-                        {...field}
-                      ></TextField>
-                    )}
-                  ></Controller>
-                </ListItem>
+                                                error={Boolean(errors.name)}
+                                                helperText={
+                                                    errors.name
+                                                        ? errors.name.type === "minLength"
+                                                            ? "Count In Stock length is more than 1"
+                                                            : "Count In Stock is required"
+                                                        : ""
+                                                }
+                                                {...field}
+                                            ></TextField>
+                                        )}
+                                    ></Controller>
+                                </ListItem>
 
-                               
+
                                 <ListItem>
                                     <Controller
                                         name="description"
@@ -386,16 +386,16 @@ const Home: NextPage = () => {
                                     ></Controller>
                                 </ListItem>
                                 <ListItem>
-                            <input type="file" name="myfile"
-                                ref={inputFileRef} multiple
-                                onChange={handleFileSelect}
-                            />
-                            </ListItem>
+                                    <input type="file" name="myfile"
+                                        ref={inputFileRef} multiple
+                                        onChange={handleFileSelect}
+                                    />
+                                </ListItem>
                             </List>
 
 
 
-                            <input className="btn btn-primary" type="submit" value="Upload"   />
+                            <input className="btn btn-primary" type="submit" value="Upload" />
 
                         </form>
 
