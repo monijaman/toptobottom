@@ -19,10 +19,14 @@ const useStyles = makeStyles({
   
 function CheckBox(props) {
 
-    const [Checked, setChecked] = useState(props.selectedChk.split(","))
+    const [Checked, setChecked] = useState()
+
+    if(props.selectedChk){
+        setChecked(props.selectedChk.split(","))
+    }
     const classes = useStyles();
     const handleToggle = (value) => {
-
+ 
         const currentIndex = Checked.indexOf(value)
         const newChecked = [...Checked]
         const allCat:string[] = []
@@ -61,7 +65,7 @@ function CheckBox(props) {
                 label='My checkbox' 
                 onChange={() => handleToggle(value._id)}
                 type="checkbox"
-                checked={Checked.indexOf(value._id) === -1 ? false : true}
+                checked={Checked?.indexOf(value._id) === -1 ? false : true}
             />   } label={value.name} />
            
         </React.Fragment>

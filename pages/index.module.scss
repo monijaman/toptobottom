@@ -2,6 +2,13 @@
 
 .container {
   width: 100%;
+ 
+  .productContainer{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+
+  }
   .main {
     padding-bottom: 40px;
     .header {

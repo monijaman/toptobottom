@@ -155,9 +155,43 @@ const brands = [
         "name": "Moucak",
     }
 ]
+
+const sizes = [
+    {
+        "_id": "500",
+        "name": "500GM"
+    },
+    {
+        "_id": "1000",
+        "name": "1KG"
+    },
+    {
+        "_id": "1500",
+        "name": "1.5KG"
+    },
+    {
+        "_id": "2000",
+        "name": "2KG"
+    },
+    {
+        "_id": "2500",
+        "name": "2.5KG"
+    },
+    {
+        "_id": "5000",
+        "name": "5KG"
+    },
+    {
+        "_id": "10000",
+        "name": "10KG"
+    } 
+     
+]
+
 export {
     prices,
     categories,
     colors,
-    brands
+    brands,
+    sizes
 }
