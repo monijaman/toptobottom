@@ -1,5 +1,5 @@
-import styles from "../index.module.scss";
 import React from "react"
+import styles from "../index.module.scss";
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/router";
 import Head from "next/head";
@@ -8,15 +8,19 @@ import { Controller, useForm } from "react-hook-form";
 import { useSnackbar } from "notistack";
 import type { NextPage } from 'next';
 import Axios from 'axios';
-import { colors, brands, categories } from 'data/filterdata';
+import { colors, sizes, brands, categories, materials } from 'data/filterdata';
 import RadioBtn from 'components/ui/htmlInputElem/RadioBtn';
+import CheckItem from 'components/ui/htmlInputElem/CheckItem';
+import FormControlLabel from '@mui/material/FormControlLabel';
+
+
 import {
-    Button,
-    Link, List,
-    ListItem, TextField,
-    CircularProgress,
-    makeStyles,
-    Typography,
+  Button,
+  Link, List,
+  ListItem, TextField,
+  CircularProgress,
+  makeStyles,
+  Typography,
 } from "@material-ui/core";
 import TextareaAutosize from '@mui/material/TextareaAutosize';
 import Divider from '@mui/material/Divider';
@@ -31,6 +35,7 @@ const queryString = require('querystring');
 import { getProducts, updatFilter, selectFilterState } from "redux/filterSlice";
 import Product from "models/Product";
 
+import FormGroup from '@mui/material/FormGroup';
 
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputLabel from '@mui/material/InputLabel';
@@ -42,42 +47,42 @@ import Checkbox from '@mui/material/Checkbox';
 // import RadioBtn from 'components/ui/htmlInputElem/RadioBtn';
 
 type FormData = {
-    name: string;
-    price: number;
+  name: string;
+  price: number;
 };
 
 const useStyles = makeStyles({
-    root: {
-        marginTop: 20,
-    },
-    loader: {
-        width: "100%",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-    },
-    paper: {
-        marginBottom: "1rem",
-        padding: "13px",
-    },
-    filters: {
-        padding: "0 1.5rem",
-    },
-    priceRangeInputs: {
-        display: "flex",
-        justifyContent: "space-between",
-    },
+  root: {
+      marginTop: 20,
+  },
+  loader: {
+      width: "100%",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+  },
+  paper: {
+      marginBottom: "1rem",
+      padding: "13px",
+  },
+  filters: {
+      padding: "0 1.5rem",
+  },
+  priceRangeInputs: {
+      display: "flex",
+      justifyContent: "space-between",
+  },
 });
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
-    PaperProps: {
-        style: {
-            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-            width: 250,
-        },
-    },
+  PaperProps: {
+      style: {
+          maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+          width: 250,
+      },
+  },
 };
 
 const Home: NextPage = () => {
@@ -255,12 +260,42 @@ const Home: NextPage = () => {
 
 
 
-                                <ListItem>
-                                    <RadioBtn
-                                        list={colors} //selectedRdo={prpPrice}
-                                        handleRadioBtn={checkedItem => handleFilters(checkedItem, "color")}
+                                <h2>Colors</h2>
+                                <FormGroup>
+                                    <CheckItem
+                                        lists={colors} //selectedRdo={prpPrice}
+                                    // handleRadioBtn={checkedItem => handleFilters(checkedItem, "color")}
                                     />
-                                </ListItem>
+                                </FormGroup>
+
+                                <h2>Size </h2>
+                                <ul>
+                                    {sizes.map((item, index) => {
+                                        return <li key={index}>
+                                                     <FormControlLabel control={<Checkbox   />} label="S (size)" />
+                                                     <TextField name={item.name} value=""  onChange={(e)=>{
+                                                        console.log(e.target.value)
+                                                     }}  label="In Stock" variant="outlined" />
+                                                     </li>
+                                    })}
+
+
+
+                                </ul>
+
+
+                                <h2>Quantity</h2>
+
+
+
+                                <FormGroup>
+                                    <CheckItem
+                                        lists={sizes} //selectedRdo={prpPrice}
+                                    // handleRadioBtn={checkedItem => handleFilters(checkedItem, "color")}
+                                    />
+                                </FormGroup>
+
+                                <h2>Material</h2>
 
                                 <ListItem>
                                     <Controller
