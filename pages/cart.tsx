@@ -30,7 +30,6 @@ const CartScreen: NextPage = () => {
 
     dispatch(additem({ ...item, quantity }))
 
-
   };
 
   const removeItemHandler = (item: IProduct) => {

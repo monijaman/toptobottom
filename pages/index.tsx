@@ -96,7 +96,7 @@ export default function HomePage({ prpTotalPages, prpDataSet }: props) {
   let colors = ["#f6f6f6", "#e6eaed", "#f3f0e8", "#d8f1ff", "#fbf7e9"]
   let partComponents = [];
 
-    
+ 
     for (let j = 0; j < dataResSet.length; j++) {
 
 
@@ -156,11 +156,10 @@ export default function HomePage({ prpTotalPages, prpDataSet }: props) {
                 <CircularProgress size="3rem" thickness={5} />
               </div>
             )}
-
-
-            < Products >
+ 
+           <div className={styles.productContainer}  >
               {partComponents}
-            </Products>
+              </div>
 
          
          

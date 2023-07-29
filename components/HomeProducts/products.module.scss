@@ -3,33 +3,16 @@
 .container {
   margin-top: 20px;
   display: grid;
-  grid-template-areas:
-    "first first"
-    "second second"
-    "third third"
-    "fourth fourth";
-  grid-template-rows: 1fr;
-  grid-template-columns: 1fr;
-  gap: 20px;
+ 
 
   @include md {
-    grid-template-areas:
-      "first first"
-      "second second"
-      "third fourth"
-      "third fourth";
-    grid-template-rows: 1fr 1fr;
-    grid-template-columns: 1fr 1fr;
+ 
     width: 98.5%;
   }
 
   @include lg {
-    grid-template-areas:
-      "first second third"
-      "first second third"
-      "first second third";
-    grid-template-rows: repeat(3, 1fr  1fr 1fr); 
-    grid-template-columns: 1fr 1fr 1fr ;
+ 
+ 
     width: 100%;
   }
 }

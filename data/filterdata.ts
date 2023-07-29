@@ -220,6 +220,8 @@ const brands = [
         "name": "Moucak",
     }
 ]
+ 
+
 export {
     prices,
     categories,

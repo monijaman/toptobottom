@@ -8,8 +8,9 @@ import { Controller, useForm } from "react-hook-form";
 import { useSnackbar } from "notistack";
 import type { NextPage } from 'next';
 import Axios from 'axios';
-import { colors, brands, categories } from 'data/filterdata';
+import { colors, sizes, brands, categories } from 'data/filterdata';
 import RadioBtn from 'components/ui/htmlInputElem/RadioBtn';
+import CheckBtn from 'components/ui/htmlInputElem/CheckBtn';
 import {
   Button,
   Link, List,
@@ -39,6 +40,7 @@ import FormControl from '@mui/material/FormControl';
 import ListItemText from '@mui/material/ListItemText';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import Checkbox from '@mui/material/Checkbox';
+import CheckBox from "components/ui/htmlInputElem/CheckBox";
 // import RadioBtn from 'components/ui/htmlInputElem/RadioBtn';
 
 type FormData = {
@@ -87,6 +89,7 @@ const Page: NextPage = ({ product }: props) => {
   const [prodId, setprodId] =   React.useState(product._id);
   const [category, setCategory] = React.useState<string[]>([product.category]);
   const [color, setColor] = React.useState<string[]>(product.color);
+  const [size, setSize] = React.useState<string[]>(product.size);
   const [brand, setBrand] = React.useState(product.brand);
   const [name, setName] = useState(product.name)
   const router = useRouter()
@@ -112,6 +115,9 @@ const Page: NextPage = ({ product }: props) => {
   const handleFilters = (checkedItem, filterType) => {
     if (filterType == "color") {
       setColor(checkedItem)
+    }
+    if (filterType == "size") {
+      setSize(checkedItem)
     }
 
   }
@@ -265,6 +271,11 @@ const Page: NextPage = ({ product }: props) => {
                     list={colors} selectedRdo={product.color}
                     handleRadioBtn={checkedItem => handleFilters(checkedItem, "color")}
                   />
+                </ListItem>
+                <ListItem>
+                  <h3>Choose Size</h3>
+            
+                  
                 </ListItem>
 
                 <ListItem>
