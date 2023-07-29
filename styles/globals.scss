@@ -280,6 +280,74 @@ html {
 	bottom: $spacingBase;
 	left: $spacingBase;
 }
+
+
+// Popup start
+
+.popup-component {
+	position: relative;
+	display: inline-block;
+  
+	&[data-action="hover"]:hover .popupHandle {
+	  filter: drop-shadow(0px 10px 20px rgba(0, 0, 0, 0.25));
+	}
+	&[data-action="hover"]:not(:hover),
+	&[data-action="click"]:not(.open) {
+	  .popupContent {
+		visibility: hidden;
+		position: absolute;
+		left: -1000px;
+	  }
+	}
+  
+	.popupContent {
+		width: 200px;
+	  position: absolute;
+	  left: var(--contentLeft);
+	  z-index: 101;
+	  .inner {
+		position: relative;
+		padding: 22px 17px;
+		background-color: #FFF;
+		border: 1px solid #333;
+		font-size: 14px;
+		box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2);
+		z-index: 1;
+		&::after {
+		  content: "";
+		  position: absolute;
+		  left: var(--handleLeft);
+		  background-color: #FFF;
+		  border: 1px solid #333;
+		  width: 21px;
+		  height: 21px;
+		  transform: rotate(-45deg);
+		  transform-origin: 0 0;
+		}
+	  }
+	  &.above {
+		bottom: 100%;
+		padding-bottom: 27px;
+		.inner::after {
+		  top: 100%;
+		  border-top: none;
+		  border-right: none;
+		}
+	  }
+	  &.below {
+		top: 100%;
+		padding-top: 27px;
+		.inner::after {
+		  top: 0;
+		  border-bottom: none;
+		  border-left: none;
+		}
+	  }
+	}
+  }
+// Popup end
+  
+
 $colorDark: #2e2e2e;
 $colorGrey100: #888888;
 $colorGrey300: #f4f4f4;

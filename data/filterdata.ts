@@ -116,10 +116,7 @@ const colors = [
         "name": "Lime",
         "code": "#00FF00"
     },
-    {
-        "name": "Magenta",
-        "code": "#FF00FF"
-    },
+  
     {
         "name": "Magenta",
         "code": "#FF00FF"
@@ -150,6 +147,74 @@ const colors = [
     }
 ]
 
+const sizes = [
+    {
+        "name": "100GM",
+        "code": "100 GM"
+    },
+    {
+        "name": "250GM",
+        "code": "250 GM"
+    },
+    {
+        "name": "500GM",
+        "code": "500 GM"
+    },
+    {
+        "name": "1000GM",
+        "code": "1 KG"
+    },
+    {
+        "name": "2KG",
+        "code": "2 KG"
+    },{
+        "name": "5KG",
+        "code": "5 KG"
+    },{
+        "name": "10KG",
+        "code": "10 KG"
+    },
+]
+
+
+const measurements = [
+    {
+        "name": "S",
+        "code": "Small"
+    },
+    {
+        "name": "M",
+        "code": "Medium"
+    },
+    {
+        "name": "L",
+        "code": "Large"
+    },
+    {
+        "name": "XL",
+        "code": "Extra Large"
+    },
+    {
+        "name": "XXL",
+        "code": "Double Extra Large"
+    }
+]
+
+const materials = [
+    {
+        "name": "cottom",
+        "code": "Cotton"
+    },
+    {
+        "name": "wolven",
+        "code": "Wolven"
+    },
+    {
+        "name": "plastic",
+        "code": "Plastic"
+    }
+]
+
 const brands = [
     {
         "name": "Moucak",
@@ -159,5 +224,8 @@ export {
     prices,
     categories,
     colors,
-    brands
+    brands,
+    sizes,
+    materials,
+    measurements
 }

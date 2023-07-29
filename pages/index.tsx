@@ -128,7 +128,7 @@ export default function HomePage({ prpTotalPages, prpDataSet }: props) {
    
 
     }
- console.log(partComponents)
+ 
 
 
   return (

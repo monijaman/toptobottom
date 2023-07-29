@@ -8,8 +8,11 @@ import { Controller, useForm } from "react-hook-form";
 import { useSnackbar } from "notistack";
 import type { NextPage } from 'next';
 import Axios from 'axios';
-import { colors, brands, categories } from 'data/filterdata';
+import { colors, sizes, brands, categories, materials,measurements } from 'data/filterdata';
 import RadioBtn from 'components/ui/htmlInputElem/RadioBtn';
+import CheckItem from 'components/ui/htmlInputElem/CheckItem';
+import FormControlLabel from '@mui/material/FormControlLabel';
+
 import {
     Button,
     Link, List,
@@ -31,6 +34,7 @@ const queryString = require('querystring');
 import { getProducts, updatFilter, selectFilterState } from "redux/filterSlice";
 import Product from "models/Product";
 
+import FormGroup from '@mui/material/FormGroup';
 
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputLabel from '@mui/material/InputLabel';
@@ -108,6 +112,106 @@ const Home: NextPage = () => {
             setColor(checkedItem)
         }
 
+    }
+
+
+
+    const wrapWithFilter = (key, filterState, columnOptions, filterOptions, content, actions) => {
+        return <Popup action="click">
+            <PopupHandle>
+                <div className="inline-flex max-sm:text-left align-middle items-center text-center">
+
+
+                </div>
+            </PopupHandle>
+            <PopupContent position="below">
+                <form className="w-full max-w-sm" onSubmit={event => {
+                    event.preventDefault()
+                }}>
+                    <h3 className="text-xs font-normal normal-case text-left text-nsw-grey-01">
+                        Sort
+                    </h3>
+                    <hr className="my-1 bg-nsw-grey-03 border font-normal" />
+
+                    <ul className="items-center m-0 w-full text-sm rounded-lg sm:flex">
+                        {[
+                            {
+                                type: 'asc',
+                                label: 'A to Z'
+                            },
+                            {
+                                type: 'desc',
+                                label: 'Z to A'
+                            }
+                        ].map(data => (
+                            <li key={data.type} className="w-full">
+                                <div className="flex items-center">
+                                    <input
+                                        id={key + data.type}
+                                        type="radio"
+                                        name={key}
+                                        checked={filterState.sortBy == key && filterState.sortType == data.type}
+                                        onChange={() => {
+                                            actions.updateSort(data.type)
+                                        }}
+                                        className="mr-[6px] mt-[0.15rem] h-[1.325rem] w-[1.325rem] text-nsw-info-blue bg-white border-nsw-info-blue focus:ring-nsw-info-blue focus:ring-1 ring-yellow-500 focus:border-nsw-info-blue"
+                                    />
+
+                                    <label
+                                        htmlFor={key + data.type}
+                                        className="w-full text-left py-1 ml-1 text-sm font-normal"
+                                    >
+                                        {data.label}
+                                    </label>
+                                </div>
+                            </li>
+                        ))}
+                    </ul>
+
+                    {(columnOptions && columnOptions.length) ? <>
+                        <h3 className="mt-6 text-xs text-left font-normal normal-case text-nsw-grey-01">
+                            Filter by
+                        </h3>
+                        <hr className="my-1 bg-nsw-grey-03 mb-4" />
+                        <div className="align-middle items-center justify-center text-center">
+                            <div className="bg-white p-2 border rounded border-nsw-grey-02">
+                                {columnOptions.map((data, index) => (
+                                    <div
+                                        key={index}
+                                        className="mb-[0.125rem] flex mr-4 inline-block min-h-[1.5rem] pl-[1.5rem]"
+                                    >
+                                        <input
+                                            id={key + index}
+                                            type="checkbox"
+                                            checked={filterOptions ? filterOptions.includes(data) : false}
+                                            onChange={() => {
+                                                actions.toggleFilterOption(data)
+                                            }}
+                                            className="-ml-[1.5rem] mr-[6px] mt-[0.25rem] h-[1.325rem] w-[1.325rem] text-nsw-info-blue bg-white border-nsw-info-blue rounded focus:ring-nsw-info-blue focus:ring-1 ring-yellow-500 focus:border-nsw-info-blue"
+                                        />
+
+                                        <label
+                                            className="pt-2 text-left font-normal text-xs pl-[0.15rem] hover:cursor-pointer whitespace-pre-line"
+                                            htmlFor={key + index}
+                                        >
+                                            {data}
+                                        </label>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </> : null}
+
+                    <h3 className="text-xs text-left font-normal normal-case text-nsw-grey-01">
+                        Search
+                    </h3>
+
+                    <hr className="my-1 bg-nsw-grey-03 mb-4" />
+
+
+                </form>
+            </PopupContent>
+        </Popup>
     }
 
     const handleBrandChange = (event: SelectChangeEvent<typeof Brand>) => {
@@ -254,13 +358,46 @@ const Home: NextPage = () => {
                                 </ListItem>
 
 
-
-                                <ListItem>
-                                    <RadioBtn
-                                        list={colors} //selectedRdo={prpPrice}
-                                        handleRadioBtn={checkedItem => handleFilters(checkedItem, "color")}
+                                <h2>Colors</h2>
+                                <FormGroup>
+                                    <CheckItem
+                                        lists={colors} //selectedRdo={prpPrice}
+                                    // handleRadioBtn={checkedItem => handleFilters(checkedItem, "color")}
                                     />
-                                </ListItem>
+                                </FormGroup>
+
+                                <h2>Size </h2>
+                                <ul>
+                                    {measurements.map((item, index) => {
+                                        return <li key={item+index}>
+                                                     <FormControlLabel control={<Checkbox   />} label={item.name} />
+                                                     <TextField name={item.name} value=""  onChange={(e)=>{
+                                                        console.log(e.target.value)
+                                                     }}  label="In Stock" variant="outlined" />
+                                                     </li>
+                                    })}
+
+
+
+                                </ul>
+
+
+                                <h2>Quantity</h2>
+
+
+
+                                <FormGroup>
+                                    <CheckItem
+                                        lists={sizes} //selectedRdo={prpPrice}
+                                    // handleRadioBtn={checkedItem => handleFilters(checkedItem, "color")}
+                                    />
+                                </FormGroup>
+
+                                <h2>Material</h2>
+
+
+
+
 
                                 <ListItem>
                                     <Controller
