@@ -8,19 +8,20 @@ import { Controller, useForm } from "react-hook-form";
 import { useSnackbar } from "notistack";
 import type { NextPage } from 'next';
 import Axios from 'axios';
-import { colors, sizes, brands, categories, materials } from 'data/filterdata';
+import { colors, sizes, brands, categories, materials, measurements } from 'data/filterdata';
 import RadioBtn from 'components/ui/htmlInputElem/RadioBtn';
 import CheckItem from 'components/ui/htmlInputElem/CheckItem';
+import Quantity from 'components/ui/htmlInputElem/Quantity';
 import FormControlLabel from '@mui/material/FormControlLabel';
 
 
 import {
-  Button,
-  Link, List,
-  ListItem, TextField,
-  CircularProgress,
-  makeStyles,
-  Typography,
+    Button,
+    Link, List,
+    ListItem, TextField,
+    CircularProgress,
+    makeStyles,
+    Typography,
 } from "@material-ui/core";
 import TextareaAutosize from '@mui/material/TextareaAutosize';
 import Divider from '@mui/material/Divider';
@@ -47,49 +48,71 @@ import Checkbox from '@mui/material/Checkbox';
 // import RadioBtn from 'components/ui/htmlInputElem/RadioBtn';
 
 type FormData = {
-  name: string;
-  price: number;
+    name: string;
+    price: number;
 };
 
 const useStyles = makeStyles({
-  root: {
-      marginTop: 20,
-  },
-  loader: {
-      width: "100%",
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-  },
-  paper: {
-      marginBottom: "1rem",
-      padding: "13px",
-  },
-  filters: {
-      padding: "0 1.5rem",
-  },
-  priceRangeInputs: {
-      display: "flex",
-      justifyContent: "space-between",
-  },
+    root: {
+        marginTop: 20,
+    },
+    loader: {
+        width: "100%",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    paper: {
+        marginBottom: "1rem",
+        padding: "13px",
+    },
+    filters: {
+        padding: "0 1.5rem",
+    },
+    priceRangeInputs: {
+        display: "flex",
+        justifyContent: "space-between",
+    },
 });
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
-  PaperProps: {
-      style: {
-          maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-          width: 250,
-      },
-  },
-};
+    PaperProps: {
+        style: {
+            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+            width: 250,
+        },
+    },
+}
+
+type formData = {
+    size: {
+        [key: string]: {}
+    }
+
+}
 
 const Home: NextPage = () => {
 
     const [category, setCategory] = React.useState<string[]>([]);
     const [color, setColor] = React.useState<string[]>([]);
     const [brandName, setBrandName] = React.useState<string[]>([]);
+
+
+
+
+    const initialState: formData = {
+        size: {}
+    }
+
+    const [state, setState] = useState(initialState)
+
+
+    useEffect(() => {
+        console.log(state)
+    }, [state]);
+
 
     const {
         handleSubmit,
@@ -131,6 +154,14 @@ const Home: NextPage = () => {
         );
 
     };
+
+
+    let [colorState, setColorState] = useState("Initial");
+
+    function handleState(sizeState:any) {
+        // setColorState(newValue);
+        console.log("sizeState", sizeState)
+    }
 
     const submitHandler = async ({
         name,
@@ -262,7 +293,7 @@ const Home: NextPage = () => {
 
                                 <h2>Colors</h2>
                                 <FormGroup>
-                                    <CheckItem
+                                    <CheckItem changeSizeState = {handleState}
                                         lists={colors} //selectedRdo={prpPrice}
                                     // handleRadioBtn={checkedItem => handleFilters(checkedItem, "color")}
                                     />
@@ -270,17 +301,22 @@ const Home: NextPage = () => {
 
                                 <h2>Size </h2>
                                 <ul>
-                                    {sizes.map((item, index) => {
-                                        return <li key={index}>
-                                                     <FormControlLabel control={<Checkbox   />} label="S (size)" />
-                                                     <TextField name={item.name} value=""  onChange={(e)=>{
-                                                        console.log(e.target.value)
-                                                     }}  label="In Stock" variant="outlined" />
-                                                     </li>
+                                    {measurements.map((item, index) => {
+                                        return <li key={index + item}>
+                                            <FormControlLabel control={<Checkbox />} label={item.code} />
+                                            <TextField name={item.name} value={state.size[item.name]} onChange={(evt) => {
+                                                setState({
+                                                    ...state,
+                                                    size: {
+                                                        ...state.size,
+                                                        [item.name]: evt.target.value
+
+                                                    }
+
+                                                })
+                                            }} label="In Stock" variant="outlined" />
+                                        </li>
                                     })}
-
-
-
                                 </ul>
 
 
@@ -289,7 +325,7 @@ const Home: NextPage = () => {
 
 
                                 <FormGroup>
-                                    <CheckItem
+                                    <Quantity
                                         lists={sizes} //selectedRdo={prpPrice}
                                     // handleRadioBtn={checkedItem => handleFilters(checkedItem, "color")}
                                     />

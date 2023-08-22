@@ -25,16 +25,20 @@ interface checkProps {
     lists: {
         _id: string;
         name: string;
-    }[];
+    }[],
+    changeSizeState : (arg: any) => void
 };
 
 
-function CheckItem({  lists }: checkProps) {
+function CheckItem({  lists, changeSizeState  }: checkProps) {
 
+  
     const [Checked, setChecked] = useState()
     const classes = useStyles();
     const handleToggle = (value: string) => {
         console.log(value)
+
+        changeSizeState({...state})
         // const currentIndex = Checked.indexOf(value)
         // const newChecked = [...Checked]
         // const allCat:string[] = []
@@ -43,18 +47,16 @@ function CheckItem({  lists }: checkProps) {
 
       type formData = {
         colorSize: {
-        type: {
+        
           [key: string]: {}  
-        }
+        
       }
     
     };
  
     const initialState: formData = {
       colorSize:{
-        type: {
-          
-        }
+       
       }
     
       // cart: {
@@ -90,7 +92,7 @@ function CheckItem({  lists }: checkProps) {
    
 
     useEffect(() => {
-       console.log(state)
+      changeSizeState({...state})
     },[state]);
 
     const wrapWithFilter = (name) => {
@@ -128,7 +130,7 @@ function CheckItem({  lists }: checkProps) {
                 
                     <input
                   type="text"
-                  value={setState[name]}
+                  value={state[name]}
                   name={name+data.name}
                   id={name+data.name}
                   className="relative searchInput appearance-none focus-shadow-sm m-0 -mr-0.5 block w-[1px] min-w-0 flex-auto rounded border border-solid border-nsw-grey-02 bg-transparent bg-nsw-white px-1 py-[0.5rem] text-sm font-normal leading-[0.6] text-neutral-700 outline-none transition duration-200 ease-in-out  focus:border-nsw-info-blue --tw-shadow-color: #fff;   dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200 dark:focus:border-nsw-info-blue"
@@ -140,14 +142,11 @@ function CheckItem({  lists }: checkProps) {
                       ...state,                     
                       colorSize:{
                         ...state.colorSize,
-                        type: {
-                          ...state.colorSize.type,
-                          
                           [name] :{
-                            ...state.colorSize.type[name],
+                            ...state.colorSize[name],
                             [data.name]: evt.target.value 
                           }
-                        }
+                        
                      
                       }
                     
@@ -155,16 +154,7 @@ function CheckItem({  lists }: checkProps) {
                   }} 
                 />
 
-{/* onChange={(evt) => {
-                    setState({
-                      ...state,                     
-                      colorSize:{
-                      ...state.colorSize,
-                        [data.name]: evt.target.value
-                      }
-                    
-                    })
-                  }} */}
+ 
 
                   </label>
                  
@@ -172,7 +162,9 @@ function CheckItem({  lists }: checkProps) {
               </li>
             ))}
           </ul>
-          <Button>Primary</Button>
+
+          
+          <Button>Primary  ww</Button>
 
             </form>
           </PopupContent>
