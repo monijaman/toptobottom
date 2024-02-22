@@ -8,7 +8,7 @@ import { Controller, useForm } from "react-hook-form";
 import { useSnackbar } from "notistack";
 import type { NextPage } from 'next';
 import Axios from 'axios';
-import { colors, sizes, brands, categories, materials, measurements } from 'data/filterdata';
+import { availablecolors, sizes, brands, categories, materials, measurements } from 'data/filterdata';
 import RadioBtn from 'components/ui/htmlInputElem/RadioBtn';
 import CheckItem from 'components/ui/htmlInputElem/CheckItem';
 import Quantity from 'components/ui/htmlInputElem/Quantity';
@@ -111,6 +111,7 @@ const Home: NextPage = () => {
 
     useEffect(() => {
         console.log(state)
+        console.log("pages/admin/index.tsx line 114");
     }, [state]);
 
 
@@ -152,15 +153,16 @@ const Home: NextPage = () => {
             typeof value === 'string' ? value.split(',') : value,
             // typeof value === 'string' ? value.split(',') : value,
         );
-
     };
 
 
-    let [colorState, setColorState] = useState("Initial");
-
-    function handleState(sizeState:any) {
-        // setColorState(newValue);
-        console.log("sizeState", sizeState)
+    // let [colours, setColours] = useState("Initial");
+    const [colors, setColours] = useState<string[]>(["Initial"]);
+ 
+    function handleState(colorState: string[]) {
+        // setColours(newValue);
+       setColours(colorState);
+        console.log("sizeState checkitem 164", colorState)
     }
 
     const submitHandler = async ({
@@ -187,10 +189,12 @@ const Home: NextPage = () => {
             name,
             price,
             category,
-            color,
+            ...colors,
             brand,
             description
         };
+
+        console.log(content)
 
         formData.append("data", JSON.stringify(content))
         Object.values(inputFileRef.current.files).forEach(file => {
@@ -198,6 +202,10 @@ const Home: NextPage = () => {
         })
 
         try {
+
+
+            console.log("save")
+
             const response = await axios({
                 method: "post",
                 url: "/api/products/upload",
@@ -206,7 +214,7 @@ const Home: NextPage = () => {
             });
 
             if (response.status == 200) {
-                router.back()
+               // router.back()
             }
 
         } catch (error) {
@@ -293,8 +301,8 @@ const Home: NextPage = () => {
 
                                 <h2>Colors</h2>
                                 <FormGroup>
-                                    <CheckItem changeSizeState = {handleState}
-                                        lists={colors} //selectedRdo={prpPrice}
+                                    <CheckItem changeSiteState={handleState}
+                                        lists={availablecolors} //selectedRdo={prpPrice}
                                     // handleRadioBtn={checkedItem => handleFilters(checkedItem, "color")}
                                     />
                                 </FormGroup>
@@ -466,7 +474,7 @@ const Home: NextPage = () => {
 
 
 
-                            <input className="btn btn-primary" type="submit" value="Upload" />
+                            <input className="btn btn-primary" type="submit" value="Save" />
 
                         </form>
 

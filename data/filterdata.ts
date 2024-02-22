@@ -95,7 +95,7 @@ const categories = [
     }
 ]
 
-const colors = [
+const availablecolors = [
     {
         "name": "Red",
         "code": "#FF0000"
@@ -225,7 +225,7 @@ const brands = [
 export {
     prices,
     categories,
-    colors,
+    availablecolors,
     brands,
     sizes,
     materials,

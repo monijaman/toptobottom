@@ -1,7 +1,22 @@
 import mongoose from "mongoose";
 // import { MongooseQueryLogger } from 'mongoose-query-logger';
 
-// export const queryLogger = new MongooseQueryLogger();
+// Define the schema for the color sizes
+const colorSizeSchema = new mongoose.Schema({
+  type: String,
+  value: String
+});
+
+// Define the schema for the colors
+const colorSchema = new mongoose.Schema({
+  type: String,
+  sizes: [colorSizeSchema] // Make sizes an array of colorSizeSchema
+});
+
+ const conditionSchema = new mongoose.Schema({
+    id: String,
+    name: String
+});
 
 const productSchema = new mongoose.Schema(
   {
@@ -10,7 +25,9 @@ const productSchema = new mongoose.Schema(
     category: { type: String, required: true },
     image: { type: String, required: true },
     price: { type: Number, required: true },
-    colors: { type: String },
+    //  colors: [colorSchema], // Make colors an array of colorSchema
+    // coloro: [{}],
+    conditions:  [{}],
     brand: { type: String },
     rating: { type: Number,  default: 0 },
     numReviews: { type: Number,  default: 0 },
